@@ -62,6 +62,13 @@ public class pbcsFileEditor extends javax.swing.JPanel {
         lblColumn = new javax.swing.JLabel();
         btnUpdateField = new javax.swing.JButton();
         btnTest = new javax.swing.JButton();
+        lblSuffix = new javax.swing.JLabel();
+        txtSuffix = new javax.swing.JTextField();
+        lblFind = new javax.swing.JLabel();
+        lblReplace = new javax.swing.JLabel();
+        txtFind = new javax.swing.JTextField();
+        txtReplace = new javax.swing.JTextField();
+        btnAddColumn = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -122,39 +129,65 @@ public class pbcsFileEditor extends javax.swing.JPanel {
 
         btnTest.setText("jButton1");
 
+        lblSuffix.setText("Suffix");
+
+        lblFind.setText("Find");
+
+        lblReplace.setText("Replace");
+
+        btnAddColumn.setText("Add Simple Column");
+        btnAddColumn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddColumnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1081, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1081, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(163, 163, 163)
+                                .addComponent(btnUpdateField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnAddColumn)
+                                .addGap(11, 11, 11)
                                 .addComponent(btnRefresh))
                             .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel1)
-                                            .addComponent(jLabel2))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtDelimiter, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                                            .addComponent(txtPrefix)))
                                     .addComponent(lblColumn)
-                                    .addComponent(btnUpdateField)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(btnBrowse)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnTest)))
-                                .addGap(60, 60, 60)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(btnTest))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(lblSuffix)
+                                            .addGap(25, 25, 25)
+                                            .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel1)
+                                                .addComponent(jLabel2))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(txtDelimiter, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                                                .addComponent(txtPrefix)))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(lblFind)
+                                                .addComponent(lblReplace))
+                                            .addGap(15, 15, 15)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(txtReplace)
+                                                .addComponent(txtFind)))))
+                                .addGap(58, 58, 58)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -163,7 +196,6 @@ public class pbcsFileEditor extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnBrowse)
@@ -178,12 +210,28 @@ public class pbcsFileEditor extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(txtPrefix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnUpdateField)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRefresh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblSuffix)
+                            .addComponent(txtSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblFind)
+                            .addComponent(txtFind, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblReplace)
+                            .addComponent(txtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(2, 2, 2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRefresh)
+                    .addComponent(btnUpdateField)
+                    .addComponent(btnAddColumn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }//GEN-END:initComponents
@@ -245,14 +293,37 @@ public class pbcsFileEditor extends javax.swing.JPanel {
 
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
+        try{
         TableModel model = jTable1.getModel();
         Object[] rows = new Object[jTable1.getRowCount()];
         for (int i = 0; i < rows.length; i++) {
-            rows[i] = txtPrefix.getText() + model.getValueAt(i, jTable1.getSelectedColumn());
-            model.setValueAt(rows[i], i, jTable1.getSelectedColumn());
+            if (txtFind.getText() != null || txtReplace.getText() != null) {
+                rows[i] = model.getValueAt(i, jTable1.getSelectedColumn());
+                if (rows[i].equals(txtFind.getText())) {
+                    rows[i] = txtPrefix.getText() + txtReplace.getText() + txtSuffix.getText();
+                    model.setValueAt(rows[i], i, jTable1.getSelectedColumn());
+                } else {
+                rows[i] = txtPrefix.getText() + model.getValueAt(i, jTable1.getSelectedColumn()) + txtSuffix.getText();
+                model.setValueAt(rows[i], i, jTable1.getSelectedColumn());
+                }
+            }
         }
         jTable1.setModel(model);
+        } catch (Throwable x) {
+            JOptionPane.showMessageDialog(this.getParent(), "Error: Please ensure you select a field. Error: " + x.getMessage());
+        }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
+
+    private void btnAddColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddColumnActionPerformed
+        // TODO add your handling code here:
+        TableModel model = jTable1.getModel();
+        TableColumn simpleColumn = new TableColumn();
+        String columnData = new String(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
+        simpleColumn.setHeaderValue(columnData);
+        //simpleColumn.equals(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
+        jTable1.addColumn(simpleColumn);
+        final JOptionPane optionPane = new JOptionPane();
+    }//GEN-LAST:event_btnAddColumnActionPerformed
 
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter) {
             DefaultTableModel model = null;
@@ -288,6 +359,7 @@ public class pbcsFileEditor extends javax.swing.JPanel {
         return null;
     }
     
+    
     public Object[] getTableColumnHeaders(int size) {
             Object[] header = new Object[size];
             for (int i = 0; i < header.length; i++) {
@@ -297,6 +369,7 @@ public class pbcsFileEditor extends javax.swing.JPanel {
         }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddColumn;
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnTest;
@@ -308,8 +381,14 @@ public class pbcsFileEditor extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblColumn;
+    private javax.swing.JLabel lblFind;
+    private javax.swing.JLabel lblReplace;
+    private javax.swing.JLabel lblSuffix;
     private javax.swing.JTextField txtDelimiter;
+    private javax.swing.JTextField txtFind;
     private javax.swing.JTextField txtPrefix;
+    private javax.swing.JTextField txtReplace;
+    private javax.swing.JTextField txtSuffix;
     // End of variables declaration//GEN-END:variables
 
 }
