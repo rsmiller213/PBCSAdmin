@@ -96,6 +96,12 @@ public class pbcsFileEditor extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setCellSelectionEnabled(true);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -192,6 +198,15 @@ public class pbcsFileEditor extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
         }
     }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        jTable1.setCellSelectionEnabled(true);
+        jTable1.setRowSelectionAllowed(true);
+        jTable1.setColumnSelectionAllowed(true);
+        jTable1.getSelectedColumn();
+        jTable1.setRowSelectionInterval(0, jTable1.getRowCount()-1);
+    }//GEN-LAST:event_jTable1MouseClicked
 
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter) {
             DefaultTableModel model = null;
