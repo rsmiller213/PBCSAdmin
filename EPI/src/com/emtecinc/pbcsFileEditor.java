@@ -61,6 +61,7 @@ public class pbcsFileEditor extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         lblColumn = new javax.swing.JLabel();
         btnUpdateField = new javax.swing.JButton();
+        btnTest = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -119,6 +120,8 @@ public class pbcsFileEditor extends javax.swing.JPanel {
             }
         });
 
+        btnTest.setText("jButton1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -136,7 +139,6 @@ public class pbcsFileEditor extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnBrowse)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel1)
@@ -146,8 +148,12 @@ public class pbcsFileEditor extends javax.swing.JPanel {
                                             .addComponent(txtDelimiter, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
                                             .addComponent(txtPrefix)))
                                     .addComponent(lblColumn)
-                                    .addComponent(btnUpdateField))
-                                .addGap(68, 68, 68)
+                                    .addComponent(btnUpdateField)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnBrowse)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnTest)))
+                                .addGap(60, 60, 60)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -159,7 +165,9 @@ public class pbcsFileEditor extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBrowse)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnBrowse)
+                            .addComponent(btnTest))
                         .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtDelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -291,6 +299,7 @@ public class pbcsFileEditor extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnTest;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
