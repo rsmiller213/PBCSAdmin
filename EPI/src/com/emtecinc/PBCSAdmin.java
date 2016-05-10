@@ -7,8 +7,10 @@ package com.emtecinc;
 
 import javax.swing.JOptionPane;
 import com.opencsv.CSVReader;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -473,9 +475,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
             
             DefaultTableModel model;
             if (txtHeaderRows.getText().length() < 1) {
-                model = getModelFromCsvFile(this.flSourceFile, strDelim, false);
+                //model = getModelFromCsvFile(this.flSourceFile, strDelim, false);
+                model = getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             } else {
-                model = getModelFromCsvFile(this.flSourceFile, strDelim, true);
+                model = getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             }
             jTable1.setModel(model);
             
@@ -542,15 +545,36 @@ public class PBCSAdmin extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
         int returnVal = fc.showOpenDialog(this.getParent());
+        BufferedReader reader = null;
 
         try {
             if (returnVal == JFileChooser.APPROVE_OPTION){
+                jTextArea1.setText("");
                 File txtSourceFile = fc.getSelectedFile();
                 flSourceFile = fc.getSelectedFile();
                 System.out.println("Opening: " + txtSourceFile.getName() + ".");
                 //System.out.println("Good");
-                List<String> srcTextFile = Files.readAllLines(txtSourceFile.getAbsoluteFile().toPath(), StandardCharsets.UTF_8);
-                for (String t: srcTextFile) {
+                ArrayList<String> arrLines = new ArrayList<String>();
+                reader = new java.io.BufferedReader(new java.io.FileReader(txtSourceFile.getAbsoluteFile()));
+                String line;
+                int N = Integer.parseInt(txtDisplayRows.getText());
+                int counter = 0;
+                int startLine = Integer.parseInt(txtStartRow.getText());
+                int lineNumber = 0;
+                try {
+                    while ((line = reader.readLine()) != null && counter < N) { 
+                        lineNumber++;
+                        if (lineNumber >= startLine) {
+                            arrLines.add(line);
+                            counter++;
+                        }
+                    }
+                } catch (IOException ex) {
+                    System.err.println(ex.toString());
+                }
+
+                //List<String> srcTextFile = Files.readAllLines(txtSourceFile.getAbsoluteFile().toPath(), StandardCharsets.UTF_8);
+                for (String t: arrLines) {
                     jTextArea1.append(t + "\n");
                 }
             } else {
@@ -613,6 +637,87 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
             return model;
         }
+    
+    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead) {
+            DefaultTableModel model = null;
+            boolean isFirstRow = true;
+            try {
+            CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
+            UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
+            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
+                        UTF8_CHARSET), delimiter.charAt(0));
+                //List<String[]> dataList = reader.readAll();
+                String[] nextLine;
+                int N = linesToRead;
+                int counter = 0;
+                while ((nextLine = reader.readNext()) != null && counter < N)  {
+                    if (isFirstRow) {
+                        if (bHeaderRow) {
+                            model = new DefaultTableModel(nextLine, 0);
+                            isFirstRow = false;
+                            counter++;
+                        } else {
+                            model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
+                            model.addRow(nextLine);
+                            isFirstRow = false;
+                            counter++;
+                        }
+                    }
+                    else {
+                        if (model != null) {
+                            model.addRow(nextLine);
+                            counter++;
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return model;
+        }
+    
+    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead, int startLine) {
+            DefaultTableModel model = null;
+            boolean isFirstRow = true;
+            try {
+            CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
+            UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
+            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
+                        UTF8_CHARSET), delimiter.charAt(0));
+                //List<String[]> dataList = reader.readAll();
+                String[] nextLine;
+                int N = linesToRead;
+                int counter = 0;
+                int lineNumber = 0;
+                while ((nextLine = reader.readNext()) != null && counter < N)  {
+                    lineNumber++;
+                    if (lineNumber >= startLine) {
+                            if (isFirstRow) {
+                                if (bHeaderRow) {
+                                    model = new DefaultTableModel(nextLine, 0);
+                                    isFirstRow = false;
+                                    counter++;
+                                } else {
+                                    model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
+                                    model.addRow(nextLine);
+                                    isFirstRow = false;
+                                    counter++;
+                                }
+                            }
+                            else {
+                                if (model != null) {
+                                    model.addRow(nextLine);
+                                    counter++;
+                                }
+                            }
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return model;
+        }
+    
     public Object[] getTableColumnHeaderName(String[] cols){
         return null;
     }
