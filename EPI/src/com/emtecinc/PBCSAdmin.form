@@ -230,9 +230,6 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblDelim">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Delimiter"/>
                   </Properties>
                   <AccessibilityProperties>
@@ -305,9 +302,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblDisplayRows">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Rows to Display"/>
                   </Properties>
                 </Component>
@@ -318,9 +312,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblStartRow">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Start Row"/>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                   </Properties>
@@ -332,9 +323,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblDisplayRows2">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Header Rows"/>
                   </Properties>
                 </Component>
@@ -423,7 +411,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="lblSuffix" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                                  <Component id="txtSuffix" max="32767" attributes="0"/>
+                                  <Component id="txtSuffix" pref="60" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -486,18 +474,12 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblColumn">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Select Column to Edit"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="0" green="0" red="0" type="rgb"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Prefix"/>
@@ -515,9 +497,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblSuffix">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Suffix"/>
                   </Properties>
                 </Component>
@@ -533,9 +512,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblFind">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Find"/>
                   </Properties>
                 </Component>
@@ -554,9 +530,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblReplace">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Replace"/>
                   </Properties>
                 </Component>

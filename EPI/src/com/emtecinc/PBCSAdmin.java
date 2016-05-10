@@ -22,6 +22,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -506,13 +507,26 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnAddColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddColumnActionPerformed
         // TODO add your handling code here:
-        TableModel model = jTable1.getModel();
         TableColumn simpleColumn = new TableColumn();
-        String columnData = new String(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
-        simpleColumn.setHeaderValue(columnData);
-        //simpleColumn.equals(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
-        jTable1.addColumn(simpleColumn);
-        final JOptionPane optionPane = new JOptionPane();
+        JTextField columnName = new JTextField();
+        JTextField columnData = new JTextField();
+        Object[] newField = {
+            "Column Name: ", columnName,
+            "Column Data: ", columnData
+        };
+        //String columnData = new String(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
+        int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
+            tblModel.addColumn(columnName.getText());
+            int columns = tblModel.getColumnCount() - 1 ;
+            Object[] rows = new Object[jTable1.getRowCount()];
+           for (int i = 0; i < rows.length; i++) {
+                rows[i] = columnData.getText();
+                tblModel.setValueAt(rows[i], i, columns);
+            }
+           tblModel.fireTableDataChanged();
+        } 
     }//GEN-LAST:event_btnAddColumnActionPerformed
 
     private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
