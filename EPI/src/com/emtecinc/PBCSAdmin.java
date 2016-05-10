@@ -456,7 +456,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 strDelim = txtCustDelim.getText();
             }
             
-            DefaultTableModel model = getModelFromCsvFile(this.flSourceFile, strDelim);
+            DefaultTableModel model;
+            if (txtHeaderRows.getText().length() < 1) {
+                model = getModelFromCsvFile(this.flSourceFile, strDelim, false);
+            } else {
+                model = getModelFromCsvFile(this.flSourceFile, strDelim, true);
+            }
             jTable1.setModel(model);
             
         } catch (Throwable x) {
@@ -546,7 +551,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtHeaderRowsActionPerformed
 
-    public DefaultTableModel getModelFromCsvFile(File file, String delimiter) {
+    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow) {
             DefaultTableModel model = null;
             boolean isFirstRow = true;
             try {
@@ -557,13 +562,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 List<String[]> dataList = reader.readAll();
                 for (String[] row: dataList) {
                     if (isFirstRow) {
-                        //model = new DefaultTableModel(getTableColumnHeaders(row.length), 0);
-                        model = new DefaultTableModel(row, 0);
-                        /*                         for (String columnName: row){
-                            System.out.println(columnName);
-                        } */
-                        //model.addRow(row);
-                        isFirstRow = false;
+                        if (bHeaderRow) {
+                            model = new DefaultTableModel(row, 0);
+                            isFirstRow = false;
+                        } else {
+                            model = new DefaultTableModel(getTableColumnHeaders(row.length), 0);
+                            model.addRow(row);
+                            isFirstRow = false;
+                        }
                     }
                     else {
                         if (model != null) {
