@@ -237,7 +237,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         ));
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable1.setColumnSelectionAllowed(true);
+        jTable1.setDragEnabled(true);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
