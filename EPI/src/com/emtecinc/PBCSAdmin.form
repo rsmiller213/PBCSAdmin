@@ -87,6 +87,8 @@
                                       <Component id="btnRefresh" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btnAddColumn" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnRenameColumn" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="jScrollPane2" alignment="0" min="-2" pref="1250" max="-2" attributes="0"/>
                               </Group>
@@ -108,6 +110,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="btnRefresh" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnAddColumn" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnRenameColumn" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
@@ -555,6 +558,16 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddColumnActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnRenameColumn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Rename Column"/>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRenameColumnActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

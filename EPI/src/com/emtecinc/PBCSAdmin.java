@@ -88,6 +88,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtReplace = new javax.swing.JTextField();
         btnUpdateField = new javax.swing.JButton();
         btnAddColumn = new javax.swing.JButton();
+        btnRenameColumn = new javax.swing.JButton();
         tabFSMgr = new javax.swing.JPanel();
 
         rbComma.doClick();
@@ -300,7 +301,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addGroup(pnlColPropsLayout.createSequentialGroup()
                         .addComponent(lblSuffix)
                         .addGap(25, 25, 25)
-                        .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
                     .addGroup(pnlColPropsLayout.createSequentialGroup()
                         .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblFind)
@@ -351,6 +352,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnRenameColumn.setText("Rename Column");
+        btnRenameColumn.setEnabled(false);
+        btnRenameColumn.setName(""); // NOI18N
+        btnRenameColumn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRenameColumnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout tabDLMgrLayout = new javax.swing.GroupLayout(tabDLMgr);
         tabDLMgr.setLayout(tabDLMgrLayout);
         tabDLMgrLayout.setHorizontalGroup(
@@ -368,7 +378,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
                             .addGroup(tabDLMgrLayout.createSequentialGroup()
                                 .addComponent(btnRefresh)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnAddColumn))
+                                .addComponent(btnAddColumn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnRenameColumn))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -383,7 +395,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(tabDLMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnRefresh)
-                            .addComponent(btnAddColumn))
+                            .addComponent(btnAddColumn)
+                            .addComponent(btnRenameColumn))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
@@ -436,6 +449,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.getSelectedColumn();
         jTable1.setRowSelectionInterval(0, jTable1.getRowCount()-1);
         lblColumn.setText(jTable1.getColumnName(jTable1.getSelectedColumn()) + " Properties");
+        btnRenameColumn.setEnabled(true);
     }//GEN-LAST:event_jTable1MouseClicked
 
     
@@ -551,6 +565,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtHeaderRowsActionPerformed
 
+    private void btnRenameColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRenameColumnActionPerformed
+        // TODO add your handling code here:
+        TableColumn simpleColumn = new TableColumn();
+        JTextField columnName = new JTextField();
+        Object[] newField = {
+            "Column Name: ", columnName,
+        };
+        int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
+            int columnNumber = jTable1.getSelectedColumn();
+            jTable1.getColumnModel().getColumn(columnNumber).setHeaderValue(columnName.getText());
+           jTable1.getTableHeader().repaint();
+        } 
+    }//GEN-LAST:event_btnRenameColumnActionPerformed
+
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow) {
             DefaultTableModel model = null;
             boolean isFirstRow = true;
@@ -638,6 +668,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnLoadSQL;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnRenameColumn;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
