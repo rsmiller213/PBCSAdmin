@@ -63,7 +63,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         rbTab = new javax.swing.JRadioButton();
         rbCustom = new javax.swing.JRadioButton();
         txtCustDelim = new javax.swing.JTextField();
-        lblDSMgmt = new javax.swing.JLabel();
         btnLoadSQL = new javax.swing.JButton();
         lblDisplayRows = new javax.swing.JLabel();
         txtDisplayRows = new javax.swing.JTextField();
@@ -100,8 +99,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         tabDLMgr.setPreferredSize(new java.awt.Dimension(1450, 512));
 
         pnlDSMgmt.setBackground(new java.awt.Color(153, 204, 255));
+        pnlDSMgmt.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Data Source Properties", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
 
-        lblDelim.setForeground(new java.awt.Color(0, 0, 0));
         lblDelim.setText("Delimiter");
 
         btgDelimiter.add(rbComma);
@@ -120,26 +119,18 @@ public class PBCSAdmin extends javax.swing.JFrame {
         rbCustom.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         rbCustom.setText("Custom");
 
-        lblDSMgmt.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
-        lblDSMgmt.setForeground(new java.awt.Color(51, 102, 255));
-        lblDSMgmt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDSMgmt.setText("Data Source Management");
-
         btnLoadSQL.setText("Load SQL");
         btnLoadSQL.setEnabled(false);
 
-        lblDisplayRows.setForeground(new java.awt.Color(0, 0, 0));
         lblDisplayRows.setText("Rows to Display");
 
         txtDisplayRows.setText("500");
 
-        lblStartRow.setForeground(new java.awt.Color(0, 0, 0));
         lblStartRow.setText("Start Row");
         lblStartRow.setToolTipText("");
 
         txtStartRow.setText("1");
 
-        lblDisplayRows2.setForeground(new java.awt.Color(0, 0, 0));
         lblDisplayRows2.setText("Header Rows");
 
         txtHeaderRows.addActionListener(new java.awt.event.ActionListener() {
@@ -179,9 +170,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtCustDelim, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlDSMgmtLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(lblDSMgmt))
-                    .addGroup(pnlDSMgmtLayout.createSequentialGroup()
                         .addComponent(lblDisplayRows)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtDisplayRows, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -201,8 +189,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
             pnlDSMgmtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDSMgmtLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblDSMgmt)
-                .addGap(11, 11, 11)
                 .addGroup(pnlDSMgmtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLoadSQL)
                     .addComponent(btnBrowse))
@@ -266,25 +252,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
         });
 
         pnlColProps.setBackground(new java.awt.Color(204, 204, 204));
+        pnlColProps.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlColProps.setForeground(new java.awt.Color(204, 204, 204));
 
-        lblColumn.setForeground(new java.awt.Color(0, 0, 0));
         lblColumn.setText("Select Column to Edit");
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Prefix");
 
         txtPrefix.setMaximumSize(new java.awt.Dimension(60, 24));
         txtPrefix.setMinimumSize(new java.awt.Dimension(60, 24));
 
-        lblSuffix.setForeground(new java.awt.Color(0, 0, 0));
         lblSuffix.setText("Suffix");
 
         txtSuffix.setMaximumSize(new java.awt.Dimension(60, 24));
         txtSuffix.setMinimumSize(new java.awt.Dimension(60, 24));
 
-        lblFind.setForeground(new java.awt.Color(0, 0, 0));
         lblFind.setText("Find");
 
         txtFind.setMaximumSize(new java.awt.Dimension(60, 24));
@@ -295,7 +278,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
-        lblReplace.setForeground(new java.awt.Color(0, 0, 0));
         lblReplace.setText("Replace");
 
         txtReplace.setMaximumSize(new java.awt.Dimension(60, 24));
@@ -358,7 +340,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblReplace)
                     .addComponent(txtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                 .addComponent(btnUpdateField))
         );
 
@@ -446,10 +428,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtHeaderRowsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHeaderRowsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtHeaderRowsActionPerformed
-
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         jTable1.setCellSelectionEnabled(true);
@@ -465,13 +443,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
         try{
-            if (txtCustDelim.getText() == null){
-                JOptionPane.showMessageDialog(this.getParent(), "Error: Please enter a delimiter character into the field");
-            } else {
-                DefaultTableModel model = getModelFromCsvFile(this.flSourceFile, this.txtCustDelim.getText());
-                jTable1.setModel(model);
-
+            
+            String strDelim = "";
+            
+            if (rbComma.isSelected()){
+                strDelim = ",";
+            } else if (rbTab.isSelected()){
+                strDelim = "\t";
+            } else if (rbSpace.isSelected()){
+                strDelim = " ";
+            } else if (rbCustom.isSelected()){
+                strDelim = txtCustDelim.getText();
             }
+            
+            DefaultTableModel model = getModelFromCsvFile(this.flSourceFile, strDelim);
+            jTable1.setModel(model);
+            
         } catch (Throwable x) {
             
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
@@ -554,6 +541,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btnBrowseActionPerformed
+
+    private void txtHeaderRowsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHeaderRowsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHeaderRowsActionPerformed
 
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter) {
             DefaultTableModel model = null;
@@ -648,7 +639,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblColumn;
-    private javax.swing.JLabel lblDSMgmt;
     private javax.swing.JLabel lblDelim;
     private javax.swing.JLabel lblDisplayRows;
     private javax.swing.JLabel lblDisplayRows2;
