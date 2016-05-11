@@ -5,22 +5,15 @@
  */
 package com.emtecinc;
 
-import com.opencsv.CSVReader;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -35,6 +28,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
     static int[] arrDataColumn;
+    static String[] arrPrefix;
+    static String[] arrSuffix;
+    static String[] arrFind;
+    static String[] arrReplace;
+    
     /**
      * Creates new form PBCSAdmin
      */
@@ -88,6 +86,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblColName = new javax.swing.JLabel();
         txtColName = new javax.swing.JTextField();
         cbData = new javax.swing.JCheckBox();
+        btnPrevField = new javax.swing.JButton();
+        btnNextField = new javax.swing.JButton();
         btnAddColumn = new javax.swing.JButton();
         btnColumnActions = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
@@ -253,6 +253,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 jTable1PropertyChange(evt);
             }
         });
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTable1KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTable1KeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         btnRefresh.setText("Refresh Table");
@@ -274,6 +282,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblPrefix.setMinimumSize(new java.awt.Dimension(35, 16));
         lblPrefix.setPreferredSize(new java.awt.Dimension(35, 16));
 
+        txtPrefix.setEnabled(false);
         txtPrefix.setMaximumSize(new java.awt.Dimension(60, 24));
         txtPrefix.setMinimumSize(new java.awt.Dimension(60, 24));
 
@@ -282,6 +291,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblSuffix.setMinimumSize(new java.awt.Dimension(35, 16));
         lblSuffix.setPreferredSize(new java.awt.Dimension(35, 16));
 
+        txtSuffix.setEnabled(false);
         txtSuffix.setMaximumSize(new java.awt.Dimension(60, 24));
         txtSuffix.setMinimumSize(new java.awt.Dimension(60, 24));
 
@@ -290,6 +300,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblFind.setMinimumSize(new java.awt.Dimension(35, 16));
         lblFind.setPreferredSize(new java.awt.Dimension(35, 16));
 
+        txtFind.setEnabled(false);
         txtFind.setMaximumSize(new java.awt.Dimension(60, 24));
         txtFind.setMinimumSize(new java.awt.Dimension(60, 24));
         txtFind.addActionListener(new java.awt.event.ActionListener() {
@@ -303,10 +314,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblReplace.setMinimumSize(new java.awt.Dimension(35, 16));
         lblReplace.setPreferredSize(new java.awt.Dimension(35, 16));
 
+        txtReplace.setEnabled(false);
         txtReplace.setMaximumSize(new java.awt.Dimension(60, 24));
         txtReplace.setMinimumSize(new java.awt.Dimension(60, 24));
 
         btnUpdateField.setText("Update Field");
+        btnUpdateField.setEnabled(false);
         btnUpdateField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateFieldActionPerformed(evt);
@@ -319,6 +332,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblColName.setMinimumSize(new java.awt.Dimension(35, 16));
         lblColName.setPreferredSize(new java.awt.Dimension(35, 16));
 
+        txtColName.setEnabled(false);
         txtColName.setMaximumSize(new java.awt.Dimension(60, 24));
         txtColName.setMinimumSize(new java.awt.Dimension(60, 24));
         txtColName.addActionListener(new java.awt.event.ActionListener() {
@@ -335,6 +349,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnPrevField.setText("Prev Field");
+        btnPrevField.setEnabled(false);
+        btnPrevField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevFieldActionPerformed(evt);
+            }
+        });
+
+        btnNextField.setText("Next Field");
+        btnNextField.setEnabled(false);
+        btnNextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlColPropsLayout = new javax.swing.GroupLayout(pnlColProps);
         pnlColProps.setLayout(pnlColPropsLayout);
         pnlColPropsLayout.setHorizontalGroup(
@@ -342,10 +372,13 @@ public class PBCSAdmin extends javax.swing.JFrame {
             .addGroup(pnlColPropsLayout.createSequentialGroup()
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblColumn)
-                    .addComponent(btnUpdateField)
                     .addGroup(pnlColPropsLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                .addComponent(btnPrevField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnNextField))
                             .addComponent(cbData)
                             .addGroup(pnlColPropsLayout.createSequentialGroup()
                                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -360,7 +393,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                     .addComponent(txtPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(txtReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(pnlColPropsLayout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(btnUpdateField)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlColPropsLayout.setVerticalGroup(
@@ -387,10 +423,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbData)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
-                .addComponent(btnUpdateField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUpdateField)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNextField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPrevField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28))
         );
 
         btnAddColumn.setText("Add Simple Column");
@@ -456,11 +497,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
                             .addComponent(btnColumnActions)
                             .addComponent(btnExport))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
                         .addComponent(pnlDSMgmt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlColProps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(pnlColProps, javax.swing.GroupLayout.PREFERRED_SIZE, 298, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -474,7 +515,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         );
         tabFSMgrLayout.setVerticalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGap(0, 557, Short.MAX_VALUE)
         );
 
         MainTabbedPane.addTab("File System Manager", tabFSMgr);
@@ -492,15 +533,17 @@ public class PBCSAdmin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(MainTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addComponent(MainTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
+        updateColProps();
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    public void updateColProps(){
         jTable1.setCellSelectionEnabled(false);
         jTable1.setRowSelectionAllowed(false);
         jTable1.setColumnSelectionAllowed(true);
@@ -510,14 +553,41 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtColName.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
        // txtColName.setText(jTable1.getColumnName(jTable1.getSelectedColumn()));
         btnColumnActions.setEnabled(true);
+        // Set Column Property Objects to Enabled
+        btnUpdateField.setEnabled(true);
         cbData.setEnabled(true);
+        txtColName.setEnabled(true);
+        txtPrefix.setEnabled(true);
+        txtSuffix.setEnabled(true);
+        txtFind.setEnabled(true);
+        txtReplace.setEnabled(true);        
+        
+        if (jTable1.getSelectedColumn() == 0){
+            btnPrevField.setEnabled(false);
+        } else {
+            btnPrevField.setEnabled(true);
+        }
+        
+        if (jTable1.getSelectedColumn() == jTable1.getColumnCount() - 1){
+            btnNextField.setEnabled(false);
+        } else {
+            btnNextField.setEnabled(true);
+        }
+        
+        // Set Data Checkbox based on array
         if (arrDataColumn[jTable1.getSelectedColumn()] == 1) {
             cbData.setSelected(true);
         } else {
             cbData.setSelected(false);
         }
-    }//GEN-LAST:event_jTable1MouseClicked
-
+        //Set Text Boxes based on Array
+        txtPrefix.setText(arrPrefix[jTable1.getSelectedColumn()]);
+        txtSuffix.setText(arrSuffix[jTable1.getSelectedColumn()]);
+        txtFind.setText(arrFind[jTable1.getSelectedColumn()]);
+        txtReplace.setText(arrReplace[jTable1.getSelectedColumn()]);
+        
+        
+    }
     
     
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
@@ -559,6 +629,18 @@ public class PBCSAdmin extends javax.swing.JFrame {
         TableModel model = dlManager.findReplaceField(jTable1, txtFind.getText(), txtReplace.getText(), txtPrefix.getText(), txtSuffix.getText());
         if (txtColName.getText() != null) {
             dlManager.renameTableColumn(jTable1, txtColName.getText());
+        }
+        if (txtPrefix.getText() != null) {
+            arrPrefix[jTable1.getSelectedColumn()] = txtPrefix.getText();
+        }
+        if (txtSuffix.getText() != null) {
+            arrSuffix[jTable1.getSelectedColumn()] = txtSuffix.getText();
+        }
+        if (txtFind.getText() != null) {
+            arrFind[jTable1.getSelectedColumn()] = txtFind.getText();
+        }
+        if (txtReplace.getText() != null) {
+            arrReplace[jTable1.getSelectedColumn()] = txtReplace.getText();
         }
         if (cbData.isSelected()) {
             arrDataColumn[jTable1.getSelectedColumn()] = 1;
@@ -655,8 +737,34 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (evt.getPropertyName() == "model") {
             btnExport.setEnabled(true);
             arrDataColumn = new int[jTable1.getColumnCount()];
+            arrPrefix = new String[jTable1.getColumnCount()];
+            arrSuffix = new String[jTable1.getColumnCount()];
+            arrFind = new String[jTable1.getColumnCount()];
+            arrReplace = new String[jTable1.getColumnCount()];
         }
     }//GEN-LAST:event_jTable1PropertyChange
+
+    private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jTable1KeyPressed
+
+    private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
+        updateColProps();
+    }//GEN-LAST:event_jTable1KeyReleased
+
+    private void btnPrevFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevFieldActionPerformed
+        // TODO add your handling code here:
+        jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() - 1, jTable1.getSelectedColumn() - 1);
+        updateColProps();
+    }//GEN-LAST:event_btnPrevFieldActionPerformed
+
+    private void btnNextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextFieldActionPerformed
+        // TODO add your handling code here:
+        
+        jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() + 1, jTable1.getSelectedColumn() + 1);
+        updateColProps();
+    }//GEN-LAST:event_btnNextFieldActionPerformed
 
     
     
@@ -703,6 +811,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnColumnActions;
     private javax.swing.JButton btnExport;
     private javax.swing.JButton btnLoadSQL;
+    private javax.swing.JButton btnNextField;
+    private javax.swing.JButton btnPrevField;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JCheckBox cbData;
