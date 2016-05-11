@@ -475,7 +475,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblColumn.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + " Properties");
         txtColName.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
        // txtColName.setText(jTable1.getColumnName(jTable1.getSelectedColumn()));
-        btnRenameColumn.setEnabled(true);
         btnColumnActions.setEnabled(true);
     }//GEN-LAST:event_jTable1MouseClicked
 
