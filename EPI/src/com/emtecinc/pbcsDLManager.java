@@ -5,6 +5,7 @@
  */
 package com.emtecinc;
 
+import static com.emtecinc.PBCSAdmin.arrDataColumn;
 import com.opencsv.CSVReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -306,8 +307,10 @@ public class pbcsDLManager {
         BufferedWriter bw = new BufferedWriter(fw);
         for(int i = 0 ; i < jTable.getColumnCount() ; i++) {
             //bw.write(jTable.getColumnName(i));
-            bw.write(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
-            bw.write("\t");
+            if (arrDataColumn[i] == 1){
+                bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString()+ "\"");
+                bw.write("\t");
+            }
         }
 
         for (int i = 0 ; i < jTable.getRowCount(); i++) {
@@ -323,5 +326,5 @@ public class pbcsDLManager {
             }
         }
         bw.close();
-    }
+    }    
 }
