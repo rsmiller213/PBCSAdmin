@@ -31,6 +31,7 @@ import javax.swing.table.TableModel;
  */
 public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
+    pbcsDLManager dlManager = new pbcsDLManager();
 
     /**
      * Creates new form PBCSAdmin
@@ -199,10 +200,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addComponent(rbComma, javax.swing.GroupLayout.PREFERRED_SIZE, 18, Short.MAX_VALUE)
                     .addComponent(rbTab, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlDSMgmtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCustDelim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlDSMgmtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rbSpace, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbCustom, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rbCustom, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCustDelim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDSMgmtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDisplayRows)
@@ -499,12 +500,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
             DefaultTableModel model;
             if (txtHeaderRows.getText().length() < 1) {
                 //model = getModelFromCsvFile(this.flSourceFile, strDelim, false);
-                model = getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             } else {
-                model = getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             }
             jTable1.setModel(model);
-            
         } catch (Throwable x) {
             
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
@@ -517,30 +517,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
-        try{
-            if (txtColName.getText() != null){
-                jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).setHeaderValue(txtColName.getText());
-                jTable1.getTableHeader().repaint();
-            }
-            
-            TableModel model = jTable1.getModel();
-            Object[] rows = new Object[jTable1.getRowCount()];
-            for (int i = 0; i < rows.length; i++) {
-                if (txtFind.getText() != null || txtReplace.getText() != null) {
-                    rows[i] = model.getValueAt(i, jTable1.getSelectedColumn());
-                    if (rows[i].equals(txtFind.getText())) {
-                        rows[i] = txtPrefix.getText() + txtReplace.getText() + txtSuffix.getText();
-                        model.setValueAt(rows[i], i, jTable1.getSelectedColumn());
-                    } else {
-                        rows[i] = txtPrefix.getText() + model.getValueAt(i, jTable1.getSelectedColumn()) + txtSuffix.getText();
-                        model.setValueAt(rows[i], i, jTable1.getSelectedColumn());
-                        
-                    }
-                }
-            }
-            jTable1.setModel(model);
-        } catch (Throwable x) {
-            JOptionPane.showMessageDialog(this.getParent(), "Error: Please ensure you select a field. Error: " + x.getMessage());
+        TableModel model = dlManager.findReplaceField(jTable1, txtFind.getText(), txtReplace.getText(), txtPrefix.getText(), txtSuffix.getText());
+        if (txtColName.getText() != null) {
+            dlManager.renameTableColumn(jTable1, txtColName.getText());
         }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
 
@@ -556,62 +535,25 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //String columnData = new String(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
         int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
-            tblModel.addColumn(columnName.getText());
-            int columns = tblModel.getColumnCount() - 1 ;
-            Object[] rows = new Object[jTable1.getRowCount()];
-           for (int i = 0; i < rows.length; i++) {
-                rows[i] = columnData.getText();
-                tblModel.setValueAt(rows[i], i, columns);
-            }
-           tblModel.fireTableDataChanged();
+            dlManager.addTableColumn(jTable1, columnName.getText(), columnData.getText());
         } 
     }//GEN-LAST:event_btnAddColumnActionPerformed
 
     private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
         // TODO add your handling code here:
+        jTextArea1.setText("");
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
-        int returnVal = fc.showOpenDialog(this.getParent());
-        BufferedReader reader = null;
-
-        try {
-            if (returnVal == JFileChooser.APPROVE_OPTION){
-                jTextArea1.setText("");
-                File txtSourceFile = fc.getSelectedFile();
-                flSourceFile = fc.getSelectedFile();
-                System.out.println("Opening: " + txtSourceFile.getName() + ".");
-                //System.out.println("Good");
-                ArrayList<String> arrLines = new ArrayList<String>();
-                reader = new java.io.BufferedReader(new java.io.FileReader(txtSourceFile.getAbsoluteFile()));
-                String line;
-                int N = Integer.parseInt(txtDisplayRows.getText());
-                int counter = 0;
-                int startLine = Integer.parseInt(txtStartRow.getText());
-                int lineNumber = 0;
-                try {
-                    while ((line = reader.readLine()) != null && counter < N) { 
-                        lineNumber++;
-                        if (lineNumber >= startLine) {
-                            arrLines.add(line);
-                            counter++;
-                        }
-                    }
-                } catch (IOException ex) {
-                    System.err.println(ex.toString());
-                }
-
-                //List<String> srcTextFile = Files.readAllLines(txtSourceFile.getAbsoluteFile().toPath(), StandardCharsets.UTF_8);
-                for (String t: arrLines) {
-                    jTextArea1.append(t + "\n");
-                }
-            } else {
-                //System.out.println("Bad");
-                System.out.println("Open command cancelled by user.");
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        int returnVal = fc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION){
+            flSourceFile = fc.getSelectedFile();
+            ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
+            for (String t: arrLines) {
+                jTextArea1.append(t + "\n");
+            } 
+        } else {
+            JOptionPane.showMessageDialog(null, "Open command cancelled by user.");
         }
     }//GEN-LAST:event_btnBrowseActionPerformed
 
@@ -645,130 +587,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtColNameActionPerformed
 
-    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow) {
-            DefaultTableModel model = null;
-            boolean isFirstRow = true;
-            try {
-            CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
-            UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
-            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
-                        UTF8_CHARSET), delimiter.charAt(0));
-                List<String[]> dataList = reader.readAll();
-                for (String[] row: dataList) {
-                    if (isFirstRow) {
-                        if (bHeaderRow) {
-                            model = new DefaultTableModel(row, 0);
-                            isFirstRow = false;
-                        } else {
-                            model = new DefaultTableModel(getTableColumnHeaders(row.length), 0);
-                            model.addRow(row);
-                            isFirstRow = false;
-                        }
-                    }
-                    else {
-                        if (model != null) {
-                            model.addRow(row);
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return model;
-        }
-    
-    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead) {
-            DefaultTableModel model = null;
-            boolean isFirstRow = true;
-            try {
-            CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
-            UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
-            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
-                        UTF8_CHARSET), delimiter.charAt(0));
-                //List<String[]> dataList = reader.readAll();
-                String[] nextLine;
-                int N = linesToRead;
-                int counter = 0;
-                while ((nextLine = reader.readNext()) != null && counter < N)  {
-                    if (isFirstRow) {
-                        if (bHeaderRow) {
-                            model = new DefaultTableModel(nextLine, 0);
-                            isFirstRow = false;
-                            counter++;
-                        } else {
-                            model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
-                            model.addRow(nextLine);
-                            isFirstRow = false;
-                            counter++;
-                        }
-                    }
-                    else {
-                        if (model != null) {
-                            model.addRow(nextLine);
-                            counter++;
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return model;
-        }
-    
-    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead, int startLine) {
-            DefaultTableModel model = null;
-            boolean isFirstRow = true;
-            try {
-            CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
-            UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
-            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
-                        UTF8_CHARSET), delimiter.charAt(0));
-                //List<String[]> dataList = reader.readAll();
-                String[] nextLine;
-                int N = linesToRead;
-                int counter = 0;
-                int lineNumber = 0;
-                while ((nextLine = reader.readNext()) != null && counter < N)  {
-                    lineNumber++;
-                    if (lineNumber >= startLine) {
-                            if (isFirstRow) {
-                                if (bHeaderRow) {
-                                    model = new DefaultTableModel(nextLine, 0);
-                                    isFirstRow = false;
-                                    counter++;
-                                } else {
-                                    model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
-                                    model.addRow(nextLine);
-                                    isFirstRow = false;
-                                    counter++;
-                                }
-                            }
-                            else {
-                                if (model != null) {
-                                    model.addRow(nextLine);
-                                    counter++;
-                                }
-                            }
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return model;
-        }
-    
-    public Object[] getTableColumnHeaderName(String[] cols){
-        return null;
-    }
-    
-    
-    public Object[] getTableColumnHeaders(int size) {
-            Object[] header = new Object[size];
-            for (int i = 0; i < header.length; i++) {
-                header[i] = i + 1;
-            }
-            return header;
-        }
     
     
     /**
