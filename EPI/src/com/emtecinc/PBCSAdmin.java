@@ -16,6 +16,8 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -87,6 +89,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtColName = new javax.swing.JTextField();
         btnAddColumn = new javax.swing.JButton();
         btnColumnActions = new javax.swing.JButton();
+        btnExport = new javax.swing.JButton();
         tabFSMgr = new javax.swing.JPanel();
 
         rbComma.doClick();
@@ -386,6 +389,13 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnExport.setText("Export to File");
+        btnExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout tabDLMgrLayout = new javax.swing.GroupLayout(tabDLMgr);
         tabDLMgr.setLayout(tabDLMgrLayout);
         tabDLMgrLayout.setHorizontalGroup(
@@ -405,7 +415,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnAddColumn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnColumnActions))
+                                .addComponent(btnColumnActions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnExport))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -421,7 +433,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addGroup(tabDLMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnRefresh)
                             .addComponent(btnAddColumn)
-                            .addComponent(btnColumnActions))
+                            .addComponent(btnColumnActions)
+                            .addComponent(btnExport))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
@@ -486,7 +499,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         try{
             
             String strDelim = "";
-            
             if (rbComma.isSelected()){
                 strDelim = ",";
             } else if (rbTab.isSelected()){
@@ -587,6 +599,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtColNameActionPerformed
 
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+        // TODO add your handling code here:
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        int returnVal = fc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION){
+            try {
+                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile());
+            } catch (IOException ex) {
+                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnExportActionPerformed
+
     
     
     /**
@@ -630,6 +657,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnAddColumn;
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnColumnActions;
+    private javax.swing.JButton btnExport;
     private javax.swing.JButton btnLoadSQL;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnUpdateField;

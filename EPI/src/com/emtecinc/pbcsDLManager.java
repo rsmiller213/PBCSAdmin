@@ -7,8 +7,10 @@ package com.emtecinc;
 
 import com.opencsv.CSVReader;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.CharsetDecoder;
@@ -286,5 +288,37 @@ public class pbcsDLManager {
         int columnNumber = jTable.getSelectedColumn();
         jTable.getColumnModel().getColumn(columnNumber).setHeaderValue(strColumnName);
         jTable.getTableHeader().repaint();
+    }
+    
+    public void exportFileFromTable(JTable jTable, File file) throws IOException{
+        if (!file.exists()){
+            file.createNewFile();
+            writeFileFromTable(jTable, file);
+        } else {
+           int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?", "Select File", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+           if (option == JOptionPane.OK_OPTION) {
+               file.delete();
+               file.createNewFile();
+               writeFileFromTable(jTable, file);
+           }
+        }
+    }
+    
+    private void writeFileFromTable(JTable jTable, File file) throws IOException{
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+        for(int i = 0 ; i < jTable.getColumnCount() ; i++) {
+            bw.write(jTable.getColumnName(i));
+            bw.write("\t");
+        }
+
+        for (int i = 0 ; i < jTable.getRowCount(); i++) {
+            bw.newLine();
+            for(int j = 0 ; j < jTable.getColumnCount();j++) {
+                bw.write((String)(jTable.getValueAt(i,j)));
+                bw.write("\t");;
+            }
+        }
+        bw.close();
     }
 }
