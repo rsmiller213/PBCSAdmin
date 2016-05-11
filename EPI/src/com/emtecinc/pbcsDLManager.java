@@ -308,7 +308,8 @@ public class pbcsDLManager {
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
         for(int i = 0 ; i < jTable.getColumnCount() ; i++) {
-            bw.write(jTable.getColumnName(i));
+            //bw.write(jTable.getColumnName(i));
+            bw.write(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
             bw.write("\t");
         }
 
