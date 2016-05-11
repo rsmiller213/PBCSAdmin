@@ -13,12 +13,12 @@ import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+
 
 /**
  *
@@ -28,10 +28,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
     static int[] arrDataColumn;
-    static String[] arrPrefix;
-    static String[] arrSuffix;
-    static String[] arrFind;
-    static String[] arrReplace;
+    ArrayList<String> arrColNames = new ArrayList<>();
+    ArrayList<String> arrPrefix = new ArrayList<>();
+    ArrayList<String> arrSuffix = new ArrayList<>();
+    ArrayList<String> arrFind = new ArrayList<>();
+    ArrayList<String> arrReplace = new ArrayList<>();
+ //   static List<String> arrSuffix;
+ //   static List<String> arrFind;
+ //   static List<String> arrReplace;
+ //   static List<String> arrColNames;
     
     /**
      * Creates new form PBCSAdmin
@@ -243,9 +248,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTable1.setColumnSelectionAllowed(true);
         jTable1.setDragEnabled(true);
+        jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
+            }
+        });
+        jTable1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentMoved(java.awt.event.ComponentEvent evt) {
+                jTable1ComponentMoved(evt);
             }
         });
         jTable1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -539,8 +550,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        updateColProps();
+        updateColProps();        
     }//GEN-LAST:event_jTable1MouseClicked
 
     public void updateColProps(){
@@ -581,10 +593,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
             cbData.setSelected(false);
         }
         //Set Text Boxes based on Array
-        txtPrefix.setText(arrPrefix[jTable1.getSelectedColumn()]);
-        txtSuffix.setText(arrSuffix[jTable1.getSelectedColumn()]);
-        txtFind.setText(arrFind[jTable1.getSelectedColumn()]);
-        txtReplace.setText(arrReplace[jTable1.getSelectedColumn()]);
+        txtPrefix.setText(arrPrefix.get(jTable1.getSelectedColumn()));
+        txtSuffix.setText(arrSuffix.get(jTable1.getSelectedColumn()));
+        txtFind.setText(arrFind.get(jTable1.getSelectedColumn()));
+        txtReplace.setText(arrReplace.get(jTable1.getSelectedColumn()));
+        
         
         
     }
@@ -628,19 +641,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //arrDataColumn = new int[jTable1.getColumnCount()];
         TableModel model = dlManager.findReplaceField(jTable1, txtFind.getText(), txtReplace.getText(), txtPrefix.getText(), txtSuffix.getText());
         if (txtColName.getText() != null) {
-            dlManager.renameTableColumn(jTable1, txtColName.getText());
+           // arrColNames[jTable1.getSelectedColumn()] = txtColName.getText();
+            arrColNames.set(jTable1.getSelectedColumn(), txtColName.getText());
+            dlManager.renameTableColumn(jTable1, txtColName.getText(), jTable1.getSelectedColumn());
         }
         if (txtPrefix.getText() != null) {
-            arrPrefix[jTable1.getSelectedColumn()] = txtPrefix.getText();
+            arrPrefix.set(jTable1.getSelectedColumn(), txtPrefix.getText());
         }
         if (txtSuffix.getText() != null) {
-            arrSuffix[jTable1.getSelectedColumn()] = txtSuffix.getText();
+            arrSuffix.set(jTable1.getSelectedColumn(), txtSuffix.getText());
         }
         if (txtFind.getText() != null) {
-            arrFind[jTable1.getSelectedColumn()] = txtFind.getText();
+            arrFind.set(jTable1.getSelectedColumn(), txtFind.getText());
         }
         if (txtReplace.getText() != null) {
-            arrReplace[jTable1.getSelectedColumn()] = txtReplace.getText();
+            arrReplace.set(jTable1.getSelectedColumn(), txtReplace.getText());
         }
         if (cbData.isSelected()) {
             arrDataColumn[jTable1.getSelectedColumn()] = 1;
@@ -737,10 +752,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (evt.getPropertyName() == "model") {
             btnExport.setEnabled(true);
             arrDataColumn = new int[jTable1.getColumnCount()];
-            arrPrefix = new String[jTable1.getColumnCount()];
-            arrSuffix = new String[jTable1.getColumnCount()];
-            arrFind = new String[jTable1.getColumnCount()];
-            arrReplace = new String[jTable1.getColumnCount()];
+
+           for (int i = 0 ; i < jTable1.getColumnCount(); i++){
+               arrColNames.add(i,"");
+               arrPrefix.add(i,"");
+               arrSuffix.add(i,"");
+               arrFind.add(i,"");
+               arrReplace.add(i,"");
+           }
         }
     }//GEN-LAST:event_jTable1PropertyChange
 
@@ -765,6 +784,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() + 1, jTable1.getSelectedColumn() + 1);
         updateColProps();
     }//GEN-LAST:event_btnNextFieldActionPerformed
+
+    private void jTable1ComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTable1ComponentMoved
+        // TODO add your handling code here:
+        //JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, arrPrefix);
+        JOptionPane.showMessageDialog(null, jTable1.getSelectedColumn());
+        //System.out.println(arrPrefix);
+        //System.out.println(jTable1.getSelectedColumn());
+    }//GEN-LAST:event_jTable1ComponentMoved
 
     
     
