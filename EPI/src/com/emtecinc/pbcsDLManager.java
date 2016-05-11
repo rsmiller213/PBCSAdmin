@@ -290,21 +290,18 @@ public class pbcsDLManager {
         jTable.getTableHeader().repaint();
     }
     
-    public void exportFileFromTable(JTable jTable, File file) throws IOException{
+    public void exportFileFromTable(JTable jTable, File file, int[] arrDataColumn) throws IOException{
         if (!file.exists()){
             file.createNewFile();
-            writeFileFromTable(jTable, file);
+            //writeFileFromTable(jTable, file);
         } else {
            int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?", "Select File", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
            if (option == JOptionPane.OK_OPTION) {
                file.delete();
                file.createNewFile();
-               writeFileFromTable(jTable, file);
+               //writeFileFromTable(jTable, file);
            }
         }
-    }
-    
-    private void writeFileFromTable(JTable jTable, File file) throws IOException{
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
         for(int i = 0 ; i < jTable.getColumnCount() ; i++) {
@@ -316,8 +313,13 @@ public class pbcsDLManager {
         for (int i = 0 ; i < jTable.getRowCount(); i++) {
             bw.newLine();
             for(int j = 0 ; j < jTable.getColumnCount();j++) {
+                if (arrDataColumn[j] == 0) {
+                    bw.write((String)("\"" + jTable.getValueAt(i,j) + "\""));
+                    bw.write("\t");
+                } else {
                 bw.write((String)(jTable.getValueAt(i,j)));
-                bw.write("\t");;
+                bw.write("\t");
+                }
             }
         }
         bw.close();

@@ -34,7 +34,7 @@ import javax.swing.table.TableModel;
 public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
-
+    static int[] arrDataColumn;
     /**
      * Creates new form PBCSAdmin
      */
@@ -87,6 +87,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnUpdateField = new javax.swing.JButton();
         lblColName = new javax.swing.JLabel();
         txtColName = new javax.swing.JTextField();
+        cbData = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
         btnAddColumn = new javax.swing.JButton();
         btnColumnActions = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
@@ -247,6 +249,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 jTable1MouseClicked(evt);
             }
         });
+        jTable1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTable1PropertyChange(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         btnRefresh.setText("Refresh Table");
@@ -321,6 +328,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        cbData.setText("Data Field");
+        cbData.setEnabled(false);
+        cbData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbDataActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlColPropsLayout = new javax.swing.GroupLayout(pnlColProps);
         pnlColProps.setLayout(pnlColPropsLayout);
         pnlColPropsLayout.setHorizontalGroup(
@@ -331,20 +353,27 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addComponent(btnUpdateField)
                     .addGroup(pnlColPropsLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblFind, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                            .addComponent(lblSuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblColName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtColName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                            .addComponent(txtPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbData)
+                            .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lblFind, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                                    .addComponent(lblSuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblColName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtColName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                                    .addComponent(txtPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlColPropsLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(41, 41, 41))
         );
         pnlColPropsLayout.setVerticalGroup(
             pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,7 +399,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(cbData)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnUpdateField))
         );
 
@@ -390,6 +423,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         });
 
         btnExport.setText("Export to File");
+        btnExport.setEnabled(false);
         btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportActionPerformed(evt);
@@ -490,6 +524,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtColName.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
        // txtColName.setText(jTable1.getColumnName(jTable1.getSelectedColumn()));
         btnColumnActions.setEnabled(true);
+        cbData.setEnabled(true);
+        if (arrDataColumn[jTable1.getSelectedColumn()] == 1) {
+            cbData.setSelected(true);
+        } else {
+            cbData.setSelected(false);
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     
@@ -529,9 +569,13 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
+        //arrDataColumn = new int[jTable1.getColumnCount()];
         TableModel model = dlManager.findReplaceField(jTable1, txtFind.getText(), txtReplace.getText(), txtPrefix.getText(), txtSuffix.getText());
         if (txtColName.getText() != null) {
             dlManager.renameTableColumn(jTable1, txtColName.getText());
+        }
+        if (cbData.isSelected()) {
+            arrDataColumn[jTable1.getSelectedColumn()] = 1;
         }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
 
@@ -607,12 +651,33 @@ public class PBCSAdmin extends javax.swing.JFrame {
         int returnVal = fc.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION){
             try {
-                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile());
+                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn);
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnExportActionPerformed
+
+    private void cbDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDataActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_cbDataActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        for(int i: arrDataColumn) {
+            System.out.println(i);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
+        // TODO add your handling code here:
+        //System.out.println(evt.getPropertyName());
+        if (evt.getPropertyName() == "model") {
+            btnExport.setEnabled(true);
+            arrDataColumn = new int[jTable1.getColumnCount()];
+        }
+    }//GEN-LAST:event_jTable1PropertyChange
 
     
     
@@ -661,6 +726,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnLoadSQL;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnUpdateField;
+    private javax.swing.JCheckBox cbData;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
