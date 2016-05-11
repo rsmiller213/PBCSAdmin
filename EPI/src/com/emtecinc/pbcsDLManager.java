@@ -273,7 +273,7 @@ public class pbcsDLManager {
                     rows[i] = strRowData;
                     tblModel.setValueAt(rows[i], i, columns);
                 }
-               tblModel.fireTableDataChanged(); 
+              // tblModel.fireTableDataChanged(); 
         } catch (Throwable x) {
                 JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
@@ -284,9 +284,10 @@ public class pbcsDLManager {
     *
     * @param JTable JTable object used in UI
     * @param strColumnName string with column name
+    * @param columnNumber int for the column being updated
     */
-    public void renameTableColumn(JTable jTable, String strColumnName){
-        int columnNumber = jTable.getSelectedColumn();
+    public void renameTableColumn(JTable jTable, String strColumnName, int columnNumber){
+        //int columnNumber = jTable.getSelectedColumn();
         jTable.getColumnModel().getColumn(columnNumber).setHeaderValue(strColumnName);
         jTable.getTableHeader().repaint();
     }
