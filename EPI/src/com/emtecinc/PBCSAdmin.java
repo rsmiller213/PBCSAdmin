@@ -8,6 +8,8 @@ package com.emtecinc;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -30,21 +32,16 @@ import javax.swing.table.TableModel;
 public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
-    static int[] arrDataColumn;
+    //static int[] arrDataColumn;
+    ArrayList<String> arrDataColumn = new ArrayList<>();
+    //static String[] arrDataColumn;
     ArrayList<String> arrColNames = new ArrayList<>();
-    ArrayList<String> arrPrefix = new ArrayList<>();
-    ArrayList<String> arrSuffix = new ArrayList<>();
-    ArrayList<String> arrFind = new ArrayList<>();
-    ArrayList<String> arrReplace = new ArrayList<>();
+    HashMap hm = new HashMap();
     static String pbcsUserName;
     static String pbcsPassword;
     static String pbcsDomain;
     static String pbcsUrl;    
     static Boolean blnIsLoggedIn = false;
- //   static List<String> arrSuffix;
- //   static List<String> arrFind;
- //   static List<String> arrReplace;
- //   static List<String> arrColNames;
     
     /**
      * Creates new form PBCSAdmin
@@ -200,9 +197,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addGap(36, 36, 36)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblDBG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lblURL, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                                .addComponent(lblDomain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblURL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblDomain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblPassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -410,7 +406,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTable1.setColumnSelectionAllowed(true);
         jTable1.setDragEnabled(true);
-        jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -651,7 +646,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addComponent(btnExport))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1250, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         tabDLMgrLayout.setVerticalGroup(
             tabDLMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -802,16 +797,38 @@ public class PBCSAdmin extends javax.swing.JFrame {
         }
         
         // Set Data Checkbox based on array
-        if (arrDataColumn[jTable1.getSelectedColumn()] == 1) {
+        String columnHeader = jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString();
+        if (arrDataColumn.contains(columnHeader)) {
             cbData.setSelected(true);
         } else {
             cbData.setSelected(false);
         }
-        //Set Text Boxes based on Array
-        txtPrefix.setText(arrPrefix.get(jTable1.getSelectedColumn()));
-        txtSuffix.setText(arrSuffix.get(jTable1.getSelectedColumn()));
-        txtFind.setText(arrFind.get(jTable1.getSelectedColumn()));
-        txtReplace.setText(arrReplace.get(jTable1.getSelectedColumn()));
+        
+        //Set Text Boxes based on HashMap
+        Object pre = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix");
+        Object suf = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix");
+        Object find = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Find");
+        Object replace = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Replace");
+        if (pre != null) {
+            txtPrefix.setText(pre.toString());
+        } else {
+            txtPrefix.setText("");
+        }
+        if (suf != null) {
+            txtSuffix.setText(suf.toString());
+        } else {
+            txtSuffix.setText("");
+        }
+        if (find != null) {
+            txtFind.setText(find.toString());
+        } else {
+            txtFind.setText("");
+        }
+        if (replace != null) {
+            txtReplace.setText(replace.toString());
+        } else {
+            txtReplace.setText("");
+        }        
     }
     
     
@@ -850,32 +867,30 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
-        //arrDataColumn = new int[jTable1.getColumnCount()];
+        //arrDataColumn = new String[jTable1.getColumnCount()];
         TableModel model = dlManager.findReplaceField(jTable1, txtFind.getText(), txtReplace.getText(), txtPrefix.getText(), txtSuffix.getText());
         if (txtColName.getText() != null) {
-           // arrColNames[jTable1.getSelectedColumn()] = txtColName.getText();
-            arrColNames.set(jTable1.getSelectedColumn(), txtColName.getText());
             dlManager.renameTableColumn(jTable1, txtColName.getText(), jTable1.getSelectedColumn());
         }
         if (txtPrefix.getText() != null) {
-            arrPrefix.set(jTable1.getSelectedColumn(), txtPrefix.getText());
+            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix", txtPrefix.getText());
         }
         if (txtSuffix.getText() != null) {
-            arrSuffix.set(jTable1.getSelectedColumn(), txtSuffix.getText());
+            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Suffix", txtSuffix.getText());
         }
         if (txtFind.getText() != null) {
-            arrFind.set(jTable1.getSelectedColumn(), txtFind.getText());
+            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Find", txtFind.getText());
         }
         if (txtReplace.getText() != null) {
-            arrReplace.set(jTable1.getSelectedColumn(), txtReplace.getText());
+            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Replace", txtReplace.getText());
         }
         if (cbData.isSelected()) {
-            arrDataColumn[jTable1.getSelectedColumn()] = 1;
+            arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
         }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
 
     private void btnAddColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddColumnActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here
         TableColumn simpleColumn = new TableColumn();
         JTextField columnName = new JTextField();
         JTextField columnData = new JTextField();
@@ -952,7 +967,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            // Upload File
+             //Upload File
             try{
                 PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
                     pbcsUrl, pbcsConstants.DBG_PBCS_HPVER, "POC_CITA");
@@ -974,14 +989,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //System.out.println(evt.getPropertyName());
         if (evt.getPropertyName() == "model") {
             btnExport.setEnabled(true);
-            arrDataColumn = new int[jTable1.getColumnCount()];
+            //arrDataColumn = new String[jTable1.getColumnCount()];
 
            for (int i = 0 ; i < jTable1.getColumnCount(); i++){
                arrColNames.add(i,"");
-               arrPrefix.add(i,"");
-               arrSuffix.add(i,"");
-               arrFind.add(i,"");
-               arrReplace.add(i,"");
            }
         }
     }//GEN-LAST:event_jTable1PropertyChange
@@ -1044,7 +1055,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    
     private void displayAppOnLogin(){
         try {
             PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
@@ -1107,11 +1117,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this.getParent(), "You are not logged in!");
         }
-        
-        
     }//GEN-LAST:event_btnRefreshListsActionPerformed
 
-    
     
     /**
      * @param args the command line arguments

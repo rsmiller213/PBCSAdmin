@@ -5,7 +5,7 @@
  */
 package com.emtecinc;
 
-import static com.emtecinc.PBCSAdmin.arrDataColumn;
+//import static com.emtecinc.PBCSAdmin.arrDataColumn;
 import com.opencsv.CSVReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -292,7 +292,8 @@ public class pbcsDLManager {
         jTable.getTableHeader().repaint();
     }
     
-    public void exportFileFromTable(JTable jTable, File file, int[] arrDataColumn) throws IOException{
+    //public void exportFileFromTable(JTable jTable, File file, int[] arrDataColumn) throws IOException{
+    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn) throws IOException{
         if (!file.exists()){
             file.createNewFile();
             //writeFileFromTable(jTable, file);
@@ -308,7 +309,8 @@ public class pbcsDLManager {
         BufferedWriter bw = new BufferedWriter(fw);
         for(int i = 0 ; i < jTable.getColumnCount() ; i++) {
             //bw.write(jTable.getColumnName(i));
-            if (arrDataColumn[i] == 1){
+            //if (arrDataColumn[i] == 1){
+            if (arrDataColumn.get(i) != null){
                 bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString()+ "\"");
                 bw.write("\t");
             }
@@ -317,7 +319,8 @@ public class pbcsDLManager {
         for (int i = 0 ; i < jTable.getRowCount(); i++) {
             bw.newLine();
             for(int j = 0 ; j < jTable.getColumnCount();j++) {
-                if (arrDataColumn[j] == 0) {
+                //if (arrDataColumn[j] == 0) {
+                if (arrDataColumn.get(j) == null) {
                     bw.write((String)("\"" + jTable.getValueAt(i,j) + "\""));
                     bw.write("\t");
                 } else {
