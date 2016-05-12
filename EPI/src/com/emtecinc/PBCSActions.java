@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import com.emtecinc.PBCSAdmin;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -475,43 +476,66 @@ public class PBCSActions {
             if (json.get("items").equals(JSONObject.NULL)) {
                 System.out.println("No files found");
             } else {
-                System.out.println("List of files :");
+                //System.out.println("List of files :");
                 JSONArray itemsArray = json.getJSONArray("items");
                 JSONObject jObj = null;
                 for (int i = 0; i < itemsArray.length(); i++) {
                     jObj = (JSONObject) itemsArray.get(i);
                     if (jObj.getString("type").equals("EXTERNAL")) {
                         strArray.add(jObj.getString("name"));
-                        System.out.println(jObj.getString("name"));
+                        //System.out.println(jObj.getString("name"));
                     }
                 }
             }
         }
         return strArray;
     }
+    /**
+    * Get App Name or Type 
+    *
+    * @param request "Name" or "Type"
+    */
+    public String getAppDetails(String request) throws Exception {
+        String res = "";
+        String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications");
+        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
+        JSONObject json = new JSONObject(response);
+         if (json.get("items").equals(JSONObject.NULL)) {
+                System.out.println("No Applications Found");
+            } else {
+             JSONArray itemsArray = json.getJSONArray("items");
+             JSONObject jObj = null;
+             for (int i = 0; i < itemsArray.length(); i++) {
+                    jObj = (JSONObject) itemsArray.get(i);
+                    if (request.equals("Type")){
+                        res = jObj.getString("type");
+                    } else if (request.equals("Name")){
+                        res = jObj.getString("name");
+                    }
+                }
+         }
+         
+         return res;
+    }
     
     public ArrayList<String> listJobs() throws Exception {
         ArrayList<String> strArray = new ArrayList<String>();
-        ArrayList<String> strJobType = new ArrayList<String>();
         String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications/POC_CITA/jobdefinitions");
+        //String urlString = String.format("%s/HyperionPlanning/rest/v3/applications/%s/jobdefinitions", serverUrl, applicationName);
+        System.out.println(urlString);
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
-//        int resStatus = json.getInt("status");
-//        if (resStatus == 0) {
             if (json.get("items").equals(JSONObject.NULL)) {
                 System.out.println("No files found");
             } else {
-                System.out.println("List of jobs:");
+                //System.out.println("List of jobs:");
                 JSONArray itemsArray = json.getJSONArray("items");
                 JSONObject jObj = null;
                 for (int i = 0; i < itemsArray.length(); i++) {
                     jObj = (JSONObject) itemsArray.get(i);
                     if(jObj.getString("jobType").equals("IMPORT_DATA")){
                         strArray.add(jObj.getString("jobName"));
-                        //System.out.println(jObj.getString("jobName"));
                     }
-                    //System.out.println(jObj.getString("jobName"));
-                    //System.out.println(jObj.getString("jobType"));
                 }
             }
         //}
