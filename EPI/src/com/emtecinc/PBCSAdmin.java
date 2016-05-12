@@ -10,10 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -33,6 +36,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
     ArrayList<String> arrSuffix = new ArrayList<>();
     ArrayList<String> arrFind = new ArrayList<>();
     ArrayList<String> arrReplace = new ArrayList<>();
+    static String pbcsUserName;
+    static String pbcsPassword;
+    static String pbcsDomain;
+    static String pbcsUrl;
  //   static List<String> arrSuffix;
  //   static List<String> arrFind;
  //   static List<String> arrReplace;
@@ -97,6 +104,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnColumnActions = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
         tabFSMgr = new javax.swing.JPanel();
+        pnLogin = new javax.swing.JPanel();
+        btnLogin = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lstJobs = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        lstFiles = new javax.swing.JList<>();
+        btnLoad = new javax.swing.JButton();
 
         rbComma.doClick();
 
@@ -512,21 +527,89 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
                         .addComponent(pnlDSMgmt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlColProps, javax.swing.GroupLayout.PREFERRED_SIZE, 298, Short.MAX_VALUE)))
+                        .addComponent(pnlColProps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         MainTabbedPane.addTab("Data Load Manager", tabDLMgr);
 
+        btnLogin.setText("Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
+        pnLogin.setLayout(pnLoginLayout);
+        pnLoginLayout.setHorizontalGroup(
+            pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnLoginLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogin)
+                .addContainerGap())
+        );
+        pnLoginLayout.setVerticalGroup(
+            pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnLoginLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnLogin)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jScrollPane3.setViewportView(lstJobs);
+
+        jScrollPane4.setViewportView(lstFiles);
+
+        btnLoad.setText("Load File");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout tabFSMgrLayout = new javax.swing.GroupLayout(tabFSMgr);
         tabFSMgr.setLayout(tabFSMgrLayout);
         tabFSMgrLayout.setHorizontalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1450, Short.MAX_VALUE)
+            .addGroup(tabFSMgrLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButton1)
+                        .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(tabFSMgrLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65)
+                        .addComponent(btnLoad)
+                        .addGap(72, 72, 72)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(928, Short.MAX_VALUE))
         );
         tabFSMgrLayout.setVerticalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 557, Short.MAX_VALUE)
+            .addGroup(tabFSMgrLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(tabFSMgrLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3)))
+                    .addGroup(tabFSMgrLayout.createSequentialGroup()
+                        .addGap(98, 98, 98)
+                        .addComponent(btnLoad)))
+                .addContainerGap(238, Short.MAX_VALUE))
         );
 
         MainTabbedPane.addTab("File System Manager", tabFSMgr);
@@ -538,7 +621,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(MainTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -794,6 +877,76 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //System.out.println(jTable1.getSelectedColumn());
     }//GEN-LAST:event_jTable1ComponentMoved
 
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+        JTextField userNameField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+        JTextField urlField = new JTextField();
+        JTextField domainField = new JTextField();
+        Object[] fields = {
+            "URL: Should be: https://xxx.pbcs.us2.oraclecloud.com", urlField,
+            "Domain", domainField,
+            "User Name", userNameField,
+            "Password", passwordField
+        };
+        int option = JOptionPane.showConfirmDialog(this.getParent(), fields, "Column Information", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION){
+            try {
+                pbcsUserName = userNameField.getText();
+                pbcsPassword = new String(passwordField.getPassword());
+                pbcsUrl = urlField.getText();
+                pbcsDomain = domainField.getText();
+                PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
+                        pbcsUrl, "11.1.2.3.600", "POC_CITA");
+                    pbcsclient.getServices();
+            } catch (Exception ex) {
+                //Logger.getLogger(PBCSAdmin1.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            // TODO add your handling code here:
+            //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
+            //        pbcsUrl, "11.1.2.3.600", "POC_CITA");
+            PBCSActions pbcsclient = new PBCSActions("epmcloud1", "emtec", "Emtec2016!",
+                    "https://emtec-emtec.pbcs.us2.oraclecloud.com", "11.1.2.3.600", "POC_CITA");
+            ArrayList<String> arrJobs = pbcsclient.listJobs();
+            ArrayList<String> arrFiles = pbcsclient.listPlanningFiles();
+            DefaultListModel listModel = new DefaultListModel();
+            DefaultListModel listModelFile = new DefaultListModel();
+            for (String job: arrJobs){
+                listModel.addElement(job);
+                //System.out.println("From Button click: " + job);
+            }
+            for (String file: arrFiles){
+                listModelFile.addElement(file);
+                //System.out.println("From Button click: " + job);
+            }
+            lstJobs.setModel(listModel);
+            lstFiles.setModel(listModelFile);
+        } catch (Exception ex) {
+            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        // TODO add your handling code here:
+        if (lstJobs.getSelectedIndex() != -1 && lstFiles.getSelectedIndex() != -1){
+            try {
+            // TODO add your handling code here:
+            PBCSActions pbcsclient = new PBCSActions("epmcloud1", "emtec", "Emtec2016!",
+                    "https://emtec-emtec.pbcs.us2.oraclecloud.com", "11.1.2.3.600", "POC_CITA");
+            pbcsclient.integrationScenarioImportData(lstFiles.getSelectedValue(), lstJobs.getSelectedValue());
+            } catch (Exception ex) {
+                //Logger.getLogger(PBCSAdmin1.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnLoadActionPerformed
+
     
     
     /**
@@ -838,14 +991,19 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnColumnActions;
     private javax.swing.JButton btnExport;
+    private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnLoadSQL;
+    private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnPrevField;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JCheckBox cbData;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblColName;
@@ -858,6 +1016,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lblReplace;
     private javax.swing.JLabel lblStartRow;
     private javax.swing.JLabel lblSuffix;
+    private javax.swing.JList<String> lstFiles;
+    private javax.swing.JList<String> lstJobs;
+    private javax.swing.JPanel pnLogin;
     private javax.swing.JPanel pnlColProps;
     private javax.swing.JPanel pnlDSMgmt;
     private javax.swing.JRadioButton rbComma;

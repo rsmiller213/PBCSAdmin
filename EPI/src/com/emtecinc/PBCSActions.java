@@ -72,12 +72,13 @@ public class PBCSActions {
         executeJob("PLAN_TYPE_MAP", "CampaignToReporting", "{clearData:false}");
     }
 
-    public void integrationScenarioImportData(File file, String jobName) throws Exception {
+    //public void integrationScenarioImportData(File file, String jobName) throws Exception {
+    public void integrationScenarioImportData(String file, String jobName) throws Exception {
 
         //uploadFile(file.getAbsolutePath());
         //uploadFile(file.getAbsolutePath());
-        uploadFile(file);
-        executeJob("IMPORT_DATA", jobName, "{importFileName:" + file.getName() + "}");
+        //uploadFile(file);
+        executeJob("IMPORT_DATA", jobName, "{importFileName:" + file + "}");
         //executeJob("CUBE_REFRESH", null, null);
         //executeJob("PLAN_TYPE_MAP", "CampaignToReporting", "{clearData:false}");
     }
@@ -461,6 +462,59 @@ public class PBCSActions {
                 }
             }
         }
+        return strArray;
+    }
+    
+    public ArrayList<String> listPlanningFiles() throws Exception {
+        ArrayList<String> strArray = new ArrayList<String>();
+        String urlString = String.format("%s/interop/rest/%s/applicationsnapshots", serverUrl, apiVersion);
+        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
+        JSONObject json = new JSONObject(response);
+        int resStatus = json.getInt("status");
+        if (resStatus == 0) {
+            if (json.get("items").equals(JSONObject.NULL)) {
+                System.out.println("No files found");
+            } else {
+                System.out.println("List of files :");
+                JSONArray itemsArray = json.getJSONArray("items");
+                JSONObject jObj = null;
+                for (int i = 0; i < itemsArray.length(); i++) {
+                    jObj = (JSONObject) itemsArray.get(i);
+                    if (jObj.getString("type").equals("EXTERNAL")) {
+                        strArray.add(jObj.getString("name"));
+                        System.out.println(jObj.getString("name"));
+                    }
+                }
+            }
+        }
+        return strArray;
+    }
+    
+    public ArrayList<String> listJobs() throws Exception {
+        ArrayList<String> strArray = new ArrayList<String>();
+        ArrayList<String> strJobType = new ArrayList<String>();
+        String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications/POC_CITA/jobdefinitions");
+        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
+        JSONObject json = new JSONObject(response);
+//        int resStatus = json.getInt("status");
+//        if (resStatus == 0) {
+            if (json.get("items").equals(JSONObject.NULL)) {
+                System.out.println("No files found");
+            } else {
+                System.out.println("List of jobs:");
+                JSONArray itemsArray = json.getJSONArray("items");
+                JSONObject jObj = null;
+                for (int i = 0; i < itemsArray.length(); i++) {
+                    jObj = (JSONObject) itemsArray.get(i);
+                    if(jObj.getString("jobType").equals("IMPORT_DATA")){
+                        strArray.add(jObj.getString("jobName"));
+                        //System.out.println(jObj.getString("jobName"));
+                    }
+                    //System.out.println(jObj.getString("jobName"));
+                    //System.out.println(jObj.getString("jobType"));
+                }
+            }
+        //}
         return strArray;
     }
 //
