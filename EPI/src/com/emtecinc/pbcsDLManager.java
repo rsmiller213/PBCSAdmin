@@ -19,11 +19,13 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 /**
@@ -389,7 +391,25 @@ public class pbcsDLManager {
         ArrayList<String> columns = new ArrayList<String>();
         for (int i = 0 ; i < jTable.getColumnCount(); i++){
             columns.add(jTable.getModel().getColumnName(i));
+            //columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
         return columns;
+    }
+    
+    //public DefaultTableModel duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
+    public void duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
+        //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+        DefaultTableModel model = (DefaultTableModel)jTable.getModel();
+        int leftColIndex = jTable.convertColumnIndexToModel(model.findColumn(leftColumn));
+        int rightColIndex = jTable.convertColumnIndexToModel(model.findColumn(rightColumn));
+        model.addColumn(header);
+        for (int i = 0 ; i < jTable.getRowCount(); i++){
+            String leftValue = model.getValueAt(i, model.findColumn(leftColumn)).toString();
+            String rightValue = model.getValueAt(i, model.findColumn(rightColumn)).toString();
+            model.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
+        }
+        if (deleteColumns) {
+        }
+        model.fireTableDataChanged();
     }
 }

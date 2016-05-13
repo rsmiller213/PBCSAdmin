@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -952,6 +953,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         columnAction.addItem("Create/Duplicate from Join");
         columnAction.addItem("Split");
         
+        JCheckBox cbDeleteColumns = new JCheckBox();
+        
         //fill drop-downs with column names
         ArrayList<String> columns = dlManager.getTableColumnNames(jTable1);
         for (String column: columns){
@@ -979,11 +982,18 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         "Left Column", leftCol,
                         "Right Column", rightCol,
                         "Header", colHeader,
-                        "Split Character", splitChar
+                        "Split Character", splitChar,
+                        "Delete source columns?", cbDeleteColumns
                     };
                     int optCreateDupJoin = JOptionPane.showConfirmDialog(this.getParent(), createDupJoin, "Create/Duplicate Via Join", JOptionPane.OK_CANCEL_OPTION);
                     if (optCreateDupJoin == JOptionPane.OK_OPTION) {
-                        dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+                        if (cbDeleteColumns.isSelected()){
+                            dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+                                    rightCol.getSelectedItem().toString(), splitChar.getText(), true);
+                        } else {
+                            dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+                                    rightCol.getSelectedItem().toString(), splitChar.getText(), false);
+                        }
                     }
                 case 2:
                     Object[] splitCols = {
