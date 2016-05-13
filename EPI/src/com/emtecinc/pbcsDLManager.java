@@ -366,7 +366,7 @@ public class pbcsDLManager {
         for(int i = 0 ; i < jTable.getColumnCount() ; i++) {
             //bw.write(jTable.getColumnName(i));
             //if (arrDataColumn[i] == 1){
-            if (arrDataColumn.get(i) != null){
+            if (!arrDataColumn.get(i).equals("")){
                 bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString()+ "\"");
                 bw.write("\t");
             }
@@ -376,7 +376,8 @@ public class pbcsDLManager {
             bw.newLine();
             for(int j = 0 ; j < jTable.getColumnCount();j++) {
                 //if (arrDataColumn[j] == 0) {
-                if (arrDataColumn.get(j) == null) {
+                if (!arrDataColumn.get(j).equals("")) {
+                //if (j <= arrDataColumn.size()) {
                     bw.write((String)("\"" + jTable.getValueAt(i,j) + "\""));
                     bw.write("\t");
                 } else {

@@ -691,8 +691,10 @@ public class PBCSActions {
     private boolean sendFileContents(Boolean isFirst, boolean isLast, byte[] lastChunk, String fileName) throws Exception {
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(String.format("%s/interop/rest/%s/applicationsnapshots/%s/contents?q={chunkSize:%d,isFirst:%b,isLast:%b}",
-                    serverUrl, apiVersion, fileName, lastChunk.length, isFirst, isLast));
+            //URL url = new URL(String.format("%s/interop/rest/%s/applicationsnapshots/%s/contents?q={chunkSize:%d,isFirst:%b,isLast:%b}",
+            //        serverUrl, apiVersion, fileName, lastChunk.length, isFirst, isLast));
+            URL url = new URL(String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/interop/rest/11.1.2.3.600/applicationsnapshots/%s/contents?q={chunkSize:%d,isFirst:%b,isLast:%b}",
+                    fileName, lastChunk.length, isFirst, isLast));
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setInstanceFollowRedirects(false);

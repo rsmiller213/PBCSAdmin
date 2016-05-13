@@ -892,7 +892,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
             hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Replace", txtReplace.getText());
         }
         if (cbData.isSelected()) {
-            arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
         }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
 
@@ -1057,6 +1058,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
            for (int i = 0 ; i < jTable1.getColumnCount(); i++){
                arrColNames.add(i,"");
+               arrDataColumn.add(i,"");
            }
         }
     }//GEN-LAST:event_jTable1PropertyChange
