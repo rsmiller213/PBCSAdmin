@@ -929,10 +929,29 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnColumnActionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColumnActionsActionPerformed
         // TODO add your handling code here:
+        JTextField colHeader = new JTextField();
+        JTextField textValue = new JTextField();
+        
+        JComboBox leftCol = new JComboBox();
+        JComboBox rightCol = new JComboBox();
+        JTextField splitChar = new JTextField();
+        
+        JComboBox splitBy = new JComboBox();
+        splitBy.addItem("Delimiter");
+        splitBy.addItem("Number of Characters");
+        JTextField splitNum = new JTextField();
+        
         JComboBox columnAction = new JComboBox();
+        columnAction.addItem("Create from Text");
+        columnAction.addItem("Create/Duplicate from Join");
         columnAction.addItem("Split");
-        columnAction.addItem("Join");
-        columnAction.addItem("Duplicate");
+        
+        //fill drop-downs with column names
+        ArrayList<String> columns = dlManager.getTableColumnNames(jTable1);
+        for (String column: columns){
+            leftCol.addItem(column);
+            rightCol.addItem(column);
+        }
         Object[] newField = {
             "Column Action: ", columnAction
         };
@@ -940,11 +959,36 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (option == JOptionPane.OK_OPTION) {
             switch (columnAction.getSelectedIndex()) {
                 case 0:
-                JTextField splitDelim = new JTextField();
-                Object[] splitField = {
-                    "Delimiter: ", splitDelim,
+
+                    Object[] splitField = {
+                        "Header", colHeader,
+                        "Text Value", textValue
+                    };
+                int optCreateViaText = JOptionPane.showConfirmDialog(this.getParent(), splitField, "Create Via Text", JOptionPane.OK_CANCEL_OPTION);
+                if (optCreateViaText == JOptionPane.OK_OPTION) {
+                    dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+                }
+                case 1:
+                    Object[] createDupJoin = {
+                        "Left Column", leftCol,
+                        "Right Column", rightCol,
+                        "Header", colHeader,
+                        "Split Character", splitChar
+                    };
+                    int optCreateDupJoin = JOptionPane.showConfirmDialog(this.getParent(), createDupJoin, "Create/Duplicate Via Join", JOptionPane.OK_CANCEL_OPTION);
+                    if (optCreateDupJoin == JOptionPane.OK_OPTION) {
+                        dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+                    }
+                case 2:
+                    Object[] splitCols = {
+                        "Column", leftCol,
+                        "Split By", splitBy,
+                        "Delimiter/# of Characters", splitNum
                 };
-                int optionSplit = JOptionPane.showConfirmDialog(this.getParent(), splitField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
+                    int optSplit = JOptionPane.showConfirmDialog(this.getParent(), splitCols, "Split Columns", JOptionPane.OK_CANCEL_OPTION);
+                    if (optSplit == JOptionPane.OK_OPTION) {
+                        //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+                    }
             }
         }
     }//GEN-LAST:event_btnColumnActionsActionPerformed

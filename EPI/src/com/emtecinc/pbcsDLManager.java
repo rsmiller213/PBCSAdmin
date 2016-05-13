@@ -331,5 +331,12 @@ public class pbcsDLManager {
             }
         }
         bw.close();
-    }    
+    }
+    public ArrayList<String> getTableColumnNames(JTable jTable){
+        ArrayList<String> columns = new ArrayList<String>();
+        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+            columns.add(jTable.getModel().getColumnName(i));
+        }
+        return columns;
+    }
 }
