@@ -198,18 +198,19 @@ public class pbcsDLManager {
     * @return            returns a TableModel and also updates the JTable
     */
     public TableModel findReplaceField(JTable jTable, String strFind, String strReplace, String strPrefix, String strSuffix) {
+        int index = jTable.convertColumnIndexToModel(jTable.getSelectedColumn());
         TableModel model = jTable.getModel();
         try{
                 Object[] rows = new Object[jTable.getRowCount()];
                 for (int i = 0; i < rows.length; i++) {
                     if (strFind != null || strReplace != null) {
-                        rows[i] = model.getValueAt(i, jTable.getSelectedColumn());
+                        rows[i] = model.getValueAt(i, index);
                         if (rows[i].equals(strFind)) {
                             rows[i] = strPrefix + strReplace + strSuffix;
-                            model.setValueAt(rows[i], i, jTable.getSelectedColumn());
+                            model.setValueAt(rows[i], i, index);
                         } else {
-                            rows[i] = strPrefix + model.getValueAt(i, jTable.getSelectedColumn()) + strSuffix;
-                            model.setValueAt(rows[i], i, jTable.getSelectedColumn());
+                            rows[i] = strPrefix + model.getValueAt(i, index) + strSuffix;
+                            model.setValueAt(rows[i], i, index);
                         }
                     }
                 }
