@@ -468,7 +468,8 @@ public class PBCSActions {
     
     public ArrayList<String> listPlanningFiles() throws Exception {
         ArrayList<String> strArray = new ArrayList<String>();
-        String urlString = String.format("%s/interop/rest/%s/applicationsnapshots", serverUrl, apiVersion);
+        //String urlString = String.format("%s/interop/rest/%s/applicationsnapshots", serverUrl, apiVersion);
+        String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/interop/rest/11.1.2.3.600/applicationsnapshots");
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
         int resStatus = json.getInt("status");
