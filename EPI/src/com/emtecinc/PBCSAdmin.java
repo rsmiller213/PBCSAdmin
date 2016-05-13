@@ -855,6 +855,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             }
             jTable1.setModel(model);
+            //Reset Text area and show new lines
+            jTextArea1.setText("");
+            ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
+            for (String t: arrLines) {
+                jTextArea1.append(t + "\n");
+            } 
         } catch (Throwable x) {
             
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
