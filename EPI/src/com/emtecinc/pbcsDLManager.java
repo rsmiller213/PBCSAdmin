@@ -280,6 +280,59 @@ public class pbcsDLManager {
         }
     }
     
+   /**
+    * Split a column by either a delim or # of chars
+    *
+    * @param tTable JTable object used in UI
+    * @param iColIdx int with Column Index
+    * @param bCharSplit boolean, True for Char Split, False for Delim Split
+    * @param strSplitBy   string with either the # of chars or delimiter
+    */
+    public void splitColumn(JTable tTable, boolean bCharSplit, String strSplitBy ){
+        try{
+            // Locals
+            int iCurCol = tTable.convertColumnIndexToModel(tTable.getSelectedColumn());
+            String strCur;
+            String strNew;
+            String strColHeader = tTable.getColumnModel().getColumn(tTable.getSelectedColumn()).getHeaderValue().toString();
+            int iNewCol;
+            
+            // Create New Column
+            DefaultTableModel tblModel = (DefaultTableModel) tTable.getModel();
+            addTableColumn(tTable,strColHeader + "_Split","abc");
+            iNewCol = tblModel.getColumnCount() - 1;
+            
+            // Get Model to Loop Rows
+            TableModel model = tTable.getModel();
+            Object[] rows = new Object[tTable.getRowCount()];
+            
+            //Loop Rows
+            for (int i = 0; i < rows.length; i++) {
+                strCur = model.getValueAt(i, iCurCol).toString();
+                
+                if (bCharSplit){
+                    // Convert Str to Int
+                    int iSplitBy = Integer.valueOf(strSplitBy);
+                    // Split into Two Strings
+                    strNew = strCur.substring(iSplitBy);
+                    strCur = strCur.substring(0, iSplitBy);
+                } else {
+                    strNew = strCur.substring(strCur.indexOf(strSplitBy) + 1);
+                    strCur = strCur.substring(0, strCur.indexOf(strSplitBy));
+                }
+                
+                // Update Rows
+                model.setValueAt(strCur, i, iCurCol);
+                model.setValueAt(strNew, i, iNewCol);
+                }
+                tTable.setModel(model);
+            } catch (Throwable x) {
+                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+            }
+    }  
+    
+    
+    
     /**
     * Adds a table column and can populate all rows with provided data 
     *

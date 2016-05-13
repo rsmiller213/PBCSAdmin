@@ -981,13 +981,17 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     }
                 case 2:
                     Object[] splitCols = {
-                        "Column", leftCol,
+                        //"Column", leftCol,
                         "Split By", splitBy,
                         "Delimiter/# of Characters", splitNum
                 };
                     int optSplit = JOptionPane.showConfirmDialog(this.getParent(), splitCols, "Split Columns", JOptionPane.OK_CANCEL_OPTION);
                     if (optSplit == JOptionPane.OK_OPTION) {
-                        //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+                        boolean bSplitBy = false;
+                        if (splitBy.getSelectedIndex() == 1){
+                            bSplitBy = true;
+                        }
+                        dlManager.splitColumn(jTable1, bSplitBy, splitNum.getText());
                     }
             }
         }
