@@ -243,64 +243,103 @@ public class PBCSActions {
         }
     }
     
-        
     /**
-     * Gets the current URL based on version for the specified app. Returns the following:
+     * Gets the current details for the app depending on request
+     * @param App "HP" or "LCM"
+     * @param request "URL", "Version", "AppName", "AppType"
+     * 
+     * URLs come out as such:
      * HP: https://<serverURL>/HyperionPlanning/rest/<version>
      * LCM: https://<serverURL>/interop/rest/<version>
-     * @param App "HP" or "LCM"
      * @throws Exception 
      */  
-    public String getCurrentURL(String App) throws Exception {
+    public String getCurrentDetails(String App, String request) throws Exception {
+        String res = "";
         String url = "";
+        
         if (App.equals("HP")){
-            url = serverUrl+ "/HyperionPlanning/rest/" + getCurrentHPVer();
+            url = String.format("%s/HyperionPlanning/rest/%s", serverUrl, getCurrentVersion("HP"));
         } else if (App.equals("LCM")){
-            url = serverUrl+ "/interop/rest/" + getCurrentLCMVer();
+            url = String.format("%s/interop/rest/%s", serverUrl, getCurrentVersion("LCM"));
         }
-        return url;
+        
+        if (request.equals("URL")){
+            res = url;
+        } else if (request.equals("Version")){
+            res = getCurrentVersion(App);
+        } else if (request.equals("AppName")){
+            res = getAppDetails("Name");
+        } else if (request.equals("AppType")){
+            res = getAppDetails("Type");
+        }
+        return res;
     }
     
     /**
-     * Gets current LCM version and returns a string
-     */
-    public String getCurrentLCMVer() throws Exception {
-        String ver = "";
-        String urlString = String.format("%s/interop/rest/", serverUrl);
-        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
-        JSONObject json = new JSONObject(response);
-        int resStatus = json.getInt("status");
-        if (resStatus == 0) {
-            JSONArray fileList = json.getJSONArray("items");
-            JSONObject jObj = null;
-            for (int i = 0; i < fileList.length(); i++) {
-                jObj = (JSONObject) fileList.get(i);
-                if (jObj.getBoolean("latest")){
-                    ver = jObj.getString("version");
-                }
-            }
-        }
-        return ver;
-    }
+     * Gets the current details for the app depending on request
+     * @param App "HP" or "LCM"
+     * @param request "URL", "Version"
+     * 
+     * URLs come out as such:
+     * HP: https://<serverURL>/HyperionPlanning/rest/<version>
+     * LCM: https://<serverURL>/interop/rest/<version>
+     * @throws Exception 
+     */ 
     
-    /**
-     * Gets current HP version and returns a string
-     */
-    public String getCurrentHPVer() throws Exception {
-        String ver = "";
-        String urlString = String.format("%s/HyperionPlanning/rest/", serverUrl);
+    public String getCurrentVersion(String App) throws Exception {
+        String res = "";
+        String urlString = "";
+        String latest = "";
+        
+        if (App.equals("HP")){
+            urlString = String.format("%s/HyperionPlanning/rest/", serverUrl);
+            latest = "isLatest";
+        } else if (App.equals("LCM")){
+            urlString = String.format("%s/interop/rest/", serverUrl);
+            latest = "latest";
+        }
+
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
         JSONArray fileList = json.getJSONArray("items");
         JSONObject jObj = null;
         for (int i = 0; i < fileList.length(); i++) {
             jObj = (JSONObject) fileList.get(i);
-            if (jObj.getBoolean("isLatest")){
-                ver = jObj.getString("version");
+            if (jObj.getBoolean(latest)){
+                res = jObj.getString("version");
             }
         }
-        
-        return ver;
+
+        return res;
+    }
+    
+    /**
+    * Get App Name or Type 
+    *
+    * @param request "Name" or "Type"
+    */
+    public String getAppDetails(String request) throws Exception {
+        String res = "";
+        //String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications");
+        String urlString = String.format("%s/applications", getCurrentDetails("HP","URL"));
+        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
+        JSONObject json = new JSONObject(response);
+         if (json.get("items").equals(JSONObject.NULL)) {
+                System.out.println("No Applications Found");
+            } else {
+             JSONArray itemsArray = json.getJSONArray("items");
+             JSONObject jObj = null;
+             for (int i = 0; i < itemsArray.length(); i++) {
+                    jObj = (JSONObject) itemsArray.get(i);
+                    if (request.equals("Type")){
+                        res = jObj.getString("type");
+                    } else if (request.equals("Name")){
+                        res = jObj.getString("name");
+                    }
+                }
+         }
+         
+         return res;
     }
 
 //
@@ -309,13 +348,13 @@ public class PBCSActions {
 
     public void getLCMVersionDetails() throws Exception {
         //String urlString = String.format("%s/interop/rest/%s", serverUrl, apiVersion);
-        String urlString = String.format("%s", getCurrentURL("LCM"));
+        String urlString = String.format("%s", getCurrentDetails("LCM","URL"));
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
         int resStatus = json.getInt("status");
         if (resStatus == 0) {
             JSONArray linksArray = json.getJSONArray("links");
-            System.out.println("Version " + getCurrentLCMVer() + " details :");
+            System.out.println("Version " + getCurrentDetails("LCM","Version") + " details :");
             JSONObject jObj = null;
             for (int i = 0; i < linksArray.length(); i++) {
                 jObj = (JSONObject) linksArray.get(i);
@@ -334,7 +373,7 @@ public class PBCSActions {
 
     public void getServices() throws Exception {
         //String urlString = String.format("%s/interop/rest/%s/services", serverUrl, getCurrentLCMVer());
-        String urlString = String.format("%s/services", getCurrentURL("LCM"));
+        String urlString = String.format("%s/services", getCurrentDetails("LCM","URL"));
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
         int resStatus = json.getInt("status");
@@ -359,7 +398,7 @@ public class PBCSActions {
 
     public void listFiles() throws Exception {
         //String urlString = String.format("%s/interop/rest/%s/applicationsnapshots", serverUrl, apiVersion);
-        String urlString = String.format("%s/applicationsnapshots", getCurrentURL("LCM"));
+        String urlString = String.format("%s/applicationsnapshots", getCurrentDetails("LCM","URL"));
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
         int resStatus = json.getInt("status");
@@ -381,7 +420,7 @@ public class PBCSActions {
     public ArrayList<String> listFilesReturn() throws Exception {
         ArrayList<String> strArray = new ArrayList<String>();
         //String urlString = String.format("%s/interop/rest/%s/applicationsnapshots", serverUrl, apiVersion);
-        String urlString = String.format("%s/applicationsnapshots", getCurrentURL("LCM"));
+        String urlString = String.format("%s/applicationsnapshots", getCurrentDetails("LCM","URL"));
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
         int resStatus = json.getInt("status");
@@ -405,7 +444,7 @@ public class PBCSActions {
     public ArrayList<String> listPlanningFiles() throws Exception {
         ArrayList<String> strArray = new ArrayList<String>();
         //String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/interop/rest/11.1.2.3.600/applicationsnapshots");
-        String urlString = String.format("%s/applicationsnapshots", getCurrentURL("LCM"));
+        String urlString = String.format("%s/applicationsnapshots", getCurrentDetails("LCM","URL"));
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
         int resStatus = json.getInt("status");
@@ -425,38 +464,12 @@ public class PBCSActions {
         }
         return strArray;
     }
-    /**
-    * Get App Name or Type 
-    *
-    * @param request "Name" or "Type"
-    */
-    public String getAppDetails(String request) throws Exception {
-        String res = "";
-        //String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications");
-        String urlString = String.format("%s/applications", getCurrentURL("HP"));
-        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
-        JSONObject json = new JSONObject(response);
-         if (json.get("items").equals(JSONObject.NULL)) {
-                System.out.println("No Applications Found");
-            } else {
-             JSONArray itemsArray = json.getJSONArray("items");
-             JSONObject jObj = null;
-             for (int i = 0; i < itemsArray.length(); i++) {
-                    jObj = (JSONObject) itemsArray.get(i);
-                    if (request.equals("Type")){
-                        res = jObj.getString("type");
-                    } else if (request.equals("Name")){
-                        res = jObj.getString("name");
-                    }
-                }
-         }
-         
-         return res;
-    }
+    
     
     public ArrayList<String> listJobs() throws Exception {
         ArrayList<String> strArray = new ArrayList<String>();
-        String urlString = String.format("%s/applications/%s/jobdefinitions", getCurrentURL("HP"), getAppDetails("Name"));
+        //String urlString = String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications/POC_CITA/jobdefinitions");
+        String urlString = String.format("%s/applications/%s/jobdefinitions", getCurrentDetails("HP","URL"), getAppDetails("Name"));
         String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
         JSONObject json = new JSONObject(response);
             if (json.get("items").equals(JSONObject.NULL)) {
@@ -554,7 +567,7 @@ public class PBCSActions {
             //URL url = new URL(String.format("https://emtec-emtec.pbcs.us2.oraclecloud.com/interop/rest/11.1.2.3.600/applicationsnapshots/%s/contents?q={chunkSize:%d,isFirst:%b,isLast:%b}",
             //        fileName, lastChunk.length, isFirst, isLast));
             URL url = new URL(String.format("%s/applicationsnapshots/%s/contents?q={chunkSize:%d,isFirst:%b,isLast:%b}",
-                    getCurrentURL("LCM"),fileName, lastChunk.length, isFirst, isLast));
+                    getCurrentDetails("LCM","URL"),fileName, lastChunk.length, isFirst, isLast));
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setInstanceFollowRedirects(false);
@@ -598,7 +611,7 @@ public class PBCSActions {
 //
     public void executeJob(String jobType, String jobName, String parameters) throws Exception {
         //String urlString = String.format("%s/HyperionPlanning/rest/v3/applications/%s/jobs", serverUrl, applicationName);
-        String urlString = String.format("%s/applications/%s/jobs", getCurrentURL("HP"), getAppDetails("Name"));
+        String urlString = String.format("%s/applications/%s/jobs", getCurrentDetails("HP","URL"), getAppDetails("Name"));
         System.out.println("URL: " + urlString);
         JSONObject payload = new JSONObject();
         payload.put("jobName", jobName);
