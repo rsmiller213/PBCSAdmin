@@ -104,33 +104,33 @@ public class NewJPanel extends javax.swing.JPanel {
 
     private void btnLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMousePressed
         // TODO add your handling code here:
-        try{
-        String pbcsPass = new String (pfPassword.getPassword());
-        PBCSActions pbcsclient = new PBCSActions(tbUserName.getText(), "emtec", pbcsPass,
-        "https://emtec-test-emtec.pbcs.us2.oraclecloud.com", "11.1.2.3.600", "Vision");
-        pbcsFiles filePanel = new pbcsFiles();
-        DefaultListModel model = new DefaultListModel();
-        javax.swing.JList lstFiles = new JList(model);
-        ArrayList<String> arrFiles = pbcsclient.listFilesReturn();
-            for (Iterator<String> i = arrFiles.iterator(); i.hasNext(); ){
-                model.addElement(i.next());
-            }
-            filePanel.jList1.setModel(model);
-            NewJFrame frame = new NewJFrame();
-            filePanel.add(lstFiles, BorderLayout.CENTER);
-            frame.add(filePanel);
-            filePanel.validate();
-            frame.validate();
-            filePanel.setSize(900, 900);
-            filePanel.setVisible(true);
-            lstFiles.setVisible(true);
-            frame.setSize(900, 900);
-            frame.pack();
-            frame.setVisible(true);
-        } catch (Throwable x) {
-            JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
-        System.err.println("Error: " + x.getMessage());
-        }
+//        try{
+//        String pbcsPass = new String (pfPassword.getPassword());
+////        PBCSActions pbcsclient = new PBCSActions(tbUserName.getText(), "emtec", pbcsPass,
+////        "https://emtec-test-emtec.pbcs.us2.oraclecloud.com", "11.1.2.3.600", "Vision");
+//        pbcsFiles filePanel = new pbcsFiles();
+//        DefaultListModel model = new DefaultListModel();
+//        javax.swing.JList lstFiles = new JList(model);
+//        ArrayList<String> arrFiles = pbcsclient.listFilesReturn();
+//            for (Iterator<String> i = arrFiles.iterator(); i.hasNext(); ){
+//                model.addElement(i.next());
+//            }
+//            filePanel.jList1.setModel(model);
+//            NewJFrame frame = new NewJFrame();
+//            filePanel.add(lstFiles, BorderLayout.CENTER);
+//            frame.add(filePanel);
+//            filePanel.validate();
+//            frame.validate();
+//            filePanel.setSize(900, 900);
+//            filePanel.setVisible(true);
+//            lstFiles.setVisible(true);
+//            frame.setSize(900, 900);
+//            frame.pack();
+//            frame.setVisible(true);
+//        } catch (Throwable x) {
+//            JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
+//        System.err.println("Error: " + x.getMessage());
+//        }
     }//GEN-LAST:event_btnLoginMousePressed
 
     private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
