@@ -869,6 +869,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         Object suf = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix");
         Object find = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Find");
         Object replace = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Replace");
+        System.out.println("Update: " + jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix");
         if (pre != null) {
             txtPrefix.setText(pre.toString());
         } else {
@@ -895,7 +896,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 //this is called so many times
                 //I don't want this, but something like column moved finished event
                 if (e.getFromIndex() != e.getToIndex()){
-                    System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
+                    //System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
                     dlManager.updateEventLog(pbcsConstants.EVT_MOVE, Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), "");
                 }
             }
@@ -988,12 +989,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
             //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
             arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
         }
-        for (Object t: dlManager.eventRows){
-            if (t instanceof String[]){
-                String[] arr = (String[]) t;
-                System.out.println(Arrays.toString(arr));
-            }
-        }
+//        for (Object t: dlManager.eventRows){
+//            if (t instanceof String[]){
+//                String[] arr = (String[]) t;
+//                System.out.println(Arrays.toString(arr));
+//            }
+//        }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
 
     private void btnAddColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddColumnActionPerformed
@@ -1360,34 +1361,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnLoadProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadProfileActionPerformed
         try {
             // TODO add your handling code here:
-            dlManager.openProfile();
+            dlManager.openProfile(jTable1);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnLoadProfileActionPerformed
     
-    public void setImportProfile (String action, int fromColumn, int toColumn, String value){
-        //ArrayList<String> arrDataColumn = new ArrayList<>();
-        System.out.println(action);
-        switch(action){
-            case pbcsConstants.EVT_RENAME:
-                dlManager.renameTableColumn(jTable1, value, toColumn);
-                jTable1.getColumnModel().getColumn(toColumn).setHeaderValue(value);
-                jTable1.getTableHeader().repaint();
-            case pbcsConstants.EVT_DATA:
-                arrDataColumn.add(toColumn, jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
-            case pbcsConstants.EVT_PREFIX:
-                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
-            case pbcsConstants.EVT_SUFFIX:
-                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
-            case pbcsConstants.EVT_FIND:
-                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
-            case pbcsConstants.EVT_REPLACE:
-                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
-            case pbcsConstants.EVT_MOVE:
-                jTable1.moveColumn(fromColumn, toColumn);
-        }
-    }
     
     /**
      * @param args the command line arguments

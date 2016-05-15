@@ -427,8 +427,7 @@ public class pbcsDLManager {
     }
     public void moveColumn (JTable jTable, int from, int to) {
         TableModel model = jTable.getModel();
-        jTable.moveColumn(to, from);
-        
+        jTable.moveColumn(from, to);
     }
 //    public void saveFile(){
 //        final JFileChooser fc = new JFileChooser();
@@ -505,7 +504,7 @@ public class pbcsDLManager {
 //        }
 //    }
     
-    public void openProfile() throws ClassNotFoundException{
+    public void openProfile(JTable jTable) throws ClassNotFoundException{
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         PBCSAdmin pbcsAdmin = new PBCSAdmin();
@@ -522,8 +521,10 @@ public class pbcsDLManager {
                     for (Object events: eventRows){
                         if (events instanceof String[]){
                             String[] arr = (String[]) events;
+                            //System.out.println(Arrays.toString(arr));
                             //System.out.println(arr[0] + " " + arr[1] + " " + arr[1] + " " + arr[3]);
-                            pbcsAdmin.setImportProfile(arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
+                            //pbcsAdmin.setImportProfile(arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
+                            setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
                             //System.out.println(Arrays.toString(arr));
                         }
                     }
@@ -538,5 +539,53 @@ public class pbcsDLManager {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
+        //ArrayList<String> arrDataColumn = new ArrayList<>();
+        //System.out.println(action);
+        PBCSAdmin pbcsAdmin = new PBCSAdmin();
+        if (action.equals(pbcsConstants.EVT_RENAME)) {
+            renameTableColumn(jTable, value, toColumn);
+        } else if (action.equals(pbcsConstants.EVT_DATA)){
+            pbcsAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
+        } else if (action.equals(pbcsConstants.EVT_PREFIX)){
+            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
+        } else if (action.equals(pbcsConstants.EVT_SUFFIX)){
+            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
+        } else if (action.equals(pbcsConstants.EVT_FIND)){
+            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
+        } else if (action.equals(pbcsConstants.EVT_REPLACE)){
+            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
+        } else if (action.equals(pbcsConstants.EVT_MOVE)){
+            jTable.getColumnModel().moveColumn(fromColumn, toColumn);
+//            DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
+//            tblModel.fireTableStructureChanged();
+            //jTable.moveColumn(fromColumn, toColumn);
+            jTable.getTableHeader().repaint();
+        }
+//        switch(action){
+//            case pbcsConstants.EVT_RENAME:
+//                renameTableColumn(jTable, value, toColumn);
+//                jTable.getColumnModel().getColumn(toColumn).setHeaderValue(value);
+//                jTable.getTableHeader().getColumnModel().getColumn(toColumn).setHeaderValue(value);
+//                jTable.getTableHeader().repaint();
+//            case pbcsConstants.EVT_DATA:
+//                pbcsAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
+//            case pbcsConstants.EVT_PREFIX:
+//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
+//                //System.out.println("Get: " + hm.get(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix"));
+//                System.out.println("Set: " + jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix");
+//            case pbcsConstants.EVT_SUFFIX:
+//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
+//            case pbcsConstants.EVT_FIND:
+//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
+//            case pbcsConstants.EVT_REPLACE:
+//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
+//            case pbcsConstants.EVT_MOVE:
+//                jTable.moveColumn(fromColumn, toColumn);
+//                jTable.getTableHeader().repaint();
+//        }
+    System.out.println("Array: " + Arrays.toString(pbcsAdmin.hm.entrySet().toArray()));
     }
 }
