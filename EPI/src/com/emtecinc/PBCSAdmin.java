@@ -5,14 +5,20 @@
  */
 package com.emtecinc;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -20,6 +26,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -45,6 +56,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     static String pbcsHPUrl;
     static String pbcsLCMUrl;
     static Boolean blnIsLoggedIn = false;
+    ArrayList<String> eventColumns = new ArrayList<String>();
+    ArrayList<String[]> eventRows = new ArrayList<String[]>();
     
     /**
      * Creates new form PBCSAdmin
@@ -118,6 +131,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnAddColumn = new javax.swing.JButton();
         btnColumnActions = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
+        btnMoveColumn = new javax.swing.JButton();
+        btnLoadProfile = new javax.swing.JButton();
+        btnSaveProfile = new javax.swing.JButton();
         tabFSMgr = new javax.swing.JPanel();
         pnLogin = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -602,6 +618,29 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnMoveColumn.setText("Move Column");
+        btnMoveColumn.setToolTipText("");
+        btnMoveColumn.setEnabled(false);
+        btnMoveColumn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMoveColumnActionPerformed(evt);
+            }
+        });
+
+        btnLoadProfile.setText("Load Profile");
+        btnLoadProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadProfileActionPerformed(evt);
+            }
+        });
+
+        btnSaveProfile.setText("Save Profile");
+        btnSaveProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveProfileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout tabDLMgrLayout = new javax.swing.GroupLayout(tabDLMgr);
         tabDLMgr.setLayout(tabDLMgrLayout);
         tabDLMgrLayout.setHorizontalGroup(
@@ -620,7 +659,13 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnColumnActions)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExport))
+                        .addComponent(btnExport)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnMoveColumn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSaveProfile)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnLoadProfile))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1250, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -637,7 +682,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
                             .addComponent(btnRefresh)
                             .addComponent(btnAddColumn)
                             .addComponent(btnColumnActions)
-                            .addComponent(btnExport))
+                            .addComponent(btnExport)
+                            .addComponent(btnMoveColumn)
+                            .addComponent(btnLoadProfile)
+                            .addComponent(btnSaveProfile))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
@@ -793,7 +841,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtPrefix.setEnabled(true);
         txtSuffix.setEnabled(true);
         txtFind.setEnabled(true);
-        txtReplace.setEnabled(true);        
+        txtReplace.setEnabled(true);     
+        btnMoveColumn.setEnabled(true);
         
         if (jTable1.getSelectedColumn() == 0){
             btnPrevField.setEnabled(false);
@@ -839,8 +888,40 @@ public class PBCSAdmin extends javax.swing.JFrame {
             txtReplace.setText(replace.toString());
         } else {
             txtReplace.setText("");
-        }        
+        }
+                jTable1.getColumnModel().addColumnModelListener(new TableColumnModelListener(){
+            @Override
+            public void columnMoved(TableColumnModelEvent e) {
+                //this is called so many times
+                //I don't want this, but something like column moved finished event
+                if (e.getFromIndex() != e.getToIndex()){
+                    System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
+                    dlManager.updateEventLog(pbcsConstants.EVT_MOVE, Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), "");
+                }
+            }
+
+            @Override
+            public void columnAdded(TableColumnModelEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void columnRemoved(TableColumnModelEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void columnMarginChanged(ChangeEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void columnSelectionChanged(ListSelectionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }); 
     }
+
     
     
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
@@ -882,24 +963,36 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         //arrDataColumn = new String[jTable1.getColumnCount()];
         TableModel model = dlManager.findReplaceField(jTable1, txtFind.getText(), txtReplace.getText(), txtPrefix.getText(), txtSuffix.getText());
-        if (txtColName.getText() != null) {
+        if (!txtColName.getText().equals("")) {
+            dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtColName.getText());
             dlManager.renameTableColumn(jTable1, txtColName.getText(), jTable1.getSelectedColumn());
         }
-        if (txtPrefix.getText() != null) {
+        if (!txtPrefix.getText().equals("")) {
+            dlManager.updateEventLog(pbcsConstants.EVT_PREFIX, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtPrefix.getText());
             hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix", txtPrefix.getText());
         }
-        if (txtSuffix.getText() != null) {
+        if (!txtSuffix.getText().equals("")) {
+            dlManager.updateEventLog(pbcsConstants.EVT_SUFFIX, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtSuffix.getText());
             hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Suffix", txtSuffix.getText());
         }
-        if (txtFind.getText() != null) {
+        if (!txtFind.getText().equals("")) {
+            dlManager.updateEventLog(pbcsConstants.EVT_FIND, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtFind.getText());
             hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Find", txtFind.getText());
         }
-        if (txtReplace.getText() != null) {
+        if (!txtReplace.getText().equals("")) {
+            dlManager.updateEventLog(pbcsConstants.EVT_REPLACE, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtReplace.getText());
             hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Replace", txtReplace.getText());
         }
         if (cbData.isSelected()) {
+            dlManager.updateEventLog(pbcsConstants.EVT_DATA, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
             //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
             arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+        }
+        for (Object t: dlManager.eventRows){
+            if (t instanceof String[]){
+                String[] arr = (String[]) t;
+                System.out.println(Arrays.toString(arr));
+            }
         }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
 
@@ -1222,6 +1315,79 @@ public class PBCSAdmin extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnCldDeleteActionPerformed
 
+    private void btnMoveColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveColumnActionPerformed
+        // TODO add your handling code here:
+        JList lstColumns = new JList();
+        JButton btnUp = new JButton();
+        JButton btnDown = new JButton();
+        btnUp.setText("Move Up");
+        btnDown.setText("Move Down");
+        ArrayList<String> columnNames = dlManager.getTableColumnNames(jTable1);
+        DefaultListModel columnModel = new DefaultListModel();
+        for (String column: columnNames) {
+            columnModel.addElement(column);
+        }
+        lstColumns.setModel(columnModel);
+        Object[] fields = {
+            "Columns", lstColumns,
+            "", btnUp,
+            "", btnDown
+        };
+        if (lstColumns.getSelectedIndex() == -1){
+            btnUp.setEnabled(false);
+            btnDown.setEnabled(false);
+        }
+        int option = JOptionPane.showConfirmDialog(this.getParent(), fields, "Column Move", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            int sourceIndex = lstColumns.getSelectedIndex();
+            System.out.println(sourceIndex);
+            int targetIndex;
+//            if (cbDeleteColumns.isSelected()){
+//                dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+//                   rightCol.getSelectedItem().toString(), splitChar.getText(), true);
+//            } else {
+//                dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+//                    rightCol.getSelectedItem().toString(), splitChar.getText(), false);
+//            }
+        }
+    }//GEN-LAST:event_btnMoveColumnActionPerformed
+
+    private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
+        // TODO add your handling code here:
+        dlManager.saveFile();
+    }//GEN-LAST:event_btnSaveProfileActionPerformed
+
+    private void btnLoadProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadProfileActionPerformed
+        try {
+            // TODO add your handling code here:
+            dlManager.openProfile();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnLoadProfileActionPerformed
+    
+    public void setImportProfile (String action, int fromColumn, int toColumn, String value){
+        //ArrayList<String> arrDataColumn = new ArrayList<>();
+        System.out.println(action);
+        switch(action){
+            case pbcsConstants.EVT_RENAME:
+                dlManager.renameTableColumn(jTable1, value, toColumn);
+                jTable1.getColumnModel().getColumn(toColumn).setHeaderValue(value);
+                jTable1.getTableHeader().repaint();
+            case pbcsConstants.EVT_DATA:
+                arrDataColumn.add(toColumn, jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
+            case pbcsConstants.EVT_PREFIX:
+                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
+            case pbcsConstants.EVT_SUFFIX:
+                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
+            case pbcsConstants.EVT_FIND:
+                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
+            case pbcsConstants.EVT_REPLACE:
+                hm.put(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
+            case pbcsConstants.EVT_MOVE:
+                jTable1.moveColumn(fromColumn, toColumn);
+        }
+    }
     
     /**
      * @param args the command line arguments
@@ -1270,11 +1436,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnColumnActions;
     private javax.swing.JButton btnExport;
     private javax.swing.JButton btnLoad;
+    private javax.swing.JButton btnLoadProfile;
     private javax.swing.JButton btnLoadSQL;
     private javax.swing.JButton btnLogin;
+    private javax.swing.JButton btnMoveColumn;
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnPrevField;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnRefreshLists;
+    private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JCheckBox cbData;
     private javax.swing.JPanel jPanel1;

@@ -278,6 +278,12 @@
                               <Component id="btnColumnActions" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnExport" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnMoveColumn" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnSaveProfile" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnLoadProfile" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane2" alignment="0" pref="1250" max="32767" attributes="0"/>
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
@@ -299,6 +305,9 @@
                                   <Component id="btnAddColumn" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnColumnActions" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnExport" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnMoveColumn" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnLoadProfile" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnSaveProfile" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
@@ -876,6 +885,32 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnMoveColumn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Move Column"/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveColumnActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnLoadProfile">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Load Profile"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoadProfileActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnSaveProfile">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Save Profile"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveProfileActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

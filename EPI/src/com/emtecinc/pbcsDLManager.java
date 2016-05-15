@@ -11,15 +11,22 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -36,6 +43,7 @@ import javax.swing.table.TableModel;
 
 public class pbcsDLManager {
     public File flSrcFile;
+    ArrayList<String[]> eventRows = new ArrayList<String[]>();
     /**
     * Creates table model from delimited file using Open CSV. 
     *
@@ -412,5 +420,123 @@ public class pbcsDLManager {
         if (deleteColumns) {
         }
         model.fireTableDataChanged();
+    }
+    
+    public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
+        eventRows.add(new String[]{operation, movedFrom, movedTo, characters});
+    }
+    public void moveColumn (JTable jTable, int from, int to) {
+        TableModel model = jTable.getModel();
+        jTable.moveColumn(to, from);
+        
+    }
+//    public void saveFile(){
+//        final JFileChooser fc = new JFileChooser();
+//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+//        int returnVal = fc.showOpenDialog(null);
+//        
+//        if (returnVal == JFileChooser.APPROVE_OPTION){
+//            File file = fc.getSelectedFile();
+//            if (file.exists()) {
+//                int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?");
+//                if (option == JOptionPane.OK_OPTION) {
+//                    file.delete();
+//                }
+//            }
+//            try {
+//                file.createNewFile();
+//                BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+//                for (Object event: eventRows){
+//                    if (event instanceof String[]){
+//                        String[] arr = (String[]) event;
+//                        bw.write(Arrays.toString(arr));
+//                        bw.newLine();
+//                    }
+//                }
+//                bw.close();
+//            } catch (IOException ex) {
+//                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//    }
+    
+    public void saveFile(){
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        int returnVal = fc.showOpenDialog(null);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION){
+            File file = fc.getSelectedFile();
+            if (file.exists()) {
+                int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?");
+                if (option == JOptionPane.OK_OPTION) {
+                    file.delete();
+                }
+            }
+            try {
+                file.createNewFile();
+                ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                outputStream.writeObject(eventRows);
+                outputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+//    public void openProfile(){
+//        final JFileChooser fc = new JFileChooser();
+//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+//        int returnVal = fc.showOpenDialog(null);
+//        
+//        if (returnVal == JFileChooser.APPROVE_OPTION){
+//            File file = fc.getSelectedFile();
+//            try {
+//                BufferedReader br = new BufferedReader(new FileReader(file));
+//                while (!br.readLine().isEmpty())
+//                    //System.out.println(br.readLine().replace("[", "").replace("[", "").split(","));
+//                    System.out.println(br.readLine());
+//                br.close();
+//            } catch (IOException ex) {
+//                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//    }
+    
+    public void openProfile() throws ClassNotFoundException{
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        PBCSAdmin pbcsAdmin = new PBCSAdmin();
+        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        int returnVal = fc.showOpenDialog(null);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION){
+            File file = fc.getSelectedFile();
+            try {
+                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+                Object importProfile = (Object) inputStream.readObject();
+                if (importProfile instanceof ArrayList){
+                    eventRows = (ArrayList<String[]>) importProfile;
+                    for (Object events: eventRows){
+                        if (events instanceof String[]){
+                            String[] arr = (String[]) events;
+                            //System.out.println(arr[0] + " " + arr[1] + " " + arr[1] + " " + arr[3]);
+                            pbcsAdmin.setImportProfile(arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
+                            //System.out.println(Arrays.toString(arr));
+                        }
+                    }
+                }
+//                for (Object event: importItems){
+//                    if (event instanceof String[]){
+//                        String[] arr = (String[]) event;
+//                        System.out.println(Arrays.toString(arr));
+//                    }
+//                }
+            } catch (IOException ex) {
+                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
