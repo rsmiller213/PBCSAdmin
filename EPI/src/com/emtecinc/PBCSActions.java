@@ -560,6 +560,8 @@ public class PBCSActions {
         }
 
     }
+    
+    
 
     private boolean sendFileContents(Boolean isFirst, boolean isLast, byte[] lastChunk, String fileName) throws Exception {
         HttpURLConnection connection = null;
@@ -606,6 +608,69 @@ public class PBCSActions {
 //
 // END - Upload a file to PBCS
 //
+    
+    public void downloadFile(String fileName, String saveFile) throws Exception {
+        HttpURLConnection connection = null;
+        InputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        try {
+            //URL url = new URL(String.format("%s/interop/rest/%s/applicationsnapshots/%s/contents", serverUrl, apiVersion, fileName));
+            URL url = new URL(String.format("%s/applicationsnapshots/%s/contents", getCurrentDetails("LCM","URL"), fileName));
+            System.out.println(url);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setInstanceFollowRedirects(false);
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setRequestProperty("Authorization", "Basic " + new sun.misc.BASE64Encoder().encode((pbcsDomain + "." + userName + ":" + password).getBytes()));
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            int status = connection.getResponseCode();
+            if (status == 200) {
+                if (connection.getContentType() != null
+                        && connection.getContentType().equals("application/json")) {
+                    JSONObject json = new JSONObject(getStringFromInputStream(connection.getInputStream()));
+                    System.out.println("Error downloading file : " + json.getString("details"));
+                } else {
+                    inputStream = connection.getInputStream();
+                    outputStream = new FileOutputStream(new File(saveFile));
+                    int bytesRead = -1;
+                    byte[] buffer = new byte[5 * 1024 * 1024];
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    System.out.println("File download completed.");
+                }
+            } else {
+                throw new Exception("Http status code: " + status);
+            }
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+    }
+    
+    public void deleteFile(String fileName) throws Exception {
+        String urlString = String.format("%s/applicationsnapshots/%s", getCurrentDetails("LCM","URL"), fileName);
+        String response = executeRequest(urlString, "DELETE", null, "application/x-www-form-urlencoded");
+        JSONObject json = new JSONObject(response);
+        int resStatus = json.getInt("status");
+        if (resStatus == 0) {
+            System.out.println("File deleted successfully");
+        } else {
+            System.out.println("Error deleting file : " + json.getString("details"));
+        }
+    }
+    
+    
+    
 // BEGIN - Execute a Job (EXPORT_DATA, EXPORT_METADATA, IMPORT_DATA, IMPORT_METADATA, CUBE_REFRESH, 
 //...)
 //

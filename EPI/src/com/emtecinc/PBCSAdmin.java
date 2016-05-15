@@ -125,7 +125,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         lstFiles = new javax.swing.JList<>();
         btnLoad = new javax.swing.JButton();
-        btnRefreshLists = new javax.swing.JButton();
+        btnCldUpload = new javax.swing.JButton();
+        btnCldDownload = new javax.swing.JButton();
+        btnCldRefresh = new javax.swing.JButton();
+        btnCldDelete = new javax.swing.JButton();
 
         rbComma.doClick();
 
@@ -668,10 +671,35 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnRefreshLists.setText("Refresh Lists");
-        btnRefreshLists.addActionListener(new java.awt.event.ActionListener() {
+        btnCldUpload.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
+        btnCldUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_upload_24x16.png"))); // NOI18N
+        btnCldUpload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshListsActionPerformed(evt);
+                btnCldUploadActionPerformed(evt);
+            }
+        });
+
+        btnCldDownload.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
+        btnCldDownload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_download_24x24.png"))); // NOI18N
+        btnCldDownload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCldDownloadActionPerformed(evt);
+            }
+        });
+
+        btnCldRefresh.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
+        btnCldRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_refresh_24x24.png"))); // NOI18N
+        btnCldRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCldRefreshActionPerformed(evt);
+            }
+        });
+
+        btnCldDelete.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
+        btnCldDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_delete_24x24.png"))); // NOI18N
+        btnCldDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCldDeleteActionPerformed(evt);
             }
         });
 
@@ -680,37 +708,46 @@ public class PBCSAdmin extends javax.swing.JFrame {
         tabFSMgrLayout.setHorizontalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabFSMgrLayout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(btnCldUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCldDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCldDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCldRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(tabFSMgrLayout.createSequentialGroup()
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addComponent(btnRefreshLists)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(118, 118, 118)
                         .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
-                        .addComponent(btnLoad)
-                        .addGap(72, 72, 72)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(868, Short.MAX_VALUE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(460, 460, 460)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(tabFSMgrLayout.createSequentialGroup()
+                        .addGap(478, 478, 478)
+                        .addComponent(btnLoad)))
+                .addContainerGap(638, Short.MAX_VALUE))
         );
         tabFSMgrLayout.setVerticalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabFSMgrLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(btnLoad)
+                .addGap(17, 17, 17)
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRefreshLists))
-                .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3)))
-                    .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addGap(148, 148, 148)
-                        .addComponent(btnLoad)))
-                .addContainerGap(268, Short.MAX_VALUE))
+                    .addComponent(btnCldUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCldDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCldDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCldRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addContainerGap(207, Short.MAX_VALUE))
         );
 
         MainTabbedPane.addTab("File System Manager", tabFSMgr);
@@ -1112,14 +1149,78 @@ public class PBCSAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoadActionPerformed
 
-    private void btnRefreshListsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshListsActionPerformed
+    private void btnCldRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldRefreshActionPerformed
         // TODO add your handling code here:
-        if(blnIsLoggedIn){
+         if(blnIsLoggedIn){
             refreshFMLists();
         } else {
             JOptionPane.showMessageDialog(this.getParent(), "You are not logged in!");
         }
-    }//GEN-LAST:event_btnRefreshListsActionPerformed
+    }//GEN-LAST:event_btnCldRefreshActionPerformed
+
+    private void btnCldUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldUploadActionPerformed
+        // TODO add your handling code here:
+        if(blnIsLoggedIn){
+            final JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+            int returnVal = fc.showOpenDialog(null);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION){
+                 //Upload File
+                try{
+                    //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
+                    //    pbcsUrl, pbcsConstants.DBG_PBCS_HPVER, "POC_CITA");
+                    PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+                    pbcsclient.uploadFile(fc.getSelectedFile());
+                    refreshFMLists();
+                } catch (Exception ex2) {
+                    JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex2.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this.getParent(), "You are not logged in!");
+        }
+    }//GEN-LAST:event_btnCldUploadActionPerformed
+
+    private void btnCldDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldDownloadActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        int returnVal = fc.showOpenDialog(null);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION){
+            // Save Locally
+            try {
+                
+                if (lstFiles.getSelectedValue() == null){
+                    JOptionPane.showMessageDialog(this.getParent(), "Please Select a File");
+                } else {
+                    PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+                    pbcsclient.downloadFile(lstFiles.getSelectedValue(),fc.getSelectedFile().toString());
+                    JOptionPane.showMessageDialog(this.getParent(), lstFiles.getSelectedValue() + " downloaded to " + fc.getSelectedFile().toString() + " successfully!");
+                }
+                
+            } catch (Exception ex) {
+                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             //Upload File
+        }
+    }//GEN-LAST:event_btnCldDownloadActionPerformed
+
+    private void btnCldDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldDeleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+            pbcsclient.deleteFile(lstFiles.getSelectedValue());
+            refreshFMLists();
+        } catch (Exception ex) {
+                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+    }//GEN-LAST:event_btnCldDeleteActionPerformed
 
     
     /**
@@ -1162,6 +1263,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.ButtonGroup btgDelimiter;
     private javax.swing.JButton btnAddColumn;
     private javax.swing.JButton btnBrowse;
+    private javax.swing.JButton btnCldDelete;
+    private javax.swing.JButton btnCldDownload;
+    private javax.swing.JButton btnCldRefresh;
+    private javax.swing.JButton btnCldUpload;
     private javax.swing.JButton btnColumnActions;
     private javax.swing.JButton btnExport;
     private javax.swing.JButton btnLoad;
@@ -1170,7 +1275,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnPrevField;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnRefreshLists;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JCheckBox cbData;
     private javax.swing.JPanel jPanel1;
