@@ -1190,7 +1190,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             pbcsclient.getServices();
             // Refresh File Manager Lists
             refreshFMLists();
-            lblApp.setText(pbcsclient.getCurrentDetails("HP","AppType"));
+            lblApp.setText(pbcsclient.getCurrentDetails("HP","AppName"));
             // Logged in & refreshed
             blnIsLoggedIn = true;
             JOptionPane.showMessageDialog(this.getParent(), "Login Successful");
