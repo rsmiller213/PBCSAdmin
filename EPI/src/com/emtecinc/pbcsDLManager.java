@@ -23,6 +23,7 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -504,7 +505,9 @@ public class pbcsDLManager {
 //        }
 //    }
     
-    public void openProfile(JTable jTable) throws ClassNotFoundException{
+    //public void openProfile(JTable jTable) throws ClassNotFoundException{
+    public HashMap openProfile(JTable jTable) throws ClassNotFoundException{
+        HashMap hm =  new HashMap();
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         PBCSAdmin pbcsAdmin = new PBCSAdmin();
@@ -524,11 +527,13 @@ public class pbcsDLManager {
                             //System.out.println(Arrays.toString(arr));
                             //System.out.println(arr[0] + " " + arr[1] + " " + arr[1] + " " + arr[3]);
                             //pbcsAdmin.setImportProfile(arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
-                            setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
+                            //hm = setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
+                            hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3])); 
                             //System.out.println(Arrays.toString(arr));
                         }
                     }
                 }
+                
 //                for (Object event: importItems){
 //                    if (event instanceof String[]){
 //                        String[] arr = (String[]) event;
@@ -539,28 +544,30 @@ public class pbcsDLManager {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
+        return hm;
     }
     
-    public void setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
+    //public void setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
+    public HashMap setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
         //ArrayList<String> arrDataColumn = new ArrayList<>();
         //System.out.println(action);
+        HashMap hm =  new HashMap();
         PBCSAdmin pbcsAdmin = new PBCSAdmin();
         if (action.equals(pbcsConstants.EVT_RENAME)) {
             renameTableColumn(jTable, value, toColumn);
         } else if (action.equals(pbcsConstants.EVT_DATA)){
             pbcsAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
         } else if (action.equals(pbcsConstants.EVT_PREFIX)){
-            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
+            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
         } else if (action.equals(pbcsConstants.EVT_SUFFIX)){
-            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
+            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
         } else if (action.equals(pbcsConstants.EVT_FIND)){
-            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
+            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
         } else if (action.equals(pbcsConstants.EVT_REPLACE)){
-            pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
+            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
         } else if (action.equals(pbcsConstants.EVT_MOVE)){
             jTable.getColumnModel().moveColumn(fromColumn, toColumn);
-//            DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
-//            tblModel.fireTableStructureChanged();
             //jTable.moveColumn(fromColumn, toColumn);
             jTable.getTableHeader().repaint();
         }
@@ -586,6 +593,7 @@ public class pbcsDLManager {
 //                jTable.moveColumn(fromColumn, toColumn);
 //                jTable.getTableHeader().repaint();
 //        }
-    System.out.println("Array: " + Arrays.toString(pbcsAdmin.hm.entrySet().toArray()));
+    //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
+    return hm;
     }
 }

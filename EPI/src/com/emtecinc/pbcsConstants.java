@@ -25,4 +25,9 @@ public class pbcsConstants {
     public static final String EVT_RENAME = "Rename";
     public static final String EVT_FIND = "Find";
     public static final String EVT_REPLACE = "Replace";
+    public static final String EVT_ADD = "Add Column";
+    public static final String EVT_SPLIT_DELIM = "Split(DELIM)";
+    public static final String EVT_SPLIT_CHARS = "Split (# Chars)";
+    public static final String EVT_CREATE_JOIN = "Create with Join";
+    
 }

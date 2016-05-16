@@ -58,6 +58,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     static Boolean blnIsLoggedIn = false;
     ArrayList<String> eventColumns = new ArrayList<String>();
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
+    ArrayList<String[]> propList = new ArrayList<String[]>();
     
     /**
      * Creates new form PBCSAdmin
@@ -979,6 +980,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (!txtPrefix.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_PREFIX, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtPrefix.getText());
             hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix", txtPrefix.getText());
+            //propList.add(new String[]{jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix", txtPrefix.getText()});
         }
         if (!txtSuffix.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_SUFFIX, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtSuffix.getText());
@@ -1017,6 +1019,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //String columnData = new String(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
         int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
+            dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), columnName.getText());
             dlManager.addTableColumn(jTable1, columnName.getText(), columnData.getText());
         } 
     }//GEN-LAST:event_btnAddColumnActionPerformed
@@ -1373,7 +1376,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnLoadProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadProfileActionPerformed
         try {
             // TODO add your handling code here:
-            dlManager.openProfile(jTable1);
+            //dlManager.openProfile(jTable1);
+            //hm = dlManager.openProfile(jTable1);
+            hm.putAll(dlManager.openProfile(jTable1));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
