@@ -1019,8 +1019,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //String columnData = new String(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
         int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), columnName.getText());
             dlManager.addTableColumn(jTable1, columnName.getText(), columnData.getText());
+            dlManager.updateEventLog(pbcsConstants.EVT_ADD, "", Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)columnName)), columnName.getText());
         } 
     }//GEN-LAST:event_btnAddColumnActionPerformed
 
@@ -1044,6 +1044,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnColumnActionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColumnActionsActionPerformed
         // TODO add your handling code here:
+        int selectedColumn = jTable1.getSelectedColumn();
         JTextField colHeader = new JTextField();
         JTextField textValue = new JTextField();
         
@@ -1084,6 +1085,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 int optCreateViaText = JOptionPane.showConfirmDialog(this.getParent(), splitField, "Create Via Text", JOptionPane.OK_CANCEL_OPTION);
                 if (optCreateViaText == JOptionPane.OK_OPTION) {
                     dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+                    dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
+                    dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
                 }
                 case 1:
                     Object[] createDupJoin = {
@@ -1101,6 +1104,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         } else {
                             dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
                                     rightCol.getSelectedItem().toString(), splitChar.getText(), false);
+                            dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, jTable1.getColumnModel().getColumnIndex(leftCol.getSelectedItem().toString())
+                                    + " " + jTable1.getColumnModel().getColumnIndex(rightCol.getSelectedItem().toString()),
+                                    Integer.toString(jTable1.getColumnCount() - 1), splitChar.getText());
+                            dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount() - 1),
+                                    Integer.toString(jTable1.getColumnCount() - 1), colHeader.getText());
                         }
                     }
                 case 2:
@@ -1116,6 +1124,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
                             bSplitBy = true;
                         }
                         dlManager.splitColumn(jTable1, bSplitBy, splitNum.getText());
+                        if (bSplitBy) {
+                            dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_CHARS, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
+                        } else {
+                            dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_DELIM, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
+                        }
                     }
             }
         }

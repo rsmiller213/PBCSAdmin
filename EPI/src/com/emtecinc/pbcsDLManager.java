@@ -342,7 +342,48 @@ public class pbcsDLManager {
             }
     }  
     
-    
+    public void splitColumnByProfile(JTable tTable, boolean bCharSplit, String strSplitBy, int oldColumn ){
+        try{
+            // Locals
+            int iCurCol = tTable.convertColumnIndexToModel(oldColumn);
+            String strCur;
+            String strNew;
+            String strColHeader = tTable.getColumnModel().getColumn(oldColumn).getHeaderValue().toString();
+            int iNewCol;
+            
+            // Create New Column
+            DefaultTableModel tblModel = (DefaultTableModel) tTable.getModel();
+            addTableColumn(tTable,strColHeader + "_Split","abc");
+            iNewCol = tblModel.getColumnCount() - 1;
+            
+            // Get Model to Loop Rows
+            TableModel model = tTable.getModel();
+            Object[] rows = new Object[tTable.getRowCount()];
+            
+            //Loop Rows
+            for (int i = 0; i < rows.length; i++) {
+                strCur = model.getValueAt(i, iCurCol).toString();
+                
+                if (bCharSplit){
+                    // Convert Str to Int
+                    int iSplitBy = Integer.valueOf(strSplitBy);
+                    // Split into Two Strings
+                    strNew = strCur.substring(iSplitBy);
+                    strCur = strCur.substring(0, iSplitBy);
+                } else {
+                    strNew = strCur.substring(strCur.indexOf(strSplitBy) + 1);
+                    strCur = strCur.substring(0, strCur.indexOf(strSplitBy));
+                }
+                
+                // Update Rows
+                model.setValueAt(strCur, i, iCurCol);
+                model.setValueAt(strNew, i, iNewCol);
+                }
+                tTable.setModel(model);
+            } catch (Throwable x) {
+                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+            }
+    }
     
     /**
     * Adds a table column and can populate all rows with provided data 
@@ -417,6 +458,20 @@ public class pbcsDLManager {
             String leftValue = model.getValueAt(i, model.findColumn(leftColumn)).toString();
             String rightValue = model.getValueAt(i, model.findColumn(rightColumn)).toString();
             model.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
+        }
+        if (deleteColumns) {
+        }
+        model.fireTableDataChanged();
+    }
+    
+    public void duplicateColumnFromProfile (JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns){
+        //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+        DefaultTableModel model = (DefaultTableModel)jTable.getModel();
+        model.addColumn(header);
+        for (int i = 0 ; i < jTable.getRowCount(); i++){
+            String leftValue = model.getValueAt(i, leftColumn).toString();
+            String rightValue = model.getValueAt(i, rightColumn).toString();
+            model.setValueAt(leftValue + delimiter + rightValue, i, model.getColumnCount() - 1);
         }
         if (deleteColumns) {
         }
@@ -528,8 +583,13 @@ public class pbcsDLManager {
                             //System.out.println(arr[0] + " " + arr[1] + " " + arr[1] + " " + arr[3]);
                             //pbcsAdmin.setImportProfile(arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
                             //hm = setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
-                            hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3])); 
-                            //System.out.println(Arrays.toString(arr));
+                            if (arr[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
+                                hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1].split(" ")[0]), Integer.parseInt(arr[1].split(" ")[1]), arr[3])); 
+                                System.out.println(Arrays.toString(arr));
+                            } else {
+                                hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3])); 
+                                System.out.println(Arrays.toString(arr));
+                            }
                         }
                     }
                 }
@@ -570,6 +630,17 @@ public class pbcsDLManager {
             jTable.getColumnModel().moveColumn(fromColumn, toColumn);
             //jTable.moveColumn(fromColumn, toColumn);
             jTable.getTableHeader().repaint();
+        } else if (action.equals(pbcsConstants.EVT_ADD)){
+            addTableColumn(jTable, value, "");
+            //jTable.getTableHeader().repaint();
+        } else if (action.equals(pbcsConstants.EVT_COLUMN_VALUES)){
+            updateColumnValues(jTable, toColumn, value);
+        } else if (action.equals(pbcsConstants.EVT_SPLIT_CHARS)){
+            splitColumnByProfile(jTable, true, value, fromColumn);
+        } else if (action.equals(pbcsConstants.EVT_SPLIT_DELIM)){
+            splitColumnByProfile(jTable, false, value, fromColumn);
+        } else if (action.equals(pbcsConstants.EVT_CREATE_JOIN)){
+            duplicateColumnFromProfile(jTable, Integer.toString(toColumn), fromColumn, toColumn, value, false);
         }
 //        switch(action){
 //            case pbcsConstants.EVT_RENAME:
@@ -595,5 +666,21 @@ public class pbcsDLManager {
 //        }
     //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
     return hm;
+    }
+    
+    public void updateColumnValues(JTable jTable, int columnIndex, String strRowData){
+        try {
+                //DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
+                TableModel tblModel = jTable.getModel();
+                //tblModel.addColumn(strColumnName);
+                Object[] rows = new Object[jTable.getRowCount()];
+               for (int i = 0; i < rows.length; i++) {
+                    rows[i] = strRowData;
+                    tblModel.setValueAt(rows[i], i, columnIndex);
+                }
+               //tblModel.fireTableDataChanged(); 
+        } catch (Throwable x) {
+                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+        }
     }
 }
