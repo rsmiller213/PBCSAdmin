@@ -816,6 +816,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addComponent(MainTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
         );
 
+        for (int i = 1; i < MainTabbedPane.getTabCount(); i++) {
+            if (pbcsConstants.DBG){
+                MainTabbedPane.setEnabledAt(i, true);
+            } else {
+                MainTabbedPane.setEnabledAt(i, false);
+            }
+        }
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1180,25 +1188,29 @@ public class PBCSAdmin extends javax.swing.JFrame {
             //        pbcsUrl, pbcsConstants.DBG_PBCS_LCMVER, "POC_CITA");
             PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
             pbcsclient.getServices();
-            System.out.println("LCM Version: " + pbcsclient.getCurrentDetails("LCM","Version"));
-            System.out.println("LCM URL: " + pbcsclient.getCurrentDetails("LCM","URL"));
-            System.out.println("HP Version: " + pbcsclient.getCurrentDetails("HP","Version"));
-            System.out.println("HP URL: " + pbcsclient.getCurrentDetails("HP","URL"));
-            System.out.println("App Name: " + pbcsclient.getCurrentDetails("HP","AppName"));
-            System.out.println("App Type: " + pbcsclient.getCurrentDetails("HP","AppType"));
             // Refresh File Manager Lists
             refreshFMLists();
-            lblApp.setText(pbcsclient.getAppDetails("Name"));
+            lblApp.setText(pbcsclient.getCurrentDetails("HP","AppType"));
             // Logged in & refreshed
             blnIsLoggedIn = true;
             JOptionPane.showMessageDialog(this.getParent(), "Login Successful");
-            
+            // Enable Panes
+            for (int i = 1; i < MainTabbedPane.getTabCount(); i++) {
+                MainTabbedPane.setEnabledAt(i, true);
+            }
+
+            if (pbcsConstants.DBG){
+                System.out.println("LCM Version: " + pbcsclient.getCurrentDetails("LCM","Version"));
+                System.out.println("LCM URL: " + pbcsclient.getCurrentDetails("LCM","URL"));
+                System.out.println("HP Version: " + pbcsclient.getCurrentDetails("HP","Version"));
+                System.out.println("HP URL: " + pbcsclient.getCurrentDetails("HP","URL"));
+                System.out.println("App Name: " + pbcsclient.getCurrentDetails("HP","AppName"));
+                System.out.println("App Type: " + pbcsclient.getCurrentDetails("HP","AppType"));
+            }
             
         } catch (Exception ex) {
-            //Logger.getLogger(PBCSAdmin1.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex.getMessage());
             blnIsLoggedIn = false;
-           // }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
     
@@ -1422,7 +1434,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnPrevField;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnRefreshLists;
     private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JCheckBox cbData;

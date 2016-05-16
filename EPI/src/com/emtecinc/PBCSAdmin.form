@@ -51,6 +51,9 @@
       <Properties>
         <Property name="tabLayoutPolicy" type="int" value="1"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="for (int i = 1; i &lt; MainTabbedPane.getTabCount(); i++) {&#xd;&#xa;    if (pbcsConstants.DBG){&#xd;&#xa;        MainTabbedPane.setEnabledAt(i, true);&#xd;&#xa;    } else {&#xd;&#xa;        MainTabbedPane.setEnabledAt(i, false);&#xd;&#xa;    }&#xd;&#xa;}"/>
+      </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
