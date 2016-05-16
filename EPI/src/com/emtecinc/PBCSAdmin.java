@@ -1099,6 +1099,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     int optCreateDupJoin = JOptionPane.showConfirmDialog(this.getParent(), createDupJoin, "Create/Duplicate Via Join", JOptionPane.OK_CANCEL_OPTION);
                     if (optCreateDupJoin == JOptionPane.OK_OPTION) {
                         if (cbDeleteColumns.isSelected()){
+                            dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, Integer.toString(leftCol.getSelectedIndex())
+                                    + " " + Integer.toString(rightCol.getSelectedIndex()), Integer.toString(jTable1.getColumnCount()), splitChar.getText());
+                            dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount()),
+                                    Integer.toString(jTable1.getColumnCount()), colHeader.getText());
+                            dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(leftCol.getSelectedIndex()),
+                                    Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
+//                            dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(rightCol.getSelectedIndex()),
+//                                    Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
                             dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
                                     rightCol.getSelectedItem().toString(), splitChar.getText(), true);
                         } else {

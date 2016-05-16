@@ -460,8 +460,10 @@ public class pbcsDLManager {
             model.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
         }
         if (deleteColumns) {
+            jTable.removeColumn(jTable.getColumn(leftColumn));
+            jTable.removeColumn(jTable.getColumn(rightColumn));
         }
-        model.fireTableDataChanged();
+        //model.fireTableDataChanged();
     }
     
     public void duplicateColumnFromProfile (JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns){
@@ -474,8 +476,10 @@ public class pbcsDLManager {
             model.setValueAt(leftValue + delimiter + rightValue, i, model.getColumnCount() - 1);
         }
         if (deleteColumns) {
+            jTable.removeColumn(jTable.getColumn(leftColumn));
+            jTable.removeColumn(jTable.getColumn(rightColumn));
         }
-        model.fireTableDataChanged();
+        //model.fireTableDataChanged();
     }
     
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
@@ -641,30 +645,10 @@ public class pbcsDLManager {
             splitColumnByProfile(jTable, false, value, fromColumn);
         } else if (action.equals(pbcsConstants.EVT_CREATE_JOIN)){
             duplicateColumnFromProfile(jTable, Integer.toString(toColumn), fromColumn, toColumn, value, false);
+        } else if (action.equals(pbcsConstants.EVT_DELETE_COLUMN)){
+            jTable.removeColumn(jTable.getColumnModel().getColumn(fromColumn));
+            jTable.removeColumn(jTable.getColumnModel().getColumn(toColumn));
         }
-//        switch(action){
-//            case pbcsConstants.EVT_RENAME:
-//                renameTableColumn(jTable, value, toColumn);
-//                jTable.getColumnModel().getColumn(toColumn).setHeaderValue(value);
-//                jTable.getTableHeader().getColumnModel().getColumn(toColumn).setHeaderValue(value);
-//                jTable.getTableHeader().repaint();
-//            case pbcsConstants.EVT_DATA:
-//                pbcsAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
-//            case pbcsConstants.EVT_PREFIX:
-//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
-//                //System.out.println("Get: " + hm.get(jTable1.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix"));
-//                System.out.println("Set: " + jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix");
-//            case pbcsConstants.EVT_SUFFIX:
-//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
-//            case pbcsConstants.EVT_FIND:
-//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
-//            case pbcsConstants.EVT_REPLACE:
-//                pbcsAdmin.hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
-//            case pbcsConstants.EVT_MOVE:
-//                jTable.moveColumn(fromColumn, toColumn);
-//                jTable.getTableHeader().repaint();
-//        }
-    //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
     return hm;
     }
     
