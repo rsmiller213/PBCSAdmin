@@ -447,8 +447,8 @@ public class pbcsDLManager {
     public ArrayList<String> getTableColumnNames(JTable jTable){
         ArrayList<String> columns = new ArrayList<String>();
         for (int i = 0 ; i < jTable.getColumnCount(); i++){
-            columns.add(jTable.getModel().getColumnName(i));
-            //columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
+            //columns.add(jTable.getModel().getColumnName(i));
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
         return columns;
     }
@@ -459,11 +459,19 @@ public class pbcsDLManager {
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
         int leftColIndex = jTable.convertColumnIndexToModel(model.findColumn(leftColumn));
         int rightColIndex = jTable.convertColumnIndexToModel(model.findColumn(rightColumn));
-        model.addColumn(header);
+        //model.addColumn(header);
+        TableColumn t = new TableColumn();
+        t.setHeaderValue(header);
+        jTable.getColumnModel().addColumn(t);
         for (int i = 0 ; i < jTable.getRowCount(); i++){
-            String leftValue = model.getValueAt(i, model.findColumn(leftColumn)).toString();
-            String rightValue = model.getValueAt(i, model.findColumn(rightColumn)).toString();
-            model.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
+            //String leftValue = model.getValueAt(i, model.findColumn(leftColumn)).toString();
+            //String rightValue = model.getValueAt(i, model.findColumn(rightColumn)).toString();
+            String leftValue = (String) jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex((Object) leftColumn));
+            String rightValue =  (String) jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex((Object) rightColumn));
+            //model.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
+            //jTable.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
+            jTable.setValueAt(leftValue + delimiter + rightValue, i, jTable.getColumnModel().getColumnIndex((Object) header));
+            System.out.println("setValueAt: " + leftValue + delimiter + rightValue + " " + i + " " + jTable.getColumnModel().getColumnIndex((Object) header));
         }
         if (deleteColumns) {
             jTable.removeColumn(jTable.getColumn(leftColumn));
@@ -475,11 +483,17 @@ public class pbcsDLManager {
     public void duplicateColumnFromProfile (JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns){
         //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
-        model.addColumn(header);
+        //model.addColumn(header);
+        TableColumn t = new TableColumn();
+        t.setHeaderValue(header);
+        jTable.getColumnModel().addColumn(t);
         for (int i = 0 ; i < jTable.getRowCount(); i++){
-            String leftValue = model.getValueAt(i, leftColumn).toString();
-            String rightValue = model.getValueAt(i, rightColumn).toString();
-            model.setValueAt(leftValue + delimiter + rightValue, i, model.getColumnCount() - 1);
+            //String leftValue = model.getValueAt(i, leftColumn).toString();
+            //String rightValue = model.getValueAt(i, rightColumn).toString();
+            //model.setValueAt(leftValue + delimiter + rightValue, i, model.getColumnCount() - 1);
+            String leftValue = (String) jTable.getValueAt(i, leftColumn);
+            String rightValue =  (String) jTable.getValueAt(i, rightColumn);
+            jTable.setValueAt(leftValue + delimiter + rightValue, i, jTable.getColumnModel().getColumnIndex((Object) header));
         }
         if (deleteColumns) {
             jTable.removeColumn(jTable.getColumn(leftColumn));
@@ -625,9 +639,9 @@ public class pbcsDLManager {
         //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header));
         for (int i = 0; i < hmMoves.size(); i++) {
             String header = hmMoves.entrySet().toArray()[i].toString().split("=")[0];
-            DefaultTableModel model = (DefaultTableModel)jTable.getModel();
             //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header).toString());
-            int from = jTable.convertColumnIndexToView(model.findColumn(header));
+            //int from = jTable.convertColumnIndexToView(model.findColumn(header));
+            int from = jTable.getColumnModel().getColumnIndex((Object) header);
             int to = Integer.parseInt(hmMoves.entrySet().toArray()[i].toString().split("=")[1]);
             System.out.println("Header: " + header + " From: " + from + " To: " + to);
             //jTable.moveColumn(to, from);
@@ -665,6 +679,7 @@ public class pbcsDLManager {
         } else if (action.equals(pbcsConstants.EVT_SPLIT_DELIM)){
             splitColumnByProfile(jTable, false, value, fromColumn);
         } else if (action.equals(pbcsConstants.EVT_CREATE_JOIN)){
+            //System.out.println(Integer.toString(toColumn) + " " + fromColumn + " " + value);
             duplicateColumnFromProfile(jTable, Integer.toString(toColumn), fromColumn, toColumn, value, false);
         } else if (action.equals(pbcsConstants.EVT_DELETE_COLUMN)){
             jTable.removeColumn(jTable.getColumnModel().getColumn(fromColumn));
