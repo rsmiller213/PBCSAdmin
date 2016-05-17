@@ -5,6 +5,8 @@
  */
 package com.emtecinc;
 
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -45,7 +48,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
     //static int[] arrDataColumn;
-    ArrayList<String> arrDataColumn = new ArrayList<>();
+    static ArrayList<String> arrDataColumn = new ArrayList<>();
     //static String[] arrDataColumn;
     ArrayList<String> arrColNames = new ArrayList<>();
     HashMap hm = new HashMap();
@@ -878,7 +881,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         Object suf = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix");
         Object find = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Find");
         Object replace = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Replace");
-        System.out.println("Update: " + jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix");
         if (pre != null) {
             txtPrefix.setText(pre.toString());
         } else {
@@ -899,37 +901,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         } else {
             txtReplace.setText("");
         }
-                jTable1.getColumnModel().addColumnModelListener(new TableColumnModelListener(){
-            @Override
-            public void columnMoved(TableColumnModelEvent e) {
-                //this is called so many times
-                //I don't want this, but something like column moved finished event
-                if (e.getFromIndex() != e.getToIndex()){
-                    //System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
-                    dlManager.updateEventLog(pbcsConstants.EVT_MOVE, Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), "");
-                }
-            }
-
-            @Override
-            public void columnAdded(TableColumnModelEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void columnRemoved(TableColumnModelEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void columnMarginChanged(ChangeEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void columnSelectionChanged(ListSelectionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        }); 
+        dlManager.getTableColumnMoves(jTable1);
     }
 
     
@@ -1370,10 +1342,13 @@ public class PBCSAdmin extends javax.swing.JFrame {
             "", btnUp,
             "", btnDown
         };
-        if (lstColumns.getSelectedIndex() == -1){
-            btnUp.setEnabled(false);
-            btnDown.setEnabled(false);
-        }
+//        if (lstColumns.getSelectedIndex() < 0){
+//            btnUp.setEnabled(false);
+//            btnDown.setEnabled(false);
+//        }
+        //dlManager.btnIsClicked(btnDown);
+        
+        
         int option = JOptionPane.showConfirmDialog(this.getParent(), fields, "Column Move", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             int sourceIndex = lstColumns.getSelectedIndex();

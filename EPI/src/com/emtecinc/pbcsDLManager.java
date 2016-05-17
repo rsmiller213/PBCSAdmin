@@ -31,9 +31,14 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
@@ -45,6 +50,7 @@ import javax.swing.table.TableModel;
 public class pbcsDLManager {
     public File flSrcFile;
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
+    HashMap hmMoves = new HashMap();
     /**
     * Creates table model from delimited file using Open CSV. 
     *
@@ -485,10 +491,7 @@ public class pbcsDLManager {
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
         eventRows.add(new String[]{operation, movedFrom, movedTo, characters});
     }
-    public void moveColumn (JTable jTable, int from, int to) {
-        TableModel model = jTable.getModel();
-        jTable.moveColumn(from, to);
-    }
+
 //    public void saveFile(){
 //        final JFileChooser fc = new JFileChooser();
 //        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -570,6 +573,7 @@ public class pbcsDLManager {
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         PBCSAdmin pbcsAdmin = new PBCSAdmin();
+        boolean bMoves = false;
         //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
         int returnVal = fc.showOpenDialog(null);
         
@@ -590,12 +594,16 @@ public class pbcsDLManager {
                             if (arr[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
                                 hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1].split(" ")[0]), Integer.parseInt(arr[1].split(" ")[1]), arr[3])); 
                                 System.out.println(Arrays.toString(arr));
+                            } else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
+                                bMoves = true;
+                                hmMoves.put(arr[3], arr[2]);
                             } else {
                                 hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3])); 
                                 System.out.println(Arrays.toString(arr));
                             }
                         }
                     }
+                    setMovesFromProfile(jTable);
                 }
                 
 //                for (Object event: importItems){
@@ -612,16 +620,31 @@ public class pbcsDLManager {
         return hm;
     }
     
+    public void setMovesFromProfile(JTable jTable){
+        //String header = hmMoves.entrySet().toArray()[0].toString();
+        //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header));
+        for (int i = 0; i < hmMoves.size(); i++) {
+            String header = hmMoves.entrySet().toArray()[i].toString().split("=")[0];
+            DefaultTableModel model = (DefaultTableModel)jTable.getModel();
+            //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header).toString());
+            int from = jTable.convertColumnIndexToView(model.findColumn(header));
+            int to = Integer.parseInt(hmMoves.entrySet().toArray()[i].toString().split("=")[1]);
+            System.out.println("Header: " + header + " From: " + from + " To: " + to);
+            //jTable.moveColumn(to, from);
+            jTable.moveColumn(from, to);
+        }
+    }
+    
     //public void setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
     public HashMap setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
         //ArrayList<String> arrDataColumn = new ArrayList<>();
         //System.out.println(action);
         HashMap hm =  new HashMap();
-        PBCSAdmin pbcsAdmin = new PBCSAdmin();
+        //jTable.moveColumn(4,0);
         if (action.equals(pbcsConstants.EVT_RENAME)) {
             renameTableColumn(jTable, value, toColumn);
         } else if (action.equals(pbcsConstants.EVT_DATA)){
-            pbcsAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
+            PBCSAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
         } else if (action.equals(pbcsConstants.EVT_PREFIX)){
             hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
         } else if (action.equals(pbcsConstants.EVT_SUFFIX)){
@@ -631,9 +654,7 @@ public class pbcsDLManager {
         } else if (action.equals(pbcsConstants.EVT_REPLACE)){
             hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
         } else if (action.equals(pbcsConstants.EVT_MOVE)){
-            jTable.getColumnModel().moveColumn(fromColumn, toColumn);
-            //jTable.moveColumn(fromColumn, toColumn);
-            jTable.getTableHeader().repaint();
+           
         } else if (action.equals(pbcsConstants.EVT_ADD)){
             addTableColumn(jTable, value, "");
             //jTable.getTableHeader().repaint();
@@ -649,7 +670,7 @@ public class pbcsDLManager {
             jTable.removeColumn(jTable.getColumnModel().getColumn(fromColumn));
             jTable.removeColumn(jTable.getColumnModel().getColumn(toColumn));
         }
-    return hm;
+        return hm;
     }
     
     public void updateColumnValues(JTable jTable, int columnIndex, String strRowData){
@@ -666,5 +687,40 @@ public class pbcsDLManager {
         } catch (Throwable x) {
                 JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
+    }
+      
+    public void getTableColumnMoves(JTable jTable){
+        jTable.getColumnModel().addColumnModelListener(new TableColumnModelListener(){
+            @Override
+            public void columnAdded(TableColumnModelEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void columnRemoved(TableColumnModelEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void columnMoved(TableColumnModelEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if (e.getFromIndex() != e.getToIndex()){
+                    System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
+                    updateEventLog(pbcsConstants.EVT_MOVE, Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), jTable.getColumnModel().getColumn(e.getToIndex()).getHeaderValue().toString());
+                    //arrMoves.add(new String[]{Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), jTable.getColumnModel().getColumn(e.getToIndex()).getHeaderValue().toString()});
+                }
+            }
+
+            @Override
+            public void columnMarginChanged(ChangeEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void columnSelectionChanged(ListSelectionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+            
+        });
     }
 }
