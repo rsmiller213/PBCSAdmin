@@ -297,9 +297,10 @@ public class pbcsDLManager {
                 Object[] rows = new Object[jTable.getRowCount()];
                 //updateColumnValues(jTable, columns, strRowData);
                for (int i = 0; i < rows.length; i++) {
-                    //tblModel.setValueAt(rows[i], i, columns);
-                    jTable.setValueAt(strRowData, i, columns);
+                    tblModel.setValueAt(strRowData, i, columns);
+                    //jTable.setValueAt(strRowData, i, columns);
                 }
+               tblModel.fireTableDataChanged();
         } catch (Throwable x) {
                 JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
@@ -486,15 +487,17 @@ public class pbcsDLManager {
             //System.out.println("setValueAt: " + leftValue + delimiter + rightValue + " " + i + " " + jTable.getColumnModel().getColumnIndex((Object) header));
         }
         if (deleteColumns) {
-            jTable.removeColumn(jTable.getColumn(leftColumn));
-            jTable.removeColumn(jTable.getColumn(rightColumn));
+            jTable.getColumnModel().removeColumn(jTable.getColumn(leftColumn));
+            jTable.getColumnModel().removeColumn(jTable.getColumn(rightColumn));
+            updateColumnModelData(jTable);
         }
-        model.fireTableDataChanged();
+        //model.fireTableDataChanged();
     }
     
     public void duplicateColumnFromProfile (JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns){
         //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
-        updateColumnModelHeaders(jTable);
+        //updateColumnModelHeaders(jTable);
+        updateColumnModelData(jTable);
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
         //model.addColumn(header);
         TableColumn t = new TableColumn();
@@ -502,8 +505,10 @@ public class pbcsDLManager {
         model.addColumn(header);
         //jTable.getColumnModel().addColumn(t);
         for (int i = 0 ; i < jTable.getRowCount(); i++){
-            String leftValue = model.getValueAt(i, leftColumn).toString();
-            String rightValue = model.getValueAt(i, rightColumn).toString();
+            //System.out.println(jTable.getColumnModel().getColumn(jTable.convertColumnIndexToModel(leftColumn)).getHeaderValue());
+            //System.out.println(jTable.getColumnModel().getColumn(leftColumn).getHeaderValue());
+            String leftValue = jTable.getValueAt(i, jTable.convertColumnIndexToView(leftColumn)).toString();
+            String rightValue = jTable.getValueAt(i, rightColumn).toString();
             model.setValueAt(leftValue + delimiter + rightValue, i, model.getColumnCount() - 1);
             //String leftValue = (String) jTable.getValueAt(i, leftColumn);
             //String rightValue =  (String) jTable.getValueAt(i, rightColumn);
@@ -512,8 +517,9 @@ public class pbcsDLManager {
         if (deleteColumns) {
             jTable.removeColumn(jTable.getColumn(leftColumn));
             jTable.removeColumn(jTable.getColumn(rightColumn));
+            updateColumnModelData(jTable);
         }
-        model.fireTableDataChanged();
+        //model.fireTableDataChanged();
     }
     
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
@@ -621,17 +627,18 @@ public class pbcsDLManager {
                             //hm = setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
                             if (arr[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
                                 hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1].split(" ")[0]), Integer.parseInt(arr[1].split(" ")[1]), arr[3])); 
-                                System.out.println(Arrays.toString(arr));
+                                //System.out.println(Arrays.toString(arr));
                             } else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
                                 bMoves = true;
                                 hmMoves.put(arr[3], arr[2]);
+                                setMovesFromProfile(jTable);
                             } else {
                                 hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3])); 
-                                System.out.println(Arrays.toString(arr));
+                                //System.out.println(Arrays.toString(arr));
                             }
                         }
                     }
-                    setMovesFromProfile(jTable);
+                    //setMovesFromProfile(jTable);
                 }
                 
 //                for (Object event: importItems){
@@ -657,9 +664,12 @@ public class pbcsDLManager {
             //int from = jTable.convertColumnIndexToView(model.findColumn(header));
             int from = jTable.getColumnModel().getColumnIndex((Object) header);
             int to = Integer.parseInt(hmMoves.entrySet().toArray()[i].toString().split("=")[1]);
-            System.out.println("Header: " + header + " From: " + from + " To: " + to);
+            //System.out.println("Header: " + header + " From: " + from + " To: " + to);
             //jTable.moveColumn(to, from);
-            jTable.moveColumn(from, to);
+            //jTable.moveColumn(from, to);
+            jTable.getColumnModel().moveColumn(from, to);
+            updateColumnModelData(jTable);
+            ((DefaultTableModel)jTable.getModel()).fireTableStructureChanged();
         }
     }
     
@@ -710,7 +720,30 @@ public class pbcsDLManager {
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
         ((DefaultTableModel) jTable.getModel()).setColumnIdentifiers(columns);
+        if (selectedColumn >= 0){
         jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
+        }
+    }
+    
+    public void updateColumnModelData(JTable jTable){
+        int selectedColumn = jTable.getSelectedColumn();
+        Vector columns = new Vector();
+        //Vector rows = ((DefaultTableModel) jTable.getModel()).getDataVector();
+        Vector rows = new Vector();
+        String[][] rowData = new String[jTable.getRowCount()][jTable.getColumnCount()];
+        //System.out.println(Arrays.toString(rows.toArray()));
+        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
+        }
+        for (int i = 0 ; i < jTable.getRowCount(); i++){
+            for (int j = 0 ; j < jTable.getColumnCount(); j++){
+                rowData[i][j] = jTable.getValueAt(i, j).toString();
+                rows.add(i, rowData[i][j]);
+            }
+        }
+        //System.out.println(Arrays.toString(rowData[0]));
+//        ((DefaultTableModel) jTable.getModel()).setDataVector(rows, columns);
+        ((DefaultTableModel) jTable.getModel()).setDataVector((Object[][])rowData, columns.toArray());
     }
     
     public void updateColumnValues(JTable jTable, int columnIndex, String strRowData){
@@ -745,7 +778,7 @@ public class pbcsDLManager {
             public void columnMoved(TableColumnModelEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 if (e.getFromIndex() != e.getToIndex()){
-                    System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
+                    //System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
                     updateEventLog(pbcsConstants.EVT_MOVE, Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), jTable.getColumnModel().getColumn(e.getToIndex()).getHeaderValue().toString());
                     //arrMoves.add(new String[]{Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), jTable.getColumnModel().getColumn(e.getToIndex()).getHeaderValue().toString()});
                 }

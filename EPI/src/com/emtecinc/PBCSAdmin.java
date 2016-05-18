@@ -132,10 +132,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         cbData = new javax.swing.JCheckBox();
         btnPrevField = new javax.swing.JButton();
         btnNextField = new javax.swing.JButton();
-        btnAddColumn = new javax.swing.JButton();
         btnColumnActions = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
-        btnMoveColumn = new javax.swing.JButton();
         btnLoadProfile = new javax.swing.JButton();
         btnSaveProfile = new javax.swing.JButton();
         tabFSMgr = new javax.swing.JPanel();
@@ -149,6 +147,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnCldDownload = new javax.swing.JButton();
         btnCldRefresh = new javax.swing.JButton();
         btnCldDelete = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tblFiles = new javax.swing.JTable();
 
         rbComma.doClick();
 
@@ -599,13 +599,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGap(28, 28, 28))
         );
 
-        btnAddColumn.setText("Add Simple Column");
-        btnAddColumn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddColumnActionPerformed(evt);
-            }
-        });
-
         btnColumnActions.setEnabled(false);
         btnColumnActions.setLabel("Column Actions");
         btnColumnActions.addActionListener(new java.awt.event.ActionListener() {
@@ -619,15 +612,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportActionPerformed(evt);
-            }
-        });
-
-        btnMoveColumn.setText("Move Column");
-        btnMoveColumn.setToolTipText("");
-        btnMoveColumn.setEnabled(false);
-        btnMoveColumn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMoveColumnActionPerformed(evt);
             }
         });
 
@@ -659,13 +643,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
                         .addComponent(btnRefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAddColumn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnColumnActions)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExport)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnMoveColumn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSaveProfile)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -684,10 +664,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(tabDLMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnRefresh)
-                            .addComponent(btnAddColumn)
                             .addComponent(btnColumnActions)
                             .addComponent(btnExport)
-                            .addComponent(btnMoveColumn)
                             .addComponent(btnLoadProfile)
                             .addComponent(btnSaveProfile))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -755,6 +733,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        tblFiles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tblFiles.setShowHorizontalLines(false);
+        tblFiles.getTableHeader().setResizingAllowed(false);
+        tblFiles.getTableHeader().setReorderingAllowed(false);
+        jScrollPane5.setViewportView(tblFiles);
+
         javax.swing.GroupLayout tabFSMgrLayout = new javax.swing.GroupLayout(tabFSMgr);
         tabFSMgr.setLayout(tabFSMgrLayout);
         tabFSMgrLayout.setHorizontalGroup(
@@ -775,7 +769,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(tabFSMgrLayout.createSequentialGroup()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(460, 460, 460)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(148, 148, 148)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(tabFSMgrLayout.createSequentialGroup()
                         .addGap(478, 478, 478)
@@ -797,6 +793,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addComponent(btnCldRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
                 .addContainerGap(207, Short.MAX_VALUE))
@@ -854,7 +851,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtSuffix.setEnabled(true);
         txtFind.setEnabled(true);
         txtReplace.setEnabled(true);     
-        btnMoveColumn.setEnabled(true);
         
         if (jTable1.getSelectedColumn() == 0){
             btnPrevField.setEnabled(false);
@@ -978,23 +974,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //            }
 //        }
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
-
-    private void btnAddColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddColumnActionPerformed
-        // TODO add your handling code here
-        TableColumn simpleColumn = new TableColumn();
-        JTextField columnName = new JTextField();
-        JTextField columnData = new JTextField();
-        Object[] newField = {
-            "Column Name: ", columnName,
-            "Column Data: ", columnData
-        };
-        //String columnData = new String(JOptionPane.showInputDialog(this.getParent(), "Enter Column Data"));
-        int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            dlManager.addTableColumn(jTable1, columnName.getText(), columnData.getText());
-            dlManager.updateEventLog(pbcsConstants.EVT_ADD, "", Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)columnName)), columnName.getText());
-        } 
-    }//GEN-LAST:event_btnAddColumnActionPerformed
 
     private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
         // TODO add your handling code here:
@@ -1391,46 +1370,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnCldDeleteActionPerformed
 
-    private void btnMoveColumnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveColumnActionPerformed
-        // TODO add your handling code here:
-        JList lstColumns = new JList();
-        JButton btnUp = new JButton();
-        JButton btnDown = new JButton();
-        btnUp.setText("Move Up");
-        btnDown.setText("Move Down");
-        ArrayList<String> columnNames = dlManager.getTableColumnNames(jTable1);
-        DefaultListModel columnModel = new DefaultListModel();
-        for (String column: columnNames) {
-            columnModel.addElement(column);
-        }
-        lstColumns.setModel(columnModel);
-        Object[] fields = {
-            "Columns", lstColumns,
-            "", btnUp,
-            "", btnDown
-        };
-//        if (lstColumns.getSelectedIndex() < 0){
-//            btnUp.setEnabled(false);
-//            btnDown.setEnabled(false);
-//        }
-        //dlManager.btnIsClicked(btnDown);
-        
-        
-        int option = JOptionPane.showConfirmDialog(this.getParent(), fields, "Column Move", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            int sourceIndex = lstColumns.getSelectedIndex();
-            System.out.println(sourceIndex);
-            int targetIndex;
-//            if (cbDeleteColumns.isSelected()){
-//                dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
-//                   rightCol.getSelectedItem().toString(), splitChar.getText(), true);
-//            } else {
-//                dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
-//                    rightCol.getSelectedItem().toString(), splitChar.getText(), false);
-//            }
-        }
-    }//GEN-LAST:event_btnMoveColumnActionPerformed
-
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
         // TODO add your handling code here:
         dlManager.saveFile();
@@ -1486,7 +1425,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane MainTabbedPane;
     private javax.swing.ButtonGroup btgDelimiter;
-    private javax.swing.JButton btnAddColumn;
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnCldDelete;
     private javax.swing.JButton btnCldDownload;
@@ -1498,7 +1436,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnLoadProfile;
     private javax.swing.JButton btnLoadSQL;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JButton btnMoveColumn;
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnPrevField;
     private javax.swing.JButton btnRefresh;
@@ -1510,6 +1447,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblApp;
@@ -1542,6 +1480,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel tabDLMgr;
     private javax.swing.JPanel tabFSMgr;
     private javax.swing.JPanel tabLogin;
+    private javax.swing.JTable tblFiles;
     private javax.swing.JTextField txtColName;
     private javax.swing.JTextField txtCustDelim;
     private javax.swing.JTextField txtDisplayRows;

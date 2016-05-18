@@ -276,13 +276,9 @@
                           <Group type="102" attributes="0">
                               <Component id="btnRefresh" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnAddColumn" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnColumnActions" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnExport" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnMoveColumn" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnSaveProfile" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -305,10 +301,8 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="btnRefresh" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnAddColumn" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnColumnActions" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnExport" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnMoveColumn" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnLoadProfile" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnSaveProfile" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -864,14 +858,6 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btnAddColumn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Add Simple Column"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddColumnActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="btnColumnActions">
               <Properties>
                 <Property name="enabled" type="boolean" value="false"/>
@@ -888,16 +874,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btnMoveColumn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Move Column"/>
-                <Property name="toolTipText" type="java.lang.String" value=""/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveColumnActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnLoadProfile">
