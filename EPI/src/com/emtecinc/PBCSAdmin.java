@@ -1047,10 +1047,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         };
         int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            switch (columnAction.getSelectedIndex()) {
-                case 0:
-
-                    Object[] splitField = {
+            if (columnAction.getSelectedIndex() == 0){
+                Object[] splitField = {
                         "Header", colHeader,
                         "Text Value", textValue
                     };
@@ -1060,57 +1058,126 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
                     dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
                 }
-                case 1:
-                    Object[] createDupJoin = {
-                        "Left Column", leftCol,
-                        "Right Column", rightCol,
-                        "Header", colHeader,
-                        "Split Character", splitChar,
-                        "Delete source columns?", cbDeleteColumns
-                    };
-                    int optCreateDupJoin = JOptionPane.showConfirmDialog(this.getParent(), createDupJoin, "Create/Duplicate Via Join", JOptionPane.OK_CANCEL_OPTION);
-                    if (optCreateDupJoin == JOptionPane.OK_OPTION) {
-                        if (cbDeleteColumns.isSelected()){
-                            dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, Integer.toString(leftCol.getSelectedIndex())
-                                    + " " + Integer.toString(rightCol.getSelectedIndex()), Integer.toString(jTable1.getColumnCount()), splitChar.getText());
-                            dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount()),
-                                    Integer.toString(jTable1.getColumnCount()), colHeader.getText());
-                            dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(leftCol.getSelectedIndex()),
-                                    Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
-//                            dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(rightCol.getSelectedIndex()),
-//                                    Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
-                            dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
-                                    rightCol.getSelectedItem().toString(), splitChar.getText(), true);
-                        } else {
-                            dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
-                                    rightCol.getSelectedItem().toString(), splitChar.getText(), false);
-                            dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, jTable1.getColumnModel().getColumnIndex(leftCol.getSelectedItem().toString())
-                                    + " " + jTable1.getColumnModel().getColumnIndex(rightCol.getSelectedItem().toString()),
-                                    Integer.toString(jTable1.getColumnCount() - 1), splitChar.getText());
-                            dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount() - 1),
-                                    Integer.toString(jTable1.getColumnCount() - 1), colHeader.getText());
-                        }
+            } else if (columnAction.getSelectedIndex() == 1){
+                Object[] createDupJoin = {
+                    "Left Column", leftCol,
+                    "Right Column", rightCol,
+                    "Header", colHeader,
+                    "Split Character", splitChar,
+                    "Delete source columns?", cbDeleteColumns
+                };
+                int optCreateDupJoin = JOptionPane.showConfirmDialog(this.getParent(), createDupJoin, "Create/Duplicate Via Join", JOptionPane.OK_CANCEL_OPTION);
+                if (optCreateDupJoin == JOptionPane.OK_OPTION) {
+                    if (cbDeleteColumns.isSelected()){
+                        dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, Integer.toString(leftCol.getSelectedIndex())
+                                + " " + Integer.toString(rightCol.getSelectedIndex()), Integer.toString(jTable1.getColumnCount()), splitChar.getText());
+                        dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount()),
+                                Integer.toString(jTable1.getColumnCount()), colHeader.getText());
+                        dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(leftCol.getSelectedIndex()),
+                                Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
+//                      dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(rightCol.getSelectedIndex()),
+//                              Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
+                        dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+                                rightCol.getSelectedItem().toString(), splitChar.getText(), true);
+                    } else {
+                        dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+                                rightCol.getSelectedItem().toString(), splitChar.getText(), false);
+                        dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, jTable1.getColumnModel().getColumnIndex(leftCol.getSelectedItem().toString())
+                                + " " + jTable1.getColumnModel().getColumnIndex(rightCol.getSelectedItem().toString()),
+                                Integer.toString(jTable1.getColumnCount() - 1), splitChar.getText());
+                        dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount() - 1),
+                                Integer.toString(jTable1.getColumnCount() - 1), colHeader.getText());
                     }
-                case 2:
-                    Object[] splitCols = {
+                }
+            } else if (columnAction.getSelectedIndex() == 2){
+                Object[] splitCols = {
                         //"Column", leftCol,
                         "Split By", splitBy,
                         "Delimiter/# of Characters", splitNum
                 };
-                    int optSplit = JOptionPane.showConfirmDialog(this.getParent(), splitCols, "Split Columns", JOptionPane.OK_CANCEL_OPTION);
-                    if (optSplit == JOptionPane.OK_OPTION) {
-                        boolean bSplitBy = false;
-                        if (splitBy.getSelectedIndex() == 1){
-                            bSplitBy = true;
-                        }
-                        dlManager.splitColumn(jTable1, bSplitBy, splitNum.getText());
-                        if (bSplitBy) {
-                            dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_CHARS, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
-                        } else {
-                            dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_DELIM, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
-                        }
+                int optSplit = JOptionPane.showConfirmDialog(this.getParent(), splitCols, "Split Columns", JOptionPane.OK_CANCEL_OPTION);
+                if (optSplit == JOptionPane.OK_OPTION) {
+                    boolean bSplitBy = false;
+                    if (splitBy.getSelectedIndex() == 1){
+                        bSplitBy = true;
                     }
+                    dlManager.splitColumn(jTable1, bSplitBy, splitNum.getText());
+                    if (bSplitBy) {
+                        dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_CHARS, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
+                    } else {
+                        dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_DELIM, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
+                    }
+                }
             }
+            
+            
+            
+            
+            
+//            switch (columnAction.getSelectedIndex()) {
+//                case 0:
+//
+//                    Object[] splitField = {
+//                        "Header", colHeader,
+//                        "Text Value", textValue
+//                    };
+//                int optCreateViaText = JOptionPane.showConfirmDialog(this.getParent(), splitField, "Create Via Text", JOptionPane.OK_CANCEL_OPTION);
+//                if (optCreateViaText == JOptionPane.OK_OPTION) {
+//                    dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+//                    dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
+//                    dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
+//                }
+//                case 1:
+//                    Object[] createDupJoin = {
+//                        "Left Column", leftCol,
+//                        "Right Column", rightCol,
+//                        "Header", colHeader,
+//                        "Split Character", splitChar,
+//                        "Delete source columns?", cbDeleteColumns
+//                    };
+//                    int optCreateDupJoin = JOptionPane.showConfirmDialog(this.getParent(), createDupJoin, "Create/Duplicate Via Join", JOptionPane.OK_CANCEL_OPTION);
+//                    if (optCreateDupJoin == JOptionPane.OK_OPTION) {
+//                        if (cbDeleteColumns.isSelected()){
+//                            dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, Integer.toString(leftCol.getSelectedIndex())
+//                                    + " " + Integer.toString(rightCol.getSelectedIndex()), Integer.toString(jTable1.getColumnCount()), splitChar.getText());
+//                            dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount()),
+//                                    Integer.toString(jTable1.getColumnCount()), colHeader.getText());
+//                            dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(leftCol.getSelectedIndex()),
+//                                    Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
+////                            dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(rightCol.getSelectedIndex()),
+////                                    Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
+//                            dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+//                                    rightCol.getSelectedItem().toString(), splitChar.getText(), true);
+//                        } else {
+//                            dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+//                                    rightCol.getSelectedItem().toString(), splitChar.getText(), false);
+//                            dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, jTable1.getColumnModel().getColumnIndex(leftCol.getSelectedItem().toString())
+//                                    + " " + jTable1.getColumnModel().getColumnIndex(rightCol.getSelectedItem().toString()),
+//                                    Integer.toString(jTable1.getColumnCount() - 1), splitChar.getText());
+//                            dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount() - 1),
+//                                    Integer.toString(jTable1.getColumnCount() - 1), colHeader.getText());
+//                        }
+//                    }
+//                case 2:
+//                    Object[] splitCols = {
+//                        //"Column", leftCol,
+//                        "Split By", splitBy,
+//                        "Delimiter/# of Characters", splitNum
+//                };
+//                    int optSplit = JOptionPane.showConfirmDialog(this.getParent(), splitCols, "Split Columns", JOptionPane.OK_CANCEL_OPTION);
+//                    if (optSplit == JOptionPane.OK_OPTION) {
+//                        boolean bSplitBy = false;
+//                        if (splitBy.getSelectedIndex() == 1){
+//                            bSplitBy = true;
+//                        }
+//                        dlManager.splitColumn(jTable1, bSplitBy, splitNum.getText());
+//                        if (bSplitBy) {
+//                            dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_CHARS, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
+//                        } else {
+//                            dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_DELIM, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
+//                        }
+//                    }
+//            }
         }
     }//GEN-LAST:event_btnColumnActionsActionPerformed
 
