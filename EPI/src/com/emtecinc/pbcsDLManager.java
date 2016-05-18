@@ -283,15 +283,23 @@ public class pbcsDLManager {
     */
     public void addTableColumn(JTable jTable, String strColumnName, String strRowData){
         try {
-                DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
+            updateColumnModelHeaders(jTable);
+            DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
                 tblModel.addColumn(strColumnName);
-                int columns = tblModel.getColumnCount() - 1 ;
+                //int columns = tblModel.getColumnCount() - 1 ;
+                //TableColumn t = new TableColumn();
+                //t.setHeaderValue((Object) strColumnName);
+                //jTable.getColumnModel().addColumn(t);
+                //System.out.println("Table Model " + jTable.getModel().getColumnCount() + " Column Model " + jTable.getColumnModel().getColumnCount());
+                //jTable.repaint();
+                //int columns = jTable.getColumnModel().getColumnIndex((Object) strColumnName);
+                int columns = tblModel.findColumn(strColumnName);
                 Object[] rows = new Object[jTable.getRowCount()];
+                //updateColumnValues(jTable, columns, strRowData);
                for (int i = 0; i < rows.length; i++) {
-                    rows[i] = strRowData;
-                    tblModel.setValueAt(rows[i], i, columns);
+                    //tblModel.setValueAt(rows[i], i, columns);
+                    jTable.setValueAt(strRowData, i, columns);
                 }
-              // tblModel.fireTableDataChanged(); 
         } catch (Throwable x) {
                 JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
@@ -402,6 +410,7 @@ public class pbcsDLManager {
         //int columnNumber = jTable.getSelectedColumn();
         jTable.getColumnModel().getColumn(columnNumber).setHeaderValue(strColumnName);
         jTable.getTableHeader().repaint();
+        updateColumnModelHeaders(jTable);
     }
     
     //public void exportFileFromTable(JTable jTable, File file, int[] arrDataColumn) throws IOException{
@@ -455,51 +464,56 @@ public class pbcsDLManager {
     
     //public DefaultTableModel duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
     public void duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
-        //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+        updateColumnModelHeaders(jTable);
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
         int leftColIndex = jTable.convertColumnIndexToModel(model.findColumn(leftColumn));
         int rightColIndex = jTable.convertColumnIndexToModel(model.findColumn(rightColumn));
-        //model.addColumn(header);
+        model.addColumn(header);
         TableColumn t = new TableColumn();
         t.setHeaderValue(header);
-        jTable.getColumnModel().addColumn(t);
+        //jTable.getColumnModel().addColumn(t);
+        //jTable.addColumn(t);
         for (int i = 0 ; i < jTable.getRowCount(); i++){
-            //String leftValue = model.getValueAt(i, model.findColumn(leftColumn)).toString();
-            //String rightValue = model.getValueAt(i, model.findColumn(rightColumn)).toString();
-            String leftValue = (String) jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex((Object) leftColumn));
-            String rightValue =  (String) jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex((Object) rightColumn));
-            //model.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
+            String leftValue = model.getValueAt(i, model.findColumn(leftColumn)).toString();
+            String rightValue = model.getValueAt(i, model.findColumn(rightColumn)).toString();
+            //String leftValue = (String) jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex((Object) leftColumn));
+            //String rightValue =  (String) jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex((Object) rightColumn));
+            model.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
             //jTable.setValueAt(leftValue + delimiter + rightValue, i, model.findColumn(header));
-            jTable.setValueAt(leftValue + delimiter + rightValue, i, jTable.getColumnModel().getColumnIndex((Object) header));
-            System.out.println("setValueAt: " + leftValue + delimiter + rightValue + " " + i + " " + jTable.getColumnModel().getColumnIndex((Object) header));
+            //jTable.setValueAt(leftValue + delimiter + rightValue, i, jTable.getColumnModel().getColumnIndex((Object) header));
+            //jTable.getModel().setValueAt(leftValue + delimiter + rightValue, i, jTable.getColumnModel().getColumnIndex((Object) header));
+            jTable.getTableHeader().repaint();
+            //System.out.println("setValueAt: " + leftValue + delimiter + rightValue + " " + i + " " + jTable.getColumnModel().getColumnIndex((Object) header));
         }
         if (deleteColumns) {
             jTable.removeColumn(jTable.getColumn(leftColumn));
             jTable.removeColumn(jTable.getColumn(rightColumn));
         }
-        //model.fireTableDataChanged();
+        model.fireTableDataChanged();
     }
     
     public void duplicateColumnFromProfile (JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns){
         //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
+        updateColumnModelHeaders(jTable);
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
         //model.addColumn(header);
         TableColumn t = new TableColumn();
-        t.setHeaderValue(header);
-        jTable.getColumnModel().addColumn(t);
+        //t.setHeaderValue(header);
+        model.addColumn(header);
+        //jTable.getColumnModel().addColumn(t);
         for (int i = 0 ; i < jTable.getRowCount(); i++){
-            //String leftValue = model.getValueAt(i, leftColumn).toString();
-            //String rightValue = model.getValueAt(i, rightColumn).toString();
-            //model.setValueAt(leftValue + delimiter + rightValue, i, model.getColumnCount() - 1);
-            String leftValue = (String) jTable.getValueAt(i, leftColumn);
-            String rightValue =  (String) jTable.getValueAt(i, rightColumn);
-            jTable.setValueAt(leftValue + delimiter + rightValue, i, jTable.getColumnModel().getColumnIndex((Object) header));
+            String leftValue = model.getValueAt(i, leftColumn).toString();
+            String rightValue = model.getValueAt(i, rightColumn).toString();
+            model.setValueAt(leftValue + delimiter + rightValue, i, model.getColumnCount() - 1);
+            //String leftValue = (String) jTable.getValueAt(i, leftColumn);
+            //String rightValue =  (String) jTable.getValueAt(i, rightColumn);
+            //jTable.setValueAt(leftValue + delimiter + rightValue, i, jTable.getColumnModel().getColumnIndex((Object) header));
         }
         if (deleteColumns) {
             jTable.removeColumn(jTable.getColumn(leftColumn));
             jTable.removeColumn(jTable.getColumn(rightColumn));
         }
-        //model.fireTableDataChanged();
+        model.fireTableDataChanged();
     }
     
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
@@ -688,6 +702,15 @@ public class pbcsDLManager {
         return hm;
     }
     
+    public void updateColumnModelHeaders(JTable jTable){
+        Vector columns = new Vector();
+        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+            //columns.add(jTable.getModel().getColumnName(i));
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
+        }
+        ((DefaultTableModel) jTable.getModel()).setColumnIdentifiers(columns);
+    }
+    
     public void updateColumnValues(JTable jTable, int columnIndex, String strRowData){
         try {
                 //DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
@@ -703,7 +726,7 @@ public class pbcsDLManager {
                 JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
     }
-      
+    
     public void getTableColumnMoves(JTable jTable){
         jTable.getColumnModel().addColumnModelListener(new TableColumnModelListener(){
             @Override
