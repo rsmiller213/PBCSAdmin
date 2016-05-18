@@ -703,12 +703,14 @@ public class pbcsDLManager {
     }
     
     public void updateColumnModelHeaders(JTable jTable){
+        int selectedColumn = jTable.getSelectedColumn();
         Vector columns = new Vector();
         for (int i = 0 ; i < jTable.getColumnCount(); i++){
             //columns.add(jTable.getModel().getColumnName(i));
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
         ((DefaultTableModel) jTable.getModel()).setColumnIdentifiers(columns);
+        jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
     }
     
     public void updateColumnValues(JTable jTable, int columnIndex, String strRowData){
