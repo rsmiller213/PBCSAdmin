@@ -47,6 +47,7 @@ import javax.swing.table.TableModel;
 public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
+    pbcsFSManager fsManager = new pbcsFSManager();
     //static int[] arrDataColumn;
     static ArrayList<String> arrDataColumn = new ArrayList<>();
     //static String[] arrDataColumn;
@@ -137,11 +138,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnLoadProfile = new javax.swing.JButton();
         btnSaveProfile = new javax.swing.JButton();
         tabFSMgr = new javax.swing.JPanel();
-        pnLogin = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         lstJobs = new javax.swing.JList<>();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        lstFiles = new javax.swing.JList<>();
         btnLoad = new javax.swing.JButton();
         btnCldUpload = new javax.swing.JButton();
         btnCldDownload = new javax.swing.JButton();
@@ -679,20 +677,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
         MainTabbedPane.addTab("Data Load Manager", tabDLMgr);
 
-        javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
-        pnLogin.setLayout(pnLoginLayout);
-        pnLoginLayout.setHorizontalGroup(
-            pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 73, Short.MAX_VALUE)
-        );
-        pnLoginLayout.setVerticalGroup(
-            pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 44, Short.MAX_VALUE)
-        );
-
         jScrollPane3.setViewportView(lstJobs);
-
-        jScrollPane4.setViewportView(lstFiles);
 
         btnLoad.setText("Load Data");
         btnLoad.addActionListener(new java.awt.event.ActionListener() {
@@ -735,13 +720,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
         tblFiles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "File Names", "Modified Date", "Size"
             }
         ));
         tblFiles.setShowHorizontalLines(false);
@@ -765,25 +747,19 @@ public class PBCSAdmin extends javax.swing.JFrame {
             .addGroup(tabFSMgrLayout.createSequentialGroup()
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addGap(118, 118, 118)
-                        .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addContainerGap()
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(148, 148, 148)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(tabFSMgrLayout.createSequentialGroup()
                         .addGap(478, 478, 478)
                         .addComponent(btnLoad)))
-                .addContainerGap(638, Short.MAX_VALUE))
+                .addContainerGap(906, Short.MAX_VALUE))
         );
         tabFSMgrLayout.setVerticalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabFSMgrLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
+                .addGap(94, 94, 94)
                 .addComponent(btnLoad)
                 .addGap(17, 17, 17)
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -794,7 +770,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
                 .addContainerGap(207, Short.MAX_VALUE))
         );
@@ -1261,35 +1236,40 @@ public class PBCSAdmin extends javax.swing.JFrame {
             // TODO add your handling code here:
            //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
            //         pbcsUrl, pbcsConstants.DBG_PBCS_HPVER, "POC_CITA");
+            ArrayList<String> arrHeaders = new ArrayList<>(4);
+            arrHeaders.add("Name");
+            arrHeaders.add("Last Modified");
+            arrHeaders.add("Size");
             PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+            // New Table
+            
+            ArrayList<Object[]> arrRows = new ArrayList<Object[]>();
+            arrRows = pbcsclient.getPlanningFileDetails();
+            DefaultTableModel fileModel = fsManager.setTableModelFromStrArray(arrRows,arrHeaders);
+            tblFiles.setModel(fileModel);
+            // Old Lists
             ArrayList<String> arrJobs = pbcsclient.listJobs();
-            ArrayList<String> arrFiles = pbcsclient.listPlanningFiles();
             DefaultListModel listModel = new DefaultListModel();
-            DefaultListModel listModelFile = new DefaultListModel();
             for (String job: arrJobs){
                 listModel.addElement(job);
             }
-            for (String file: arrFiles){
-                listModelFile.addElement(file);
-            }
             lstJobs.setModel(listModel);
-            lstFiles.setModel(listModelFile);
 
 
         } catch (Exception ex) {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
         } 
-    }
+	}
     
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
         // TODO add your handling code here:
-        if (lstJobs.getSelectedIndex() != -1 && lstFiles.getSelectedIndex() != -1){
+        if (lstJobs.getSelectedIndex() != -1 && tblFiles.getSelectedRow() != -1){
             try {
-            // TODO add your handling code here:
-            //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
-            //        pbcsUrl, "11.1.2.3.600", "POC_CITA");
-            PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
-            pbcsclient.integrationScenarioImportData(lstFiles.getSelectedValue(), lstJobs.getSelectedValue());
+                // TODO add your handling code here:
+                //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
+                    //        pbcsUrl, "11.1.2.3.600", "POC_CITA");
+                PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+                pbcsclient.integrationScenarioImportData(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString(), lstJobs.getSelectedValue());
             } catch (Exception ex) {
                 //Logger.getLogger(PBCSAdmin1.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex.getMessage());
@@ -1332,29 +1312,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCldUploadActionPerformed
 
     private void btnCldDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldDownloadActionPerformed
-        // TODO add your handling code here:
-        // TODO add your handling code here:
-        final JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
-        int returnVal = fc.showOpenDialog(null);
-        
-        if (returnVal == JFileChooser.APPROVE_OPTION){
-            // Save Locally
-            try {
-                
-                if (lstFiles.getSelectedValue() == null){
-                    JOptionPane.showMessageDialog(this.getParent(), "Please Select a File");
-                } else {
+        try {
+            if (tblFiles.getSelectedRow() == -1){
+                JOptionPane.showMessageDialog(this.getParent(), "Please Select a File");
+            } else {
+                final JFileChooser fc = new JFileChooser();
+                fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION){
                     PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
-                    pbcsclient.downloadFile(lstFiles.getSelectedValue(),fc.getSelectedFile().toString());
-                    JOptionPane.showMessageDialog(this.getParent(), lstFiles.getSelectedValue() + " downloaded to " + fc.getSelectedFile().toString() + " successfully!");
+                    pbcsclient.downloadFile(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString(),fc.getSelectedFile().toString());
+                    JOptionPane.showMessageDialog(this.getParent(), tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString() + " downloaded to " + fc.getSelectedFile().toString() + " successfully!");
                 }
-                
-            } catch (Exception ex) {
-                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
-             //Upload File
+        } catch (Exception ex) {
+            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnCldDownloadActionPerformed
 
@@ -1362,11 +1335,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
-            pbcsclient.deleteFile(lstFiles.getSelectedValue());
+            pbcsclient.deleteFile(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString());
             refreshFMLists();
         } catch (Exception ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        }
         
     }//GEN-LAST:event_btnCldDeleteActionPerformed
 
@@ -1446,7 +1419,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
@@ -1467,9 +1439,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lblSuffix;
     private javax.swing.JLabel lblURL;
     private javax.swing.JLabel lblUser;
-    private javax.swing.JList<String> lstFiles;
     private javax.swing.JList<String> lstJobs;
-    private javax.swing.JPanel pnLogin;
     private javax.swing.JPanel pnlColProps;
     private javax.swing.JPanel pnlDSMgmt;
     private javax.swing.JPasswordField pwdPassword;

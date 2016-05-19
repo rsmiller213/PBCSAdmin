@@ -18,8 +18,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import com.emtecinc.PBCSAdmin;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -463,6 +466,52 @@ public class PBCSActions {
             }
         }
         return strArray;
+    }
+    
+    public ArrayList<Object[]> getPlanningFileDetails() throws Exception {
+        ArrayList<Object[]> arrRows = new ArrayList<Object[]>();
+        String urlString = String.format("%s/applicationsnapshots", getCurrentDetails("LCM","URL"));
+        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
+        JSONObject json = new JSONObject(response);
+        
+        int resStatus = json.getInt("status");
+        if (resStatus == 0) {
+            if (json.get("items").equals(JSONObject.NULL)) {
+                System.out.println("No files found");
+            } else {
+                JSONArray itemsArray = json.getJSONArray("items");
+                JSONObject jObj = null;
+                for (int i = 0; i < itemsArray.length(); i++) {
+                    jObj = (JSONObject) itemsArray.get(i);
+                    if (jObj.getString("type").equals("EXTERNAL")) {
+                        if (!jObj.getString("name").contains("/")){
+                            String strDate = convertTime(Long.parseLong(jObj.getString("lastModififedTime")));
+                            String strSize = convertSize(Long.parseLong(jObj.getString("size")));
+                            String strFName = parseFileNameFromPath(jObj.getString("name"));
+                            arrRows.add(new Object[]{strFName,strDate,strSize});
+                        }
+                    }
+                }
+            }
+        }
+        return arrRows;
+    }
+    
+    public String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        return format.format(date);
+    }
+    public static String convertSize(long bytes) {
+        int unit = 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = ("kMGTPE").charAt(exp-1) + "";
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	}
+    public static String parseFileNameFromPath(String path){
+        String[] arrPath = path.split("/");        
+        return arrPath[arrPath.length - 1];        
     }
     
     
