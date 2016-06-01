@@ -135,6 +135,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         cbData = new javax.swing.JCheckBox();
         btnPrevField = new javax.swing.JButton();
         btnNextField = new javax.swing.JButton();
+        cbFlipSign = new javax.swing.JCheckBox();
+        cbIgnoreCol = new javax.swing.JCheckBox();
         btnColumnActions = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
         btnLoadProfile = new javax.swing.JButton();
@@ -542,6 +544,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        cbFlipSign.setText("Flip Sign");
+        cbFlipSign.setEnabled(false);
+
+        cbIgnoreCol.setText("Ignore Column");
+        cbIgnoreCol.setEnabled(false);
+
         javax.swing.GroupLayout pnlColPropsLayout = new javax.swing.GroupLayout(pnlColProps);
         pnlColProps.setLayout(pnlColPropsLayout);
         pnlColPropsLayout.setHorizontalGroup(
@@ -553,10 +561,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlColPropsLayout.createSequentialGroup()
-                                .addComponent(btnPrevField)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnNextField))
-                            .addComponent(cbData)
+                                .addComponent(cbData)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbFlipSign))
                             .addGroup(pnlColPropsLayout.createSequentialGroup()
                                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(lblFind, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
@@ -570,10 +577,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                     .addComponent(txtPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(pnlColPropsLayout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(btnUpdateField)))
+                                    .addComponent(txtReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                .addComponent(btnPrevField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnNextField))
+                            .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(btnUpdateField))
+                            .addComponent(cbIgnoreCol))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlColPropsLayout.setVerticalGroup(
@@ -601,14 +613,18 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addComponent(lblReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbData)
+                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbData)
+                    .addComponent(cbFlipSign))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbIgnoreCol)
+                .addGap(9, 9, 9)
                 .addComponent(btnUpdateField)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnNextField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrevField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28))
+                .addGap(21, 21, 21))
         );
 
         btnColumnActions.setEnabled(false);
@@ -1547,6 +1563,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JCheckBox cbData;
+    private javax.swing.JCheckBox cbFlipSign;
+    private javax.swing.JCheckBox cbIgnoreCol;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
