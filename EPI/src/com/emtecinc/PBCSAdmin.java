@@ -224,8 +224,18 @@ public class PBCSAdmin extends javax.swing.JFrame {
         lblFnRSelectedCol.setToolTipText("");
 
         btnFnRRemove.setText("Remove");
+        btnFnRRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFnRRemoveActionPerformed(evt);
+            }
+        });
 
         btnFnRAdd.setText("Add");
+        btnFnRAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFnRAddActionPerformed(evt);
+            }
+        });
 
         btnFnRNext.setText("Next Field");
         btnFnRNext.addActionListener(new java.awt.event.ActionListener() {
@@ -507,7 +517,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 .addComponent(rbCustom, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtCustDelim)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         pnlDSMgmtLayout.setVerticalGroup(
             pnlDSMgmtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -544,6 +554,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
         lblDelim.getAccessibleContext().setAccessibleName("lblDelim");
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
@@ -712,14 +723,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
                             .addGroup(pnlColPropsLayout.createSequentialGroup()
                                 .addComponent(btnPrevField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnNextField)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlColPropsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnUpdateField)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnFindReplace)
+                                .addComponent(btnNextField))
+                            .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                .addComponent(btnUpdateField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFindReplace)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlColPropsLayout.setVerticalGroup(
@@ -848,7 +856,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
         MainTabbedPane.addTab("Data Load Manager", tabDLMgr);
 
-        pnlLoadData.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Load Data", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Dialog", 1, 18), new java.awt.Color(0, 0, 0))); // NOI18N
+        pnlLoadData.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Load Data", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Dialog", 1, 18))); // NOI18N
         pnlLoadData.setForeground(new java.awt.Color(153, 204, 255));
 
         btnCldUpload.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
@@ -961,7 +969,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlJobDetails.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Latest Job Details", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Dialog", 1, 18), new java.awt.Color(0, 0, 0))); // NOI18N
+        pnlJobDetails.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Latest Job Details", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Dialog", 1, 18))); // NOI18N
 
         lblJobID.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblJobID.setMaximumSize(new java.awt.Dimension(36, 16));
@@ -1044,7 +1052,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addComponent(pnlLoadData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlJobDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(765, Short.MAX_VALUE))
+                .addContainerGap(759, Short.MAX_VALUE))
         );
         tabFSMgrLayout.setVerticalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1064,7 +1072,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(MainTabbedPane)
+                .addComponent(MainTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1490, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -1662,6 +1670,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnFnROKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnROKActionPerformed
         // TODO add your handling code here:
+        //dlManager.findReplaceItems
     }//GEN-LAST:event_btnFnROKActionPerformed
 
     private void btnFnRPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRPrevActionPerformed
@@ -1675,6 +1684,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() + 1, jTable1.getSelectedColumn() + 1);
         updateColProps();
     }//GEN-LAST:event_btnFnRNextActionPerformed
+
+    private void btnFnRAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRAddActionPerformed
+        // TODO add your handling code here:
+        ((DefaultTableModel) tblFindReplace.getModel()).addRow(new Object[tblFindReplace.getColumnCount()]);
+    }//GEN-LAST:event_btnFnRAddActionPerformed
+
+    private void btnFnRRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRRemoveActionPerformed
+        // TODO add your handling code here:
+        try {
+            ((DefaultTableModel) tblFindReplace.getModel()).removeRow(tblFindReplace.getSelectedRow());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this.getParent(), "Please select a row to delete");
+        }
+        
+    }//GEN-LAST:event_btnFnRRemoveActionPerformed
 
     /**
      * @param args the command line arguments

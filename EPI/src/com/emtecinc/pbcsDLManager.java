@@ -50,6 +50,7 @@ import javax.swing.table.TableModel;
 public class pbcsDLManager {
     public File flSrcFile;
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
+    ArrayList<String[]> findReplaceItems = new ArrayList<String[]>();
     HashMap hmMoves = new HashMap();
     /**
     * Creates table model from delimited file using Open CSV. 
@@ -795,5 +796,9 @@ public class pbcsDLManager {
             }
             
         });
+    }
+    
+    public void saveFindReplaceItems(){
+        
     }
 }
