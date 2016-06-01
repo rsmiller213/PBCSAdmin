@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +33,7 @@ import org.json.JSONObject;
 *
  */
 public class PBCSActions {
-
+    PBCSAdmin AdminClass = new PBCSAdmin();
     private String userName; // PBCS user name
     private String pbcsDomain; //PBCS Domain
     private String password; // PBCS user password
@@ -78,14 +79,8 @@ public class PBCSActions {
     }
 
     //public void integrationScenarioImportData(File file, String jobName) throws Exception {
-    public void integrationScenarioImportData(String file, String jobName) throws Exception {
-
-        //uploadFile(file.getAbsolutePath());
-        //uploadFile(file.getAbsolutePath());
-        //uploadFile(file);
-        executeJob("IMPORT_DATA", jobName, "{importFileName:" + file + "}");
-        //executeJob("CUBE_REFRESH", null, null);
-        //executeJob("PLAN_TYPE_MAP", "CampaignToReporting", "{clearData:false}");
+    public int ImportData(String file, String jobName) throws Exception {
+        return executeJob("IMPORT_DATA", jobName, "{importFileName:" + file + "}");
     }
 
     public void integrationScenarioExportMetadataAndDataAndDownloadFiles() throws Exception {
@@ -184,25 +179,27 @@ public class PBCSActions {
         boolean completed = false;
         while (!completed) {
             String pingResponse = executeRequest(pingUrlString, methodType, null, "application/x-wwwform-urlencoded");
-            JSONObject json = new JSONObject(pingResponse);
-            int status = json.getInt("status");
+            JSONObject jObj = new JSONObject(pingResponse);
+            int status = jObj.getInt("status");
             if (status == -1) {
                 try {
                     System.out.println("Please wait...");
-                    Thread.sleep(20000);
+                    // Pause for 10 seconds
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     completed = true;
                     throw e;
                 }
             } else {
                 if (status > 0) {
-                    System.out.println("Error occurred: " + json.getString("details"));
+                    System.out.println("Error occurred: " + jObj.getString("details"));
                 } else {
                     System.out.println("Completed");
                 }
                 completed = true;
             }
         }
+        
     }
 
     public String fetchPingUrlFromResponse(String response) throws Exception {
@@ -497,6 +494,18 @@ public class PBCSActions {
         return arrRows;
     }
     
+    public HashMap getJobDetails(int JID) throws Exception {
+        String urlString = String.format("%s/applications/%s/jobs/%s", getCurrentDetails("HP","URL"), getAppDetails("Name"), JID);
+        String response = executeRequest(urlString, "GET", null, "application/x-www-form-urlencoded");
+        JSONObject json = new JSONObject(response);
+        HashMap JobDetails = new HashMap();
+        JobDetails.put("jobId", json.getInt("jobId"));
+        JobDetails.put("jobName",json.getString("jobName"));
+        JobDetails.put("status",json.getString("descriptiveStatus"));
+        JobDetails.put("details",json.getString("details"));
+        return JobDetails;
+    }
+    
     public String convertTime(long time){
         Date date = new Date(time);
         Format format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -723,17 +732,21 @@ public class PBCSActions {
 // BEGIN - Execute a Job (EXPORT_DATA, EXPORT_METADATA, IMPORT_DATA, IMPORT_METADATA, CUBE_REFRESH, 
 //...)
 //
-    public void executeJob(String jobType, String jobName, String parameters) throws Exception {
+    public int executeJob(String jobType, String jobName, String parameters) throws Exception {
         //String urlString = String.format("%s/HyperionPlanning/rest/v3/applications/%s/jobs", serverUrl, applicationName);
         String urlString = String.format("%s/applications/%s/jobs", getCurrentDetails("HP","URL"), getAppDetails("Name"));
-        System.out.println("URL: " + urlString);
+//        System.out.println("URL: " + urlString);
         JSONObject payload = new JSONObject();
         payload.put("jobName", jobName);
         payload.put("jobType", jobType);
         payload.put("parameters", new JSONObject(parameters));
         String response = executeRequest(urlString, "POST", payload.toString(), "application/json");
         System.out.println("Job started successfully");
+//        System.out.println("Ping URL: " + fetchPingUrlFromResponse(response));
+//        System.out.println("Response: " + response);
         getJobStatus(fetchPingUrlFromResponse(response), "GET");
+        JSONObject json = new JSONObject(response);
+        return json.getInt("jobId");
     }
 //
 // END - Execute a Job (EXPORT_DATA, EXPORT_METADATA, IMPORT_DATA, IMPORT_METADATA, CUBE_REFRESH,

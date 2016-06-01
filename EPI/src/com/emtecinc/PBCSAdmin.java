@@ -48,6 +48,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
     pbcsFSManager fsManager = new pbcsFSManager();
+    JLabel jobIDLabel = new JLabel();
+    
     //static int[] arrDataColumn;
     static ArrayList<String> arrDataColumn = new ArrayList<>();
     //static String[] arrDataColumn;
@@ -138,15 +140,27 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnLoadProfile = new javax.swing.JButton();
         btnSaveProfile = new javax.swing.JButton();
         tabFSMgr = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        lstJobs = new javax.swing.JList<>();
-        btnLoad = new javax.swing.JButton();
+        pnlLoadData = new javax.swing.JPanel();
         btnCldUpload = new javax.swing.JButton();
         btnCldDownload = new javax.swing.JButton();
-        btnCldRefresh = new javax.swing.JButton();
         btnCldDelete = new javax.swing.JButton();
+        btnCldRefresh = new javax.swing.JButton();
+        lblLoadFiles = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblFiles = new javax.swing.JTable();
+        btnLoad = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lstJobs = new javax.swing.JList<>();
+        lblImportJobs = new javax.swing.JLabel();
+        pnlJobDetails = new javax.swing.JPanel();
+        lblJobID = new javax.swing.JLabel();
+        lblJobName = new javax.swing.JLabel();
+        lblJobStatus = new javax.swing.JLabel();
+        lblJobDetails = new javax.swing.JLabel();
+        titleJobID = new javax.swing.JLabel();
+        titleJobName = new javax.swing.JLabel();
+        titleJobStatus = new javax.swing.JLabel();
+        titleJobDetails = new javax.swing.JLabel();
 
         rbComma.doClick();
 
@@ -614,6 +628,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         });
 
         btnLoadProfile.setText("Load Profile");
+        btnLoadProfile.setEnabled(false);
         btnLoadProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoadProfileActionPerformed(evt);
@@ -621,6 +636,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         });
 
         btnSaveProfile.setText("Save Profile");
+        btnSaveProfile.setEnabled(false);
         btnSaveProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveProfileActionPerformed(evt);
@@ -677,14 +693,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
         MainTabbedPane.addTab("Data Load Manager", tabDLMgr);
 
-        jScrollPane3.setViewportView(lstJobs);
-
-        btnLoad.setText("Load Data");
-        btnLoad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoadActionPerformed(evt);
-            }
-        });
+        pnlLoadData.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Load Data", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Dialog", 1, 18), new java.awt.Color(0, 0, 0))); // NOI18N
+        pnlLoadData.setForeground(new java.awt.Color(153, 204, 255));
 
         btnCldUpload.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
         btnCldUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_upload_24x16.png"))); // NOI18N
@@ -702,6 +712,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnCldDelete.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
+        btnCldDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_delete_24x24.png"))); // NOI18N
+        btnCldDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCldDeleteActionPerformed(evt);
+            }
+        });
+
         btnCldRefresh.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
         btnCldRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_refresh_24x24.png"))); // NOI18N
         btnCldRefresh.addActionListener(new java.awt.event.ActionListener() {
@@ -710,13 +728,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnCldDelete.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.darcula.color1"));
-        btnCldDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/emtecinc/images/cloud_delete_24x24.png"))); // NOI18N
-        btnCldDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCldDeleteActionPerformed(evt);
-            }
-        });
+        lblLoadFiles.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblLoadFiles.setText("Data Files");
 
         tblFiles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -731,50 +744,166 @@ public class PBCSAdmin extends javax.swing.JFrame {
         tblFiles.getTableHeader().setReorderingAllowed(false);
         jScrollPane5.setViewportView(tblFiles);
 
+        btnLoad.setText("Load Data");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
+
+        jScrollPane3.setViewportView(lstJobs);
+
+        lblImportJobs.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblImportJobs.setText("Import Jobs");
+
+        javax.swing.GroupLayout pnlLoadDataLayout = new javax.swing.GroupLayout(pnlLoadData);
+        pnlLoadData.setLayout(pnlLoadDataLayout);
+        pnlLoadDataLayout.setHorizontalGroup(
+            pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoadDataLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                    .addGroup(pnlLoadDataLayout.createSequentialGroup()
+                        .addGroup(pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlLoadDataLayout.createSequentialGroup()
+                                .addComponent(btnCldUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCldDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCldDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCldRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblLoadFiles))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblImportJobs)
+                    .addComponent(btnLoad))
+                .addContainerGap())
+        );
+        pnlLoadDataLayout.setVerticalGroup(
+            pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoadDataLayout.createSequentialGroup()
+                .addGroup(pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlLoadDataLayout.createSequentialGroup()
+                        .addComponent(lblLoadFiles)
+                        .addGap(6, 6, 6)
+                        .addGroup(pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnCldUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCldDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCldDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCldRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlLoadDataLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblImportJobs)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnLoad)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlLoadDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        pnlJobDetails.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Latest Job Details", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Dialog", 1, 18), new java.awt.Color(0, 0, 0))); // NOI18N
+
+        lblJobID.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblJobID.setMaximumSize(new java.awt.Dimension(36, 16));
+        lblJobID.setMinimumSize(new java.awt.Dimension(36, 16));
+        lblJobID.setPreferredSize(new java.awt.Dimension(36, 16));
+
+        lblJobName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        lblJobStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblJobStatus.setMaximumSize(new java.awt.Dimension(36, 16));
+        lblJobStatus.setMinimumSize(new java.awt.Dimension(36, 16));
+        lblJobStatus.setPreferredSize(new java.awt.Dimension(36, 16));
+
+        lblJobDetails.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        titleJobID.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        titleJobID.setText("Job ID: ");
+
+        titleJobName.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        titleJobName.setText("Job Name: ");
+
+        titleJobStatus.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        titleJobStatus.setText("Job Status: ");
+
+        titleJobDetails.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        titleJobDetails.setText("Job Details: ");
+
+        javax.swing.GroupLayout pnlJobDetailsLayout = new javax.swing.GroupLayout(pnlJobDetails);
+        pnlJobDetails.setLayout(pnlJobDetailsLayout);
+        pnlJobDetailsLayout.setHorizontalGroup(
+            pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlJobDetailsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblJobDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlJobDetailsLayout.createSequentialGroup()
+                            .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(titleJobName, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                                .addComponent(titleJobID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblJobName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblJobID, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(pnlJobDetailsLayout.createSequentialGroup()
+                            .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(titleJobStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(titleJobDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblJobStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 12, Short.MAX_VALUE))
+        );
+        pnlJobDetailsLayout.setVerticalGroup(
+            pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlJobDetailsLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleJobID)
+                    .addComponent(lblJobID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(titleJobName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblJobName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlJobDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(titleJobStatus)
+                    .addComponent(lblJobStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(titleJobDetails)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblJobDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout tabFSMgrLayout = new javax.swing.GroupLayout(tabFSMgr);
         tabFSMgr.setLayout(tabFSMgrLayout);
         tabFSMgrLayout.setHorizontalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabFSMgrLayout.createSequentialGroup()
-                .addComponent(btnCldUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(pnlLoadData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCldDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCldDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCldRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(tabFSMgrLayout.createSequentialGroup()
-                .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(tabFSMgrLayout.createSequentialGroup()
-                        .addGap(478, 478, 478)
-                        .addComponent(btnLoad)))
-                .addContainerGap(906, Short.MAX_VALUE))
+                .addComponent(pnlJobDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(593, Short.MAX_VALUE))
         );
         tabFSMgrLayout.setVerticalGroup(
             tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabFSMgrLayout.createSequentialGroup()
-                .addGap(94, 94, 94)
-                .addComponent(btnLoad)
-                .addGap(17, 17, 17)
-                .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCldUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCldDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCldDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCldRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3))
-                .addContainerGap(207, Short.MAX_VALUE))
+                    .addComponent(pnlJobDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlLoadData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(268, Short.MAX_VALUE))
         );
 
-        MainTabbedPane.addTab("File System Manager", tabFSMgr);
+        MainTabbedPane.addTab("System Manager", tabFSMgr);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -782,7 +911,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(MainTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1473, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(MainTabbedPane)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -800,7 +929,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         }
 
-        pack();
+        setSize(new java.awt.Dimension(1501, 678));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -879,8 +1009,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
-        try{
-            
+        try{            
             String strDelim = "";
             if (rbComma.isSelected()){
                 strDelim = ",";
@@ -1151,8 +1280,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
              //Upload File
             try{
-                //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
-                //    pbcsUrl, pbcsConstants.DBG_PBCS_HPVER, "POC_CITA");
                 PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
                 pbcsclient.uploadFile(fc.getSelectedFile());
                 refreshFMLists();
@@ -1165,9 +1292,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
         // TODO add your handling code here:
         //System.out.println(evt.getPropertyName());
-        if (evt.getPropertyName() == "model") {
+        if (evt.getPropertyName() == "model") {            
+            btnLoadProfile.setEnabled(true);
+            btnSaveProfile.setEnabled(true);
             btnExport.setEnabled(true);
-            //arrDataColumn = new String[jTable1.getColumnCount()];
 
            for (int i = 0 ; i < jTable1.getColumnCount(); i++){
                arrColNames.add(i,"");
@@ -1265,15 +1393,20 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (lstJobs.getSelectedIndex() != -1 && tblFiles.getSelectedRow() != -1){
             try {
-                // TODO add your handling code here:
-                //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
-                    //        pbcsUrl, "11.1.2.3.600", "POC_CITA");
                 PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
-                pbcsclient.integrationScenarioImportData(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString(), lstJobs.getSelectedValue());
+                int JID = pbcsclient.ImportData(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString(), lstJobs.getSelectedValue());
+                HashMap JobDetails = new HashMap();
+                JobDetails = pbcsclient.getJobDetails(JID);
+                lblJobID.setText(JobDetails.get("jobId").toString());
+                lblJobName.setText(JobDetails.get("jobName").toString());
+                lblJobStatus.setText(JobDetails.get("status").toString());
+                lblJobDetails.setText(JobDetails.get("details").toString());
             } catch (Exception ex) {
                 //Logger.getLogger(PBCSAdmin1.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex.getMessage());
             }
+        }else {
+            JOptionPane.showMessageDialog(this.getParent(), "Please Select a Load File & Job");
         }
     }//GEN-LAST:event_btnLoadActionPerformed
 
@@ -1358,8 +1491,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnLoadProfileActionPerformed
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -1431,6 +1563,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lblDisplayRows2;
     private javax.swing.JLabel lblDomain;
     private javax.swing.JLabel lblFind;
+    private javax.swing.JLabel lblImportJobs;
+    private javax.swing.JLabel lblJobDetails;
+    private javax.swing.JLabel lblJobID;
+    private javax.swing.JLabel lblJobName;
+    private javax.swing.JLabel lblJobStatus;
+    private javax.swing.JLabel lblLoadFiles;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblPassword1;
     private javax.swing.JLabel lblPrefix;
@@ -1442,6 +1580,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JList<String> lstJobs;
     private javax.swing.JPanel pnlColProps;
     private javax.swing.JPanel pnlDSMgmt;
+    private javax.swing.JPanel pnlJobDetails;
+    private javax.swing.JPanel pnlLoadData;
     private javax.swing.JPasswordField pwdPassword;
     private javax.swing.JRadioButton rbComma;
     private javax.swing.JRadioButton rbCustom;
@@ -1451,6 +1591,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel tabFSMgr;
     private javax.swing.JPanel tabLogin;
     private javax.swing.JTable tblFiles;
+    private javax.swing.JLabel titleJobDetails;
+    private javax.swing.JLabel titleJobID;
+    private javax.swing.JLabel titleJobName;
+    private javax.swing.JLabel titleJobStatus;
     private javax.swing.JTextField txtColName;
     private javax.swing.JTextField txtCustDelim;
     private javax.swing.JTextField txtDisplayRows;
