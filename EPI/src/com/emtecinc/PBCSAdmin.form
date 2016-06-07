@@ -33,20 +33,27 @@
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
-                          <Component id="btnFnROK" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                                  <Component id="btnFnRAdd" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btnFnRRemove" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btnFnRPrev" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
+                                  <Component id="btnFnROK" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btnFnRClose" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnFnRClose" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
-                          <Component id="btnFnRAdd" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnFnRRemove" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnFnRPrev" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnFnRNext" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="btnSaveFnR" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnFnRNext" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -71,6 +78,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnFnRClose" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnFnROK" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnSaveFnR" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="31" max="32767" attributes="0"/>
               </Group>
@@ -88,34 +96,38 @@
             <Component class="javax.swing.JTable" name="tblFindReplace">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="4">
-                    <Column editable="true" title="&lt;HTML&gt;&amp;nbsp&lt;BR&gt;Replace&lt;BR&gt;&amp;nbsp&lt;/HTML&gt;" type="java.lang.Object">
-                      <Data value="Test"/>
-                      <Data value="Test1"/>
-                      <Data value="Test2"/>
-                      <Data value="Test3"/>
-                    </Column>
-                    <Column editable="true" title="With" type="java.lang.Object">
-                      <Data value="Hi!"/>
-                      <Data value="Ho!"/>
-                      <Data value="Hello!"/>
-                      <Data value="Hi There!"/>
-                    </Column>
-                    <Column editable="true" title="&lt;HTML&gt;Match&lt;BR&gt;Whole&lt;BR&gt;Word&lt;/HTML&gt;" type="java.lang.Boolean">
-                      <Data value="null"/>
-                      <Data value="true"/>
-                      <Data value="null"/>
-                      <Data value="true"/>
-                    </Column>
-                    <Column editable="true" title="&lt;HTML&gt;Match&lt;BR&gt;Case&lt;/HTML&gt;" type="java.lang.Boolean">
-                      <Data value="true"/>
-                      <Data value="null"/>
-                      <Data value="true"/>
-                      <Data value="null"/>
-                    </Column>
+                  <Table columnCount="4" rowCount="0">
+                    <Column editable="true" title="&lt;HTML&gt;&amp;nbsp&lt;BR&gt;Replace&lt;BR&gt;&amp;nbsp&lt;/HTML&gt;" type="java.lang.Object"/>
+                    <Column editable="true" title="With" type="java.lang.Object"/>
+                    <Column editable="true" title="&lt;HTML&gt;Match&lt;BR&gt;Whole&lt;BR&gt;Word&lt;/HTML&gt;" type="java.lang.Boolean"/>
+                    <Column editable="true" title="&lt;HTML&gt;Match&lt;BR&gt;Case&lt;/HTML&gt;" type="java.lang.Boolean"/>
                   </Table>
                 </Property>
                 <Property name="autoResizeMode" type="int" value="4"/>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                  </TableColumnModel>
+                </Property>
                 <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                 </Property>
@@ -180,6 +192,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFnRPrevActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="btnSaveFnR">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Save"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveFnRActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </NonVisualComponents>
@@ -209,7 +229,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="MainTabbedPane" pref="1490" max="32767" attributes="0"/>
+              <Component id="MainTabbedPane" max="32767" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>

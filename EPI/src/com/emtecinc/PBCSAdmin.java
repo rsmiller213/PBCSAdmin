@@ -93,6 +93,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         btnFnRAdd = new javax.swing.JButton();
         btnFnRNext = new javax.swing.JButton();
         btnFnRPrev = new javax.swing.JButton();
+        btnSaveFnR = new javax.swing.JButton();
         MainTabbedPane = new javax.swing.JTabbedPane();
         tabLogin = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -185,10 +186,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
         tblFindReplace.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Test", "Hi!", null,  new Boolean(true)},
-                {"Test1", "Ho!",  new Boolean(true), null},
-                {"Test2", "Hello!", null,  new Boolean(true)},
-                {"Test3", "Hi There!",  new Boolean(true), null}
+
             },
             new String [] {
                 "<HTML>&nbsp<BR>Replace<BR>&nbsp</HTML>", "With", "<HTML>Match<BR>Whole<BR>Word</HTML>", "<HTML>Match<BR>Case</HTML>"
@@ -251,6 +249,13 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnSaveFnR.setText("Save");
+        btnSaveFnR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveFnRActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jdFindReplaceLayout = new javax.swing.GroupLayout(jdFindReplace.getContentPane());
         jdFindReplace.getContentPane().setLayout(jdFindReplaceLayout);
         jdFindReplaceLayout.setHorizontalGroup(
@@ -263,19 +268,23 @@ public class PBCSAdmin extends javax.swing.JFrame {
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblFnRSelectedCol)))
                     .addGroup(jdFindReplaceLayout.createSequentialGroup()
-                        .addGap(124, 124, 124)
-                        .addComponent(btnFnROK)
+                        .addGroup(jdFindReplaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jdFindReplaceLayout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addComponent(btnFnRAdd)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFnRRemove)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFnRPrev))
+                            .addGroup(jdFindReplaceLayout.createSequentialGroup()
+                                .addGap(124, 124, 124)
+                                .addComponent(btnFnROK)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFnRClose)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFnRClose))
-                    .addGroup(jdFindReplaceLayout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(btnFnRAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFnRRemove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFnRPrev)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFnRNext)))
+                        .addGroup(jdFindReplaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSaveFnR)
+                            .addComponent(btnFnRNext))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jdFindReplaceLayout.setVerticalGroup(
@@ -294,7 +303,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jdFindReplaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFnRClose)
-                    .addComponent(btnFnROK))
+                    .addComponent(btnFnROK)
+                    .addComponent(btnSaveFnR))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
@@ -1061,7 +1071,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlLoadData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlJobDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(340, Short.MAX_VALUE))
+                .addContainerGap(335, Short.MAX_VALUE))
         );
 
         MainTabbedPane.addTab("System Manager", tabFSMgr);
@@ -1072,7 +1082,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(MainTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1490, Short.MAX_VALUE)
+                .addComponent(MainTabbedPane)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -1670,18 +1680,31 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnFnROKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnROKActionPerformed
         // TODO add your handling code here:
-        //dlManager.findReplaceItems
+//        for (int i = 0; i < tblFindReplace.getRowCount() ; i++) {
+//            dlManager.saveFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), 
+//                    tblFindReplace.getValueAt(i, 0).toString(), tblFindReplace.getValueAt(i, 1).toString(), Boolean.parseBoolean(tblFindReplace.getValueAt(i, 2).toString()),
+//                    Boolean.parseBoolean(tblFindReplace.getValueAt(i, 3).toString()));
+//        }
+        dlManager.saveFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn());
+        jdFindReplace.dispose();
     }//GEN-LAST:event_btnFnROKActionPerformed
 
     private void btnFnRPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRPrevActionPerformed
         // TODO add your handling code here:
+        //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() - 1, jTable1.getSelectedColumn() - 1);
+        //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
+        dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         updateColProps();
+        
     }//GEN-LAST:event_btnFnRPrevActionPerformed
 
     private void btnFnRNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRNextActionPerformed
         // TODO add your handling code here:
+        //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() + 1, jTable1.getSelectedColumn() + 1);
+        //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
+        dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         updateColProps();
     }//GEN-LAST:event_btnFnRNextActionPerformed
 
@@ -1699,6 +1722,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnFnRRemoveActionPerformed
+
+    private void btnSaveFnRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveFnRActionPerformed
+        // TODO add your handling code here:
+        dlManager.saveFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn());
+    }//GEN-LAST:event_btnSaveFnRActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1759,6 +1787,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnPrevField;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnSaveFnR;
     private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnUpdateField;
     private javax.swing.JCheckBox cbData;
