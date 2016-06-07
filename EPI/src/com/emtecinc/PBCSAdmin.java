@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -1685,7 +1686,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //                    tblFindReplace.getValueAt(i, 0).toString(), tblFindReplace.getValueAt(i, 1).toString(), Boolean.parseBoolean(tblFindReplace.getValueAt(i, 2).toString()),
 //                    Boolean.parseBoolean(tblFindReplace.getValueAt(i, 3).toString()));
 //        }
-        dlManager.saveFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn());
+        dlManager.saveFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn());
         jdFindReplace.dispose();
     }//GEN-LAST:event_btnFnROKActionPerformed
 
@@ -1694,7 +1695,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() - 1, jTable1.getSelectedColumn() - 1);
         //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
-        dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
+        dlManager.getFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         updateColProps();
         
     }//GEN-LAST:event_btnFnRPrevActionPerformed
@@ -1704,13 +1705,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() + 1, jTable1.getSelectedColumn() + 1);
         //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
-        dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
+        dlManager.getFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         updateColProps();
     }//GEN-LAST:event_btnFnRNextActionPerformed
 
     private void btnFnRAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRAddActionPerformed
         // TODO add your handling code here:
-        ((DefaultTableModel) tblFindReplace.getModel()).addRow(new Object[tblFindReplace.getColumnCount()]);
+        //((DefaultTableModel) tblFindReplace.getModel()).addRow(new Object[tblFindReplace.getColumnCount()]);
+        ((DefaultTableModel) tblFindReplace.getModel()).addRow(new Object[]{ "", "", false, false});
     }//GEN-LAST:event_btnFnRAddActionPerformed
 
     private void btnFnRRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRRemoveActionPerformed
@@ -1725,7 +1727,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnSaveFnRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveFnRActionPerformed
         // TODO add your handling code here:
-        dlManager.saveFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn());
+        
+//        Vector columns = new Vector();
+//        Vector rows = new Vector();
+//        String[][] rowData = new String[tblFindReplace.getRowCount()][tblFindReplace.getColumnCount()];
+//        for (int i = 0 ; i < tblFindReplace.getColumnCount(); i++){
+//            columns.add(tblFindReplace.getColumnModel().getColumn(i).getHeaderValue().toString());
+//        }
+//        for (int i = 0 ; i < tblFindReplace.getRowCount(); i++){
+//            for (int j = 0 ; j < tblFindReplace.getColumnCount(); j++){
+//                rowData[i][j] = tblFindReplace.getValueAt(i, j).toString();
+//                rows.add(i, rowData[i][j]);
+//            }
+//        }
+//        ((DefaultTableModel) tblFindReplace.getModel()).setDataVector((Object[][])rowData, columns.toArray());
+        dlManager.saveFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn());
     }//GEN-LAST:event_btnSaveFnRActionPerformed
 
     /**

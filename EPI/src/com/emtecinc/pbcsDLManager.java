@@ -51,8 +51,7 @@ import javax.swing.table.TableModel;
 public class pbcsDLManager {
     public File flSrcFile;
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
-    ArrayList<String[]> findReplaceItems = new ArrayList<String[]>();
-    ArrayList<DefaultTableModel> findReplaceModels = new ArrayList<DefaultTableModel>();
+    HashMap hmFindReplaceItems = new HashMap();
     HashMap hmMoves = new HashMap();
     /**
     * Creates table model from delimited file using Open CSV. 
@@ -800,57 +799,29 @@ public class pbcsDLManager {
         });
     }
     
-    public void saveFindReplaceItems(String columnHeader, String find, String replace, Boolean matchWholeWord, Boolean matchCase){
-        findReplaceItems.add(new String[]{columnHeader, find, replace, matchWholeWord.toString(), matchCase.toString()});
+    public void saveFindReplaceItems(String columnHeader, JTable jTable, int index){
+        System.out.println(jTable.getModel().getRowCount());
+        hmFindReplaceItems.put(columnHeader, ((DefaultTableModel) jTable.getModel()).getDataVector());
     }
-    public void saveFindReplaceItems(JTable jTable, int index){
-        findReplaceModels.set(index, (DefaultTableModel) jTable.getModel());
-    }
-    
-//    public DefaultTableModel getFindReplaceItems(JTable jTable, int index){
-//        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-//        try {
-//            System.out.println("index " + index + " size " + findReplaceModels.size());
-//            if (index >= findReplaceModels.size()) {
-//                for (int i = 0; i < model.getRowCount(); i++){
-//                    model.removeRow(i);
-//                }
-//                findReplaceModels.add(index, model);
-//                System.out.println("if");
-//            } else {
-//                model = findReplaceModels.get(index);
-//                System.out.println("else");
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-//        }
-//        jTable.setModel(model);
-//        model.fireTableDataChanged();
-//        jTable.getTableHeader().repaint();
-//        return model;
-//    }
-    public void initiateFindReplaceArray(int count, DefaultTableModel model) {
-        for (int i = 0; i < count; i++){
-            findReplaceModels.add(i, model);
+
+        public void getFindReplaceItems(String columnHeader, JTable jTable, int index, int colCount){
+            DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+            Vector columns = new Vector();
+        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+            //columns.add(jTable.getModel().getColumnName(i));
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
-    }
-        public void getFindReplaceItems(JTable jTable, int index, int colCount){
-        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-        //DefaultTableModel model = new DefaultTableModel();
-        try {
-            if (findReplaceModels.isEmpty()) {
-                initiateFindReplaceArray(colCount, model);
-            } else {
-            //System.out.println("index " + index + " size " + findReplaceModels.size());
-            //findReplaceModels.get(1).addRow(new Object[colCount]);
-            jTable.setModel(findReplaceModels.get(index));
-            ((DefaultTableModel) jTable.getModel()).fireTableDataChanged();
-            model = findReplaceModels.get(index);
-            jTable.getTableHeader().repaint();
-            System.out.println("row count: " + findReplaceModels.get(index).getRowCount() + " index: " + index);
+            //DefaultTableModel model = new DefaultTableModel();
+            try {
+                if (hmFindReplaceItems.containsKey(columnHeader)) {
+                    model.setDataVector((Vector) hmFindReplaceItems.get(columnHeader), columns);
+                    //System.out.println(Arrays.toString(((Vector) hmFindReplaceItems.get(columnHeader)).toArray()));
+                } else {
+                    model.setDataVector(new Vector(), columns);
+                }
+                ((DefaultTableModel) jTable.getModel()).fireTableDataChanged();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
-    }
 }
