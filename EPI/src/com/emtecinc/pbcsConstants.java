@@ -31,4 +31,5 @@ public class pbcsConstants {
     public static final String EVT_SPLIT_CHARS = "Split (# Chars)";
     public static final String EVT_CREATE_JOIN = "Create with Join";
     public static final String EVT_DELETE_COLUMN = "Delete Column";
+    public static final String EVT_IGNORE_COLUMN = "Ignore Column";
 }

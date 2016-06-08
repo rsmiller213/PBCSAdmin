@@ -53,6 +53,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     
     //static int[] arrDataColumn;
     static ArrayList<String> arrDataColumn = new ArrayList<>();
+    static ArrayList<String> arrIgnoreColumn = new ArrayList<>();
     //static String[] arrDataColumn;
     ArrayList<String> arrColNames = new ArrayList<>();
     HashMap hm = new HashMap();
@@ -1129,6 +1130,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtFind.setEnabled(true);
         txtReplace.setEnabled(true);
         btnFindReplace.setEnabled(true);
+        cbIgnoreCol.setEnabled(true);
         lblFnRSelectedCol.setText("Selected Column: " + lblColumn.getText());
         if (jTable1.getSelectedColumn() == 0){
             btnPrevField.setEnabled(false);
@@ -1152,6 +1154,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
             cbData.setSelected(true);
         } else {
             cbData.setSelected(false);
+        }
+        if (arrIgnoreColumn.contains(columnHeader)) {
+            cbIgnoreCol.setSelected(true);
+        } else {
+            cbIgnoreCol.setSelected(false);
         }
         
         //Set Text Boxes based on HashMap
@@ -1247,6 +1254,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
             dlManager.updateEventLog(pbcsConstants.EVT_DATA, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
             //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
             arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+        }
+        if (cbIgnoreCol.isSelected()) {
+            dlManager.updateEventLog(pbcsConstants.EVT_IGNORE_COLUMN, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
+            //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            arrIgnoreColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
         }
 //        for (Object t: dlManager.eventRows){
 //            if (t instanceof String[]){
@@ -1451,7 +1463,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION){
             // Save Locally
             try {
-                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn);                
+                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn);                
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1477,6 +1489,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
            for (int i = 0 ; i < jTable1.getColumnCount(); i++){
                arrColNames.add(i,"");
                arrDataColumn.add(i,"");
+               arrIgnoreColumn.add(i, "");
            }
         }
     }//GEN-LAST:event_jTable1PropertyChange

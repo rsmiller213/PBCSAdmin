@@ -453,7 +453,7 @@ public class pbcsDLManager {
     }
     
     //public void exportFileFromTable(JTable jTable, File file, int[] arrDataColumn) throws IOException{
-    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn) throws IOException{
+    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField) throws IOException{
         if (!file.exists()){
             file.createNewFile();
             //writeFileFromTable(jTable, file);
@@ -484,9 +484,11 @@ public class pbcsDLManager {
                 //if (j <= arrDataColumn.size()) {
                     bw.write((String)("\"" + jTable.getValueAt(i,j) + "\""));
                     bw.write("\t");
+                } else if (!arrIgnoreField.get(j).equals("")) {
+                    continue;
                 } else {
-                bw.write((String)(jTable.getValueAt(i,j)));
-                bw.write("\t");
+                    bw.write((String)(jTable.getValueAt(i,j)));
+                    bw.write("\t");
                 }
             }
         }
@@ -644,7 +646,7 @@ public class pbcsDLManager {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
+        //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
         return hm;
     }
     
@@ -676,6 +678,8 @@ public class pbcsDLManager {
             renameTableColumn(jTable, value, toColumn);
         } else if (action.equals(pbcsConstants.EVT_DATA)){
             PBCSAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
+        } else if (action.equals(pbcsConstants.EVT_IGNORE_COLUMN)){
+            PBCSAdmin.arrIgnoreColumn.set(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
         } else if (action.equals(pbcsConstants.EVT_PREFIX)){
             hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
         } else if (action.equals(pbcsConstants.EVT_SUFFIX)){
