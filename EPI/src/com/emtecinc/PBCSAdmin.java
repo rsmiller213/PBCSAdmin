@@ -1237,11 +1237,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
         }
         if (!txtFind.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_FIND, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtFind.getText());
-            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Find", txtFind.getText());
+            //hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Find", txtFind.getText());
         }
         if (!txtReplace.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_REPLACE, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtReplace.getText());
-            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Replace", txtReplace.getText());
+            //hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Replace", txtReplace.getText());
         }
         if (cbData.isSelected()) {
             dlManager.updateEventLog(pbcsConstants.EVT_DATA, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
@@ -1687,6 +1687,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //                    Boolean.parseBoolean(tblFindReplace.getValueAt(i, 3).toString()));
 //        }
         dlManager.saveFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn());
+        dlManager.executeFindReplaceItems(jTable1);
         jdFindReplace.dispose();
     }//GEN-LAST:event_btnFnROKActionPerformed
 
@@ -1727,20 +1728,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnSaveFnRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveFnRActionPerformed
         // TODO add your handling code here:
-        
-//        Vector columns = new Vector();
-//        Vector rows = new Vector();
-//        String[][] rowData = new String[tblFindReplace.getRowCount()][tblFindReplace.getColumnCount()];
-//        for (int i = 0 ; i < tblFindReplace.getColumnCount(); i++){
-//            columns.add(tblFindReplace.getColumnModel().getColumn(i).getHeaderValue().toString());
-//        }
-//        for (int i = 0 ; i < tblFindReplace.getRowCount(); i++){
-//            for (int j = 0 ; j < tblFindReplace.getColumnCount(); j++){
-//                rowData[i][j] = tblFindReplace.getValueAt(i, j).toString();
-//                rows.add(i, rowData[i][j]);
-//            }
-//        }
-//        ((DefaultTableModel) tblFindReplace.getModel()).setDataVector((Object[][])rowData, columns.toArray());
         dlManager.saveFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn());
     }//GEN-LAST:event_btnSaveFnRActionPerformed
 

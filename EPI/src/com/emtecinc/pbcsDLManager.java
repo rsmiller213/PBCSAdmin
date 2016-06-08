@@ -24,10 +24,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -234,6 +236,40 @@ public class pbcsDLManager {
                     }
                 }
                 jTable.setModel(model);
+            } catch (Throwable x) {
+                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+            }
+        return model;
+    }
+    
+    public TableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
+        TableModel model = jTable.getModel();
+        try {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                int index = jTable.convertColumnIndexToModel(j);
+                    Object[] rows = new Object[jTable.getRowCount()];
+                    for (int i = 0; i < rows.length; i++) {
+                        if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
+                            rows[i] = model.getValueAt(i, index);
+                            if (rows[i].equals(strFind)) {
+                                rows[i] = strReplace;
+                                model.setValueAt(rows[i], i, index);
+                            } else {
+                                rows[i] = model.getValueAt(i, index);
+                                model.setValueAt(rows[i], i, index);
+                            }
+                        } else if (strFind != null && !bMatchWord && bMatchCase || strReplace != null && !bMatchWord && bMatchCase) {
+                            rows[i] = model.getValueAt(i, index);
+                            rows[i] = rows[i].toString().replace(strFind, strReplace);
+                            model.setValueAt(rows[i], i, index);
+                        } else if (strFind != null && !bMatchWord && !bMatchCase || strReplace != null && !bMatchWord && !bMatchCase) {
+                            rows[i] = model.getValueAt(i, index);
+                            rows[i] = rows[i].toString().replaceAll("(?i)"+ Pattern.quote(strFind), strReplace);
+                            model.setValueAt(rows[i], i, index);
+                        }
+                    }
+                    jTable.setModel(model);
+            }
             } catch (Throwable x) {
                 JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
             }
@@ -527,37 +563,6 @@ public class pbcsDLManager {
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
         eventRows.add(new String[]{operation, movedFrom, movedTo, characters});
     }
-
-//    public void saveFile(){
-//        final JFileChooser fc = new JFileChooser();
-//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-//        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
-//        int returnVal = fc.showOpenDialog(null);
-//        
-//        if (returnVal == JFileChooser.APPROVE_OPTION){
-//            File file = fc.getSelectedFile();
-//            if (file.exists()) {
-//                int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?");
-//                if (option == JOptionPane.OK_OPTION) {
-//                    file.delete();
-//                }
-//            }
-//            try {
-//                file.createNewFile();
-//                BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-//                for (Object event: eventRows){
-//                    if (event instanceof String[]){
-//                        String[] arr = (String[]) event;
-//                        bw.write(Arrays.toString(arr));
-//                        bw.newLine();
-//                    }
-//                }
-//                bw.close();
-//            } catch (IOException ex) {
-//                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//    }
     
     public void saveFile(){
         final JFileChooser fc = new JFileChooser();
@@ -577,33 +582,14 @@ public class pbcsDLManager {
                 file.createNewFile();
                 ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
                 outputStream.writeObject(eventRows);
+                outputStream.writeObject(hmFindReplaceItems);
                 outputStream.close();
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-//    public void openProfile(){
-//        final JFileChooser fc = new JFileChooser();
-//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-//        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
-//        int returnVal = fc.showOpenDialog(null);
-//        
-//        if (returnVal == JFileChooser.APPROVE_OPTION){
-//            File file = fc.getSelectedFile();
-//            try {
-//                BufferedReader br = new BufferedReader(new FileReader(file));
-//                while (!br.readLine().isEmpty())
-//                    //System.out.println(br.readLine().replace("[", "").replace("[", "").split(","));
-//                    System.out.println(br.readLine());
-//                br.close();
-//            } catch (IOException ex) {
-//                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//    }
-    
-    //public void openProfile(JTable jTable) throws ClassNotFoundException{
+
     public HashMap openProfile(JTable jTable) throws ClassNotFoundException{
         HashMap hm =  new HashMap();
         final JFileChooser fc = new JFileChooser();
@@ -618,6 +604,7 @@ public class pbcsDLManager {
             try {
                 ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
                 Object importProfile = (Object) inputStream.readObject();
+                Object findReplaceVectors = (Object) inputStream.readObject();
                 if (importProfile instanceof ArrayList){
                     eventRows = (ArrayList<String[]>) importProfile;
                     for (Object events: eventRows){
@@ -641,6 +628,10 @@ public class pbcsDLManager {
                         }
                     }
                     //setMovesFromProfile(jTable);
+                } 
+                if (findReplaceVectors instanceof HashMap) {
+                    hmFindReplaceItems = (HashMap) findReplaceVectors;
+                    executeFindReplaceItems(jTable);
                 }
                 
 //                for (Object event: importItems){
@@ -800,7 +791,6 @@ public class pbcsDLManager {
     }
     
     public void saveFindReplaceItems(String columnHeader, JTable jTable, int index){
-        System.out.println(jTable.getModel().getRowCount());
         hmFindReplaceItems.put(columnHeader, ((DefaultTableModel) jTable.getModel()).getDataVector());
     }
 
@@ -824,4 +814,27 @@ public class pbcsDLManager {
                 JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
             }
         }
+    
+    public void executeFindReplaceItems(JTable jTable) {
+        if (!hmFindReplaceItems.isEmpty()) {
+            for (int i = 0; i < hmFindReplaceItems.size(); i++) {
+                for (int j = 0; j < jTable.getColumnCount(); j++) {
+                    String column = jTable.getColumnModel().getColumn(j).getHeaderValue().toString();
+                    if (hmFindReplaceItems.containsKey(column)) {
+                        Vector allData = (Vector) hmFindReplaceItems.get(column);
+                    //System.out.println(Arrays.toString(allData.toArray()));
+                        if (!allData.isEmpty()) {
+                            for (Iterator it = allData.iterator(); it.hasNext();) {
+                            Vector row = (Vector) it.next();
+                            findReplaceField(jTable, row.get(0).toString(), row.get(1).toString(),
+                                    Boolean.parseBoolean(row.get(2).toString()), Boolean.parseBoolean(row.get(3).toString()));
+                            //System.out.println(allData.toArray()[0].toString() + allData.toArray()[1].toString() + Boolean.parseBoolean(allData.toArray()[2].toString()) + Boolean.parseBoolean(allData.toArray()[3].toString()));
+                            //System.out.println(row.get(0));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
