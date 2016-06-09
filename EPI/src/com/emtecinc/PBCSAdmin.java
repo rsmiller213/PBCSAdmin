@@ -5,6 +5,8 @@
  */
 package com.emtecinc;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedWriter;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javax.management.Query.value;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -31,11 +34,13 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -1266,6 +1271,24 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //                System.out.println(Arrays.toString(arr));
 //            }
 //        }
+
+
+//        Can't check if cbIgnore is selected as if you switch columns it will become unselected. Need to test against some stored value. 
+//        jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+//        {
+//            @Override
+//            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+//            {
+//                if (cbIgnoreCol.isSelected()) {
+//                    setBackground(Color.RED);
+//                } else {
+//                    setBackground(null);
+//                }
+//
+//                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//                return this;
+//            }  
+//        });
     }//GEN-LAST:event_btnUpdateFieldActionPerformed
 
     private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed

@@ -203,7 +203,8 @@ public class pbcsDLManager {
     public Object[] getTableColumnHeaders(int size) {
             Object[] header = new Object[size];
             for (int i = 0; i < header.length; i++) {
-                header[i] = i + 1;
+                //header[i] = i + 1;
+                header[i] = String.format("Field %d", i + 1);
             }
             return header;
         }
