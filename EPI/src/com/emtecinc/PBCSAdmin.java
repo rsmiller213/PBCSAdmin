@@ -143,10 +143,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtPrefix = new javax.swing.JTextField();
         lblSuffix = new javax.swing.JLabel();
         txtSuffix = new javax.swing.JTextField();
-        lblFind = new javax.swing.JLabel();
-        txtFind = new javax.swing.JTextField();
-        lblReplace = new javax.swing.JLabel();
-        txtReplace = new javax.swing.JTextField();
         btnUpdateField = new javax.swing.JButton();
         lblColName = new javax.swing.JLabel();
         txtColName = new javax.swing.JTextField();
@@ -639,24 +635,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtSuffix.setMaximumSize(new java.awt.Dimension(60, 24));
         txtSuffix.setMinimumSize(new java.awt.Dimension(60, 24));
 
-        lblFind.setText("Find");
-        lblFind.setMaximumSize(new java.awt.Dimension(35, 16));
-        lblFind.setMinimumSize(new java.awt.Dimension(35, 16));
-        lblFind.setPreferredSize(new java.awt.Dimension(35, 16));
-
-        txtFind.setEnabled(false);
-        txtFind.setMaximumSize(new java.awt.Dimension(60, 24));
-        txtFind.setMinimumSize(new java.awt.Dimension(60, 24));
-
-        lblReplace.setText("Replace");
-        lblReplace.setMaximumSize(new java.awt.Dimension(35, 16));
-        lblReplace.setMinimumSize(new java.awt.Dimension(35, 16));
-        lblReplace.setPreferredSize(new java.awt.Dimension(35, 16));
-
-        txtReplace.setEnabled(false);
-        txtReplace.setMaximumSize(new java.awt.Dimension(60, 24));
-        txtReplace.setMinimumSize(new java.awt.Dimension(60, 24));
-
         btnUpdateField.setText("Update Field");
         btnUpdateField.setEnabled(false);
         btnUpdateField.addActionListener(new java.awt.event.ActionListener() {
@@ -725,18 +703,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 .addComponent(cbFlipSign))
                             .addGroup(pnlColPropsLayout.createSequentialGroup()
                                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lblFind, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                                    .addComponent(lblSuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblSuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                                     .addComponent(lblPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblColName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lblColName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtColName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
                                     .addComponent(txtPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtReplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(pnlColPropsLayout.createSequentialGroup()
                                 .addComponent(btnPrevField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -745,7 +719,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 .addComponent(btnUpdateField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnFindReplace)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         pnlColPropsLayout.setVerticalGroup(
             pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -763,15 +737,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblFind, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFind, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(68, 68, 68)
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbData)
                     .addComponent(cbFlipSign))
@@ -1078,7 +1044,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlLoadData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlJobDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(335, Short.MAX_VALUE))
+                .addContainerGap(330, Short.MAX_VALUE))
         );
 
         MainTabbedPane.addTab("System Manager", tabFSMgr);
@@ -1132,8 +1098,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         txtColName.setEnabled(true);
         txtPrefix.setEnabled(true);
         txtSuffix.setEnabled(true);
-        txtFind.setEnabled(true);
-        txtReplace.setEnabled(true);
         btnFindReplace.setEnabled(true);
         cbIgnoreCol.setEnabled(true);
         lblFnRSelectedCol.setText("Selected Column: " + lblColumn.getText());
@@ -1169,8 +1133,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //Set Text Boxes based on HashMap
         Object pre = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix");
         Object suf = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix");
-        Object find = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Find");
-        Object replace = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Replace");
         if (pre != null) {
             txtPrefix.setText(pre.toString());
         } else {
@@ -1180,16 +1142,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
             txtSuffix.setText(suf.toString());
         } else {
             txtSuffix.setText("");
-        }
-        if (find != null) {
-            txtFind.setText(find.toString());
-        } else {
-            txtFind.setText("");
-        }
-        if (replace != null) {
-            txtReplace.setText(replace.toString());
-        } else {
-            txtReplace.setText("");
         }
         dlManager.getTableColumnMoves(jTable1);
     }
@@ -1233,7 +1185,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
         //arrDataColumn = new String[jTable1.getColumnCount()];
-        TableModel model = dlManager.findReplaceField(jTable1, txtFind.getText(), txtReplace.getText(), txtPrefix.getText(), txtSuffix.getText());
+       
         if (!txtColName.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtColName.getText());
             dlManager.renameTableColumn(jTable1, txtColName.getText(), jTable1.getSelectedColumn());
@@ -1246,14 +1198,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (!txtSuffix.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_SUFFIX, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtSuffix.getText());
             hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Suffix", txtSuffix.getText());
-        }
-        if (!txtFind.getText().equals("")) {
-            dlManager.updateEventLog(pbcsConstants.EVT_FIND, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtFind.getText());
-            //hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Find", txtFind.getText());
-        }
-        if (!txtReplace.getText().equals("")) {
-            dlManager.updateEventLog(pbcsConstants.EVT_REPLACE, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtReplace.getText());
-            //hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Replace", txtReplace.getText());
         }
         if (cbData.isSelected()) {
             dlManager.updateEventLog(pbcsConstants.EVT_DATA, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
@@ -1849,7 +1793,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lblDisplayRows;
     private javax.swing.JLabel lblDisplayRows2;
     private javax.swing.JLabel lblDomain;
-    private javax.swing.JLabel lblFind;
     private javax.swing.JLabel lblFnRSelectedCol;
     private javax.swing.JLabel lblImportJobs;
     private javax.swing.JLabel lblJobDetails;
@@ -1860,7 +1803,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblPassword1;
     private javax.swing.JLabel lblPrefix;
-    private javax.swing.JLabel lblReplace;
     private javax.swing.JLabel lblStartRow;
     private javax.swing.JLabel lblSuffix;
     private javax.swing.JLabel lblURL;
@@ -1888,10 +1830,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private javax.swing.JTextField txtCustDelim;
     private javax.swing.JTextField txtDisplayRows;
     private javax.swing.JTextField txtDomain;
-    private javax.swing.JTextField txtFind;
     private javax.swing.JTextField txtHeaderRows;
     private javax.swing.JTextField txtPrefix;
-    private javax.swing.JTextField txtReplace;
     private javax.swing.JTextField txtStartRow;
     private javax.swing.JTextField txtSuffix;
     private javax.swing.JTextField txtURL;

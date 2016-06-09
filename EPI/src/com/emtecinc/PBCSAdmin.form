@@ -815,19 +815,15 @@
                                       </Group>
                                       <Group type="102" attributes="0">
                                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="lblFind" pref="85" max="32767" attributes="0"/>
-                                              <Component id="lblSuffix" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="lblSuffix" alignment="0" pref="85" max="32767" attributes="0"/>
                                               <Component id="lblPrefix" max="32767" attributes="0"/>
                                               <Component id="lblColName" max="32767" attributes="0"/>
-                                              <Component id="lblReplace" max="32767" attributes="0"/>
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Component id="txtColName" pref="96" max="32767" attributes="0"/>
                                               <Component id="txtPrefix" max="32767" attributes="0"/>
                                               <Component id="txtSuffix" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="txtFind" max="32767" attributes="0"/>
-                                              <Component id="txtReplace" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
@@ -843,7 +839,7 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="17" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -866,17 +862,7 @@
                               <Component id="lblSuffix" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
                               <Component id="txtSuffix" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblFind" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                              <Component id="txtFind" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblReplace" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtReplace" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="cbData" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbFlipSign" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -952,56 +938,6 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtSuffix">
-                  <Properties>
-                    <Property name="enabled" type="boolean" value="false"/>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[60, 24]"/>
-                    </Property>
-                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[60, 24]"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblFind">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Find"/>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[35, 16]"/>
-                    </Property>
-                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[35, 16]"/>
-                    </Property>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[35, 16]"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtFind">
-                  <Properties>
-                    <Property name="enabled" type="boolean" value="false"/>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[60, 24]"/>
-                    </Property>
-                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[60, 24]"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblReplace">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Replace"/>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[35, 16]"/>
-                    </Property>
-                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[35, 16]"/>
-                    </Property>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[35, 16]"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtReplace">
                   <Properties>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
