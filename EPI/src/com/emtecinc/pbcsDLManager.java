@@ -483,12 +483,12 @@ public class pbcsDLManager {
                 //if (arrDataColumn[j] == 0) {
                 if (!arrDataColumn.get(j).equals("")) {
                 //if (j <= arrDataColumn.size()) {
-                    bw.write((String)("\"" + jTable.getValueAt(i,j) + "\""));
+                    bw.write((String)(jTable.getValueAt(i,j)));
                     bw.write("\t");
                 } else if (!arrIgnoreField.get(j).equals("")) {
                     continue;
                 } else {
-                    bw.write((String)(jTable.getValueAt(i,j)));
+                    bw.write((String)("\"" + jTable.getValueAt(i,j) + "\""));
                     bw.write("\t");
                 }
             }
