@@ -213,8 +213,6 @@ public class pbcsDLManager {
     * Creates table model from delimited file using Open CSV. 
     *
     * @param jTable JTable used in the UI
-    * @param strFind String to Find
-    * @param strReplace   New Value
     * @param strPrefix   Prefix to be added
     * @param strSuffix   Suffix to be added
     * @return            returns a TableModel and also updates the JTable
@@ -321,7 +319,8 @@ public class pbcsDLManager {
     */
     public void addTableColumn(JTable jTable, String strColumnName, String strRowData){
         try {
-            updateColumnModelHeaders(jTable);
+            //updateColumnModelHeaders(jTable);
+            updateColumnModelData(jTable);
             DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
                 tblModel.addColumn(strColumnName);
                 //int columns = tblModel.getColumnCount() - 1 ;
@@ -449,7 +448,8 @@ public class pbcsDLManager {
         //int columnNumber = jTable.getSelectedColumn();
         jTable.getColumnModel().getColumn(columnNumber).setHeaderValue(strColumnName);
         jTable.getTableHeader().repaint();
-        updateColumnModelHeaders(jTable);
+        //updateColumnModelHeaders(jTable);
+        updateColumnModelData(jTable);
     }
     
     //public void exportFileFromTable(JTable jTable, File file, int[] arrDataColumn) throws IOException{
@@ -505,7 +505,8 @@ public class pbcsDLManager {
     
     //public DefaultTableModel duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
     public void duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
-        updateColumnModelHeaders(jTable);
+        //updateColumnModelHeaders(jTable);
+        updateColumnModelData(jTable);
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
         int leftColIndex = jTable.convertColumnIndexToModel(model.findColumn(leftColumn));
         int rightColIndex = jTable.convertColumnIndexToModel(model.findColumn(rightColumn));
@@ -724,7 +725,7 @@ public class pbcsDLManager {
         }
         ((DefaultTableModel) jTable.getModel()).setColumnIdentifiers(columns);
         if (selectedColumn >= 0){
-        jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
+            jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
         }
     }
     
@@ -747,6 +748,9 @@ public class pbcsDLManager {
         //System.out.println(Arrays.toString(rowData[0]));
 //        ((DefaultTableModel) jTable.getModel()).setDataVector(rows, columns);
         ((DefaultTableModel) jTable.getModel()).setDataVector((Object[][])rowData, columns.toArray());
+        if (selectedColumn >= 0){
+            jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
+        }
     }
     
     public void updateColumnValues(JTable jTable, int columnIndex, String strRowData){
