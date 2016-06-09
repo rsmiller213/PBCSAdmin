@@ -1185,7 +1185,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
         //arrDataColumn = new String[jTable1.getColumnCount()];
-       
+       dlManager.findReplaceField(jTable1, txtPrefix.getText(), txtSuffix.getText());
         if (!txtColName.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtColName.getText());
             dlManager.renameTableColumn(jTable1, txtColName.getText(), jTable1.getSelectedColumn());

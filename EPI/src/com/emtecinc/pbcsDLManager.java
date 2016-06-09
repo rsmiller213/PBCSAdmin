@@ -219,22 +219,21 @@ public class pbcsDLManager {
     * @param strSuffix   Suffix to be added
     * @return            returns a TableModel and also updates the JTable
     */
-    public TableModel findReplaceField(JTable jTable, String strFind, String strReplace, String strPrefix, String strSuffix) {
+    public TableModel findReplaceField(JTable jTable, String strPrefix, String strSuffix) {
         int index = jTable.convertColumnIndexToModel(jTable.getSelectedColumn());
         TableModel model = jTable.getModel();
         try{
                 Object[] rows = new Object[jTable.getRowCount()];
                 for (int i = 0; i < rows.length; i++) {
-                    if (strFind != null || strReplace != null) {
-                        rows[i] = model.getValueAt(i, index);
-                        if (rows[i].equals(strFind)) {
-                            rows[i] = strPrefix + strReplace + strSuffix;
-                            model.setValueAt(rows[i], i, index);
-                        } else {
-                            rows[i] = strPrefix + model.getValueAt(i, index) + strSuffix;
-                            model.setValueAt(rows[i], i, index);
-                        }
+                    rows[i] = model.getValueAt(i, index);
+                    if (!rows[i].toString().startsWith(strPrefix)) {
+                        rows[i] = strPrefix + rows[i];
+                    } 
+                    if (!rows[i].toString().endsWith(strSuffix)) {
+                        rows[i] = rows[i] + strSuffix;
                     }
+                    
+                    model.setValueAt(rows[i], i, index);
                 }
                 jTable.setModel(model);
             } catch (Throwable x) {
@@ -565,6 +564,12 @@ public class pbcsDLManager {
     
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
         eventRows.add(new String[]{operation, movedFrom, movedTo, characters});
+//        for (Object events: eventRows){
+//                        if (events instanceof String[]){
+//                            String[] arr = (String[]) events;
+//                            System.out.println(Arrays.toString(arr) + "\t");
+//                        }
+//        }
     }
     
     public void saveFile(){
