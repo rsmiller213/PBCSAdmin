@@ -82,6 +82,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
      */
     public PBCSAdmin() {
         initComponents();
+        //dlManager.getTableColumnMoves(jTable1);
     }
 
     /**
@@ -682,7 +683,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         cbIgnoreCol.setText("Ignore Column");
         cbIgnoreCol.setEnabled(false);
 
-        btnFindReplace.setText("Show FnR");
+        btnFindReplace.setText("Find & Replace");
         btnFindReplace.setEnabled(false);
         btnFindReplace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -705,25 +706,28 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 .addComponent(cbData)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cbFlipSign))
-                            .addGroup(pnlColPropsLayout.createSequentialGroup()
-                                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lblSuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                                    .addComponent(lblPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblColName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtColName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                                    .addComponent(txtPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(pnlColPropsLayout.createSequentialGroup()
-                                .addComponent(btnPrevField)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnNextField))
-                            .addGroup(pnlColPropsLayout.createSequentialGroup()
-                                .addComponent(btnUpdateField)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnFindReplace)))))
-                .addContainerGap(17, Short.MAX_VALUE))
+                            .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                        .addComponent(btnPrevField)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnNextField))
+                                    .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                        .addGap(27, 27, 27)
+                                        .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(btnFindReplace)
+                                            .addComponent(btnUpdateField))))
+                                .addGroup(pnlColPropsLayout.createSequentialGroup()
+                                    .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(lblSuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                                        .addComponent(lblPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblColName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtColName, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                                        .addComponent(txtPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlColPropsLayout.setVerticalGroup(
             pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -741,19 +745,16 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(68, 68, 68)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbData)
                     .addComponent(cbFlipSign))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbIgnoreCol)
-                .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlColPropsLayout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(btnUpdateField))
-                    .addGroup(pnlColPropsLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFindReplace)))
+                .addGap(18, 18, 18)
+                .addComponent(btnFindReplace)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUpdateField)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlColPropsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnNextField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -822,7 +823,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             tabDLMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabDLMgrLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(tabDLMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(tabDLMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -837,8 +838,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     .addGroup(tabDLMgrLayout.createSequentialGroup()
                         .addComponent(pnlDSMgmt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlColProps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(pnlColProps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         MainTabbedPane.addTab("Data Load Manager", tabDLMgr);
@@ -1048,7 +1049,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 .addGroup(tabFSMgrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlLoadData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlJobDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(330, Short.MAX_VALUE))
+                .addContainerGap(319, Short.MAX_VALUE))
         );
 
         MainTabbedPane.addTab("System Manager", tabFSMgr);
@@ -1066,7 +1067,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(MainTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
+                .addComponent(MainTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE))
         );
 
         for (int i = 1; i < MainTabbedPane.getTabCount(); i++) {
@@ -1077,7 +1078,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
         }
 
-        setSize(new java.awt.Dimension(1501, 678));
+        setSize(new java.awt.Dimension(1501, 653));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1195,6 +1196,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         //arrDataColumn = new String[jTable1.getColumnCount()];
        dlManager.findReplaceField(jTable1, txtPrefix.getText(), txtSuffix.getText(), jTable1.getSelectedColumn());
+       System.out.println(oldColumnName + " | New " + txtColName.getText());
        dlManager.updateFindReplaceHeader(oldColumnName, txtColName.getText());
         if (!txtColName.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtColName.getText());
@@ -1653,6 +1655,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             // TODO add your handling code here:
             //dlManager.openProfile(jTable1);
             //hm = dlManager.openProfile(jTable1);
+            //jTable1.clearSelection();
             hm.putAll(dlManager.openProfile(jTable1));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
@@ -1662,6 +1665,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnFindReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindReplaceActionPerformed
         // TODO add your handling code here:
         jdFindReplace.setVisible(true);
+        dlManager.getFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
+        
     }//GEN-LAST:event_btnFindReplaceActionPerformed
 
     private void btnFnRCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRCloseActionPerformed

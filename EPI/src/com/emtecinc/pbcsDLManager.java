@@ -355,16 +355,17 @@ public class pbcsDLManager {
     public void splitColumn(JTable tTable, boolean bCharSplit, String strSplitBy ){
         try{
             // Locals
+            updateColumnModelData(tTable);
             int iCurCol = tTable.convertColumnIndexToModel(tTable.getSelectedColumn());
             String strCur;
             String strNew;
             String strColHeader = tTable.getColumnModel().getColumn(tTable.getSelectedColumn()).getHeaderValue().toString();
-            int iNewCol;
             
             // Create New Column
             DefaultTableModel tblModel = (DefaultTableModel) tTable.getModel();
             addTableColumn(tTable,strColHeader + "_Split","abc");
-            iNewCol = tblModel.getColumnCount() - 1;
+            int iNewCol = tblModel.getColumnCount() - 1;
+            
             
             // Get Model to Loop Rows
             TableModel model = tTable.getModel();
@@ -388,8 +389,10 @@ public class pbcsDLManager {
                 // Update Rows
                 model.setValueAt(strCur, i, iCurCol);
                 model.setValueAt(strNew, i, iNewCol);
-                }
-                tTable.setModel(model);
+            }
+            
+            tTable.setModel(model);
+            
             } catch (Throwable x) {
                 JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
             }
@@ -810,9 +813,13 @@ public class pbcsDLManager {
     
     public void updateFindReplaceHeader(String oldColumnHeader, String newColumnHeader) {
         if (!hmFindReplaceItems.isEmpty()) {
-            Vector data = (Vector) hmFindReplaceItems.get(oldColumnHeader);
-            hmFindReplaceItems.remove(oldColumnHeader);
-            hmFindReplaceItems.put(newColumnHeader, data);
+            if (hmFindReplaceItems.containsKey(oldColumnHeader)){
+                System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
+                Vector data = (Vector) hmFindReplaceItems.get(oldColumnHeader);
+                hmFindReplaceItems.remove(oldColumnHeader);
+                hmFindReplaceItems.put(newColumnHeader, data);
+            }
+            
         }
         if (!hmMoves.isEmpty()) {
             Vector data = (Vector) hmMoves.get(oldColumnHeader);
@@ -844,14 +851,16 @@ public class pbcsDLManager {
     
     public void executeFindReplaceItems(JTable jTable) {
         if (!hmFindReplaceItems.isEmpty()) {
+            System.out.println(Arrays.toString(hmFindReplaceItems.entrySet().toArray()));
             ArrayList<String> columns = new ArrayList<String>();
             for (int j = 0; j < jTable.getColumnCount(); j++) {
+                System.out.println("Index: " + j + " Column: " + jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
                 columns.add(jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
             }
             for (int i = 0; i < columns.size(); i++) {
                 Vector allData = new Vector();
-                System.out.println(columns.get(i));
                 if (hmFindReplaceItems.containsKey(columns.get(i))){
+                    System.out.println(i + " : " + columns.get(i));
                     allData = (Vector) hmFindReplaceItems.get(columns.get(i));
                     if (!allData.isEmpty()) {
                         for (Iterator it = allData.iterator(); it.hasNext();) {
