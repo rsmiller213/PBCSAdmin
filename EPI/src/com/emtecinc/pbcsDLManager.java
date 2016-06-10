@@ -600,6 +600,7 @@ public class pbcsDLManager {
     }
 
     public HashMap openProfile(JTable jTable) throws ClassNotFoundException{
+        ArrayList<String[]> eventRowsProfile = new ArrayList<String[]>();
         HashMap hm =  new HashMap();
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -615,8 +616,8 @@ public class pbcsDLManager {
                 Object importProfile = (Object) inputStream.readObject();
                 Object findReplaceVectors = (Object) inputStream.readObject();
                 if (importProfile instanceof ArrayList){
-                    eventRows = (ArrayList<String[]>) importProfile;
-                    for (Iterator it = eventRows.iterator(); it.hasNext();) {
+                    eventRowsProfile = (ArrayList<String[]>) importProfile;
+                    for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
                         String[] currLine = (String[]) it.next();
                         if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
                             hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3])); 
@@ -641,6 +642,7 @@ public class pbcsDLManager {
                     hmFindReplaceItems = (HashMap) findReplaceVectors;
                     executeFindReplaceItems(jTable);
                 }
+                eventRows.removeAll(eventRowsProfile);
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
