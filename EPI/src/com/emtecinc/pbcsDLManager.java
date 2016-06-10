@@ -74,6 +74,8 @@ public class pbcsDLManager {
                         UTF8_CHARSET), delimiter.charAt(0));
                 List<String[]> dataList = reader.readAll();
                 for (String[] row: dataList) {
+                    for (int j = 0; j < row.length; j++)
+                        row[j] = row[j].trim();
                     if (isFirstRow) {
                         if (bHeaderRow) {
                             model = new DefaultTableModel(row, 0);
@@ -118,6 +120,8 @@ public class pbcsDLManager {
                 int N = linesToRead;
                 int counter = 0;
                 while ((nextLine = reader.readNext()) != null && counter < N)  {
+                    for (int j = 0; j < nextLine.length; j++)
+                        nextLine[j] = nextLine[j].trim();
                     if (isFirstRow) {
                         if (bHeaderRow) {
                             model = new DefaultTableModel(nextLine, 0);
@@ -167,6 +171,8 @@ public class pbcsDLManager {
                 int counter = 0;
                 int lineNumber = 0;
                 while ((nextLine = reader.readNext()) != null && counter < N)  {
+                    for (int j = 0; j < nextLine.length; j++)
+                        nextLine[j] = nextLine[j].trim();
                     lineNumber++;
                     if (lineNumber >= startLine) {
                             if (isFirstRow) {
