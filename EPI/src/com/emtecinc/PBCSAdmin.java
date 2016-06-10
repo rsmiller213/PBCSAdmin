@@ -82,7 +82,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
      */
     public PBCSAdmin() {
         initComponents();
-        dlManager.getTableColumnMoves(jTable1);
     }
 
     /**
@@ -1150,7 +1149,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         } else {
             txtSuffix.setText("");
         }
-        //dlManager.getTableColumnMoves(jTable1);
+        dlManager.getTableColumnMoves(jTable1);
     }
 
     
