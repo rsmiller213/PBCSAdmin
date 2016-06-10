@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -638,11 +639,12 @@ public class pbcsDLManager {
                         }
                     }
                 }
+                eventRows.clear();
+                eventRows.addAll(eventRowsProfile);
                 if (findReplaceVectors instanceof HashMap) {
                     hmFindReplaceItems = (HashMap) findReplaceVectors;
                     executeFindReplaceItems(jTable);
                 }
-                eventRows.removeAll(eventRowsProfile);
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
