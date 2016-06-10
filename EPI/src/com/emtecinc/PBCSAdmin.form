@@ -1099,7 +1099,7 @@
                           <Component id="pnlLoadData" max="32767" attributes="0"/>
                           <Component id="pnlJobDetails" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="330" max="32767" attributes="0"/>
+                      <EmptySpace pref="325" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

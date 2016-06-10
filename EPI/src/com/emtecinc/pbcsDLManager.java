@@ -217,8 +217,9 @@ public class pbcsDLManager {
     * @param strSuffix   Suffix to be added
     * @return            returns a TableModel and also updates the JTable
     */
-    public TableModel findReplaceField(JTable jTable, String strPrefix, String strSuffix) {
-        int index = jTable.convertColumnIndexToModel(jTable.getSelectedColumn());
+    public TableModel findReplaceField(JTable jTable, String strPrefix, String strSuffix, int index) {
+        //int index = jTable.convertColumnIndexToModel(jTable.getSelectedColumn());
+        updateColumnModelData(jTable);
         TableModel model = jTable.getModel();
         try{
                 Object[] rows = new Object[jTable.getRowCount()];
@@ -397,6 +398,7 @@ public class pbcsDLManager {
     public void splitColumnByProfile(JTable tTable, boolean bCharSplit, String strSplitBy, int oldColumn ){
         try{
             // Locals
+            updateColumnModelData(tTable);
             int iCurCol = tTable.convertColumnIndexToModel(oldColumn);
             String strCur;
             String strNew;
@@ -433,7 +435,7 @@ public class pbcsDLManager {
                 }
                 tTable.setModel(model);
             } catch (Throwable x) {
-                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+                JOptionPane.showMessageDialog(null, "Error: Column Identifier not found. Error: " + x.getMessage());
             }
     }
     
@@ -508,8 +510,8 @@ public class pbcsDLManager {
         //updateColumnModelHeaders(jTable);
         updateColumnModelData(jTable);
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
-        int leftColIndex = jTable.convertColumnIndexToModel(model.findColumn(leftColumn));
-        int rightColIndex = jTable.convertColumnIndexToModel(model.findColumn(rightColumn));
+        //int leftColIndex = jTable.convertColumnIndexToModel(model.findColumn(leftColumn));
+        //int rightColIndex = jTable.convertColumnIndexToModel(model.findColumn(rightColumn));
         model.addColumn(header);
         TableColumn t = new TableColumn();
         t.setHeaderValue(header);
@@ -538,7 +540,7 @@ public class pbcsDLManager {
     public void duplicateColumnFromProfile (JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns){
         //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
         //updateColumnModelHeaders(jTable);
-        updateColumnModelData(jTable);
+        //updateColumnModelData(jTable);
         DefaultTableModel model = (DefaultTableModel)jTable.getModel();
         //model.addColumn(header);
         TableColumn t = new TableColumn();
@@ -558,19 +560,14 @@ public class pbcsDLManager {
         if (deleteColumns) {
             jTable.removeColumn(jTable.getColumn(leftColumn));
             jTable.removeColumn(jTable.getColumn(rightColumn));
-            updateColumnModelData(jTable);
+            //updateColumnModelData(jTable);
         }
         //model.fireTableDataChanged();
     }
     
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
         eventRows.add(new String[]{operation, movedFrom, movedTo, characters});
-//        for (Object events: eventRows){
-//                        if (events instanceof String[]){
-//                            String[] arr = (String[]) events;
-//                            System.out.println(Arrays.toString(arr) + "\t");
-//                        }
-//        }
+        System.out.println(operation + " " + movedFrom + " " + movedTo + " " + characters);
     }
     
     public void saveFile(){
@@ -616,70 +613,74 @@ public class pbcsDLManager {
                 Object findReplaceVectors = (Object) inputStream.readObject();
                 if (importProfile instanceof ArrayList){
                     eventRows = (ArrayList<String[]>) importProfile;
-                    for (Object events: eventRows){
-                        if (events instanceof String[]){
-                            String[] arr = (String[]) events;
+                    for (Iterator it = eventRows.iterator(); it.hasNext();) {
+                        String[] currLine = (String[]) it.next();
+                        if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
+                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3])); 
                             //System.out.println(Arrays.toString(arr));
-                            //System.out.println(arr[0] + " " + arr[1] + " " + arr[1] + " " + arr[3]);
-                            //pbcsAdmin.setImportProfile(arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
-                            //hm = setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3]);
-                            if (arr[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
-                                hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1].split(" ")[0]), Integer.parseInt(arr[1].split(" ")[1]), arr[3])); 
-                                //System.out.println(Arrays.toString(arr));
-                            } else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
-                                bMoves = true;
-                                hmMoves.put(arr[3], arr[2]);
-                                setMovesFromProfile(jTable);
-                            } else {
-                                hm.putAll(setImportProfile(jTable, arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[1]), arr[3])); 
-                                //System.out.println(Arrays.toString(arr));
-                            }
+                            //} else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
+                        }
+                        if (currLine[0].equals(pbcsConstants.EVT_MOVE)){
+                            bMoves = true;
+                            //System.out.println(arr[3] + arr[2]);
+                            hmMoves.clear();
+                            hmMoves.put(currLine[3], currLine[2]);
+                                //System.out.println("Before: " + hmMoves.get(currLine[3]));
+                            setMovesFromProfile(jTable);
+                        }
+                        if (!currLine[0].equals(pbcsConstants.EVT_MOVE) && !currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
+                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1]), Integer.parseInt(currLine[1]), currLine[3])); 
+                            //System.out.println(Arrays.toString(arr));
                         }
                     }
-                    //setMovesFromProfile(jTable);
-                } 
+                }
                 if (findReplaceVectors instanceof HashMap) {
                     hmFindReplaceItems = (HashMap) findReplaceVectors;
                     executeFindReplaceItems(jTable);
                 }
-                
-//                for (Object event: importItems){
-//                    if (event instanceof String[]){
-//                        String[] arr = (String[]) event;
-//                        System.out.println(Arrays.toString(arr));
-//                    }
-//                }
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
+        System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
         return hm;
     }
     
     public void setMovesFromProfile(JTable jTable){
         //String header = hmMoves.entrySet().toArray()[0].toString();
         //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header));
-        for (int i = 0; i < hmMoves.size(); i++) {
-            String header = hmMoves.entrySet().toArray()[i].toString().split("=")[0];
-            //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header).toString());
-            //int from = jTable.convertColumnIndexToView(model.findColumn(header));
-            int from = jTable.getColumnModel().getColumnIndex((Object) header);
-            int to = Integer.parseInt(hmMoves.entrySet().toArray()[i].toString().split("=")[1]);
-            //System.out.println("Header: " + header + " From: " + from + " To: " + to);
-            //jTable.moveColumn(to, from);
-            //jTable.moveColumn(from, to);
-            jTable.getColumnModel().moveColumn(from, to);
-            updateColumnModelData(jTable);
-            ((DefaultTableModel)jTable.getModel()).fireTableStructureChanged();
+        updateColumnModelData(jTable);
+        String header = hmMoves.entrySet().toArray()[0].toString().split("=")[0];
+        //System.out.println(Arrays.toString(hmMoves.entrySet().toArray()));
+        for (int index = 0; index < jTable.getColumnModel().getColumnCount(); index++) {
+            if (jTable.getColumnModel().getColumn(index).getIdentifier().equals(header)) {
+                int from = jTable.getColumnModel().getColumnIndex((Object) header);
+                int to = Integer.parseInt(hmMoves.entrySet().toArray()[0].toString().split("=")[1]);
+                jTable.getColumnModel().moveColumn(from, to);
+                updateColumnModelData(jTable);
+            }
         }
+//        for (int i = startFromIndex; i < hmMoves.size(); i++) {
+//            String header = hmMoves.entrySet().toArray()[i].toString().split("=")[0];
+//            System.out.println("Header: " + header);
+//            //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header).toString());
+//            //int from = jTable.convertColumnIndexToView(model.findColumn(header));
+//            int from = jTable.getColumnModel().getColumnIndex((Object) header);
+//            int to = Integer.parseInt(hmMoves.entrySet().toArray()[i].toString().split("=")[1]);
+//            //System.out.println("Header: " + header + " From: " + from + " To: " + to);
+//            //jTable.moveColumn(to, from);
+//            //jTable.moveColumn(from, to);
+//            jTable.getColumnModel().moveColumn(from, to);
+//            updateColumnModelData(jTable);
+//            //((DefaultTableModel)jTable.getModel()).fireTableStructureChanged();
+//        }
     }
     
     //public void setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
     public HashMap setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
         //ArrayList<String> arrDataColumn = new ArrayList<>();
         //System.out.println(action);
-        HashMap hm =  new HashMap();
+        HashMap hm = new HashMap();
         //jTable.moveColumn(4,0);
         if (action.equals(pbcsConstants.EVT_RENAME)) {
             renameTableColumn(jTable, value, toColumn);
@@ -689,12 +690,10 @@ public class pbcsDLManager {
             PBCSAdmin.arrIgnoreColumn.set(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
         } else if (action.equals(pbcsConstants.EVT_PREFIX)){
             hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
+            findReplaceField(jTable, value, "", toColumn);
         } else if (action.equals(pbcsConstants.EVT_SUFFIX)){
             hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
-        } else if (action.equals(pbcsConstants.EVT_FIND)){
-            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Find", value);
-        } else if (action.equals(pbcsConstants.EVT_REPLACE)){
-            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Replace", value);
+            findReplaceField(jTable, "", value, toColumn);
         } else if (action.equals(pbcsConstants.EVT_MOVE)){
            
         } else if (action.equals(pbcsConstants.EVT_ADD)){
@@ -713,6 +712,7 @@ public class pbcsDLManager {
             jTable.removeColumn(jTable.getColumnModel().getColumn(fromColumn));
             jTable.removeColumn(jTable.getColumnModel().getColumn(toColumn));
         }
+        //System.out.println(Arrays.toString(hm.entrySet().toArray()));
         return hm;
     }
     
@@ -807,6 +807,19 @@ public class pbcsDLManager {
     public void saveFindReplaceItems(String columnHeader, JTable jTable, int index){
         hmFindReplaceItems.put(columnHeader, ((DefaultTableModel) jTable.getModel()).getDataVector());
     }
+    
+    public void updateFindReplaceHeader(String oldColumnHeader, String newColumnHeader) {
+        if (!hmFindReplaceItems.isEmpty()) {
+            Vector data = (Vector) hmFindReplaceItems.get(oldColumnHeader);
+            hmFindReplaceItems.remove(oldColumnHeader);
+            hmFindReplaceItems.put(newColumnHeader, data);
+        }
+        if (!hmMoves.isEmpty()) {
+            Vector data = (Vector) hmMoves.get(oldColumnHeader);
+            hmMoves.remove(oldColumnHeader);
+            hmMoves.put(newColumnHeader, data);
+        }
+    }
 
         public void getFindReplaceItems(String columnHeader, JTable jTable, int index, int colCount){
             DefaultTableModel model = (DefaultTableModel) jTable.getModel();
@@ -831,20 +844,20 @@ public class pbcsDLManager {
     
     public void executeFindReplaceItems(JTable jTable) {
         if (!hmFindReplaceItems.isEmpty()) {
-            for (int i = 0; i < hmFindReplaceItems.size(); i++) {
-                for (int j = 0; j < jTable.getColumnCount(); j++) {
-                    String column = jTable.getColumnModel().getColumn(j).getHeaderValue().toString();
-                    if (hmFindReplaceItems.containsKey(column)) {
-                        Vector allData = (Vector) hmFindReplaceItems.get(column);
-                    //System.out.println(Arrays.toString(allData.toArray()));
-                        if (!allData.isEmpty()) {
-                            for (Iterator it = allData.iterator(); it.hasNext();) {
+            ArrayList<String> columns = new ArrayList<String>();
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                columns.add(jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
+            }
+            for (int i = 0; i < columns.size(); i++) {
+                Vector allData = new Vector();
+                System.out.println(columns.get(i));
+                if (hmFindReplaceItems.containsKey(columns.get(i))){
+                    allData = (Vector) hmFindReplaceItems.get(columns.get(i));
+                    if (!allData.isEmpty()) {
+                        for (Iterator it = allData.iterator(); it.hasNext();) {
                             Vector row = (Vector) it.next();
                             findReplaceField(jTable, row.get(0).toString(), row.get(1).toString(),
-                                    Boolean.parseBoolean(row.get(2).toString()), Boolean.parseBoolean(row.get(3).toString()));
-                            //System.out.println(allData.toArray()[0].toString() + allData.toArray()[1].toString() + Boolean.parseBoolean(allData.toArray()[2].toString()) + Boolean.parseBoolean(allData.toArray()[3].toString()));
-                            //System.out.println(row.get(0));
-                            }
+                                Boolean.parseBoolean(row.get(2).toString()), Boolean.parseBoolean(row.get(3).toString()));
                         }
                     }
                 }

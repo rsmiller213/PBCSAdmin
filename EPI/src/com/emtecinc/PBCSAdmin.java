@@ -8,6 +8,9 @@ package com.emtecinc;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -72,6 +75,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     ArrayList<String> eventColumns = new ArrayList<String>();
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
     ArrayList<String[]> propList = new ArrayList<String[]>();
+    String oldColumnName;
     
     /**
      * Creates new form PBCSAdmin
@@ -1090,6 +1094,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.setRowSelectionInterval(0, jTable1.getRowCount()-1);
         lblColumn.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + " Properties");
         txtColName.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+        oldColumnName = txtColName.getText();
        // txtColName.setText(jTable1.getColumnName(jTable1.getSelectedColumn()));
         btnColumnActions.setEnabled(true);
         // Set Column Property Objects to Enabled
@@ -1133,6 +1138,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //Set Text Boxes based on HashMap
         Object pre = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix");
         Object suf = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix");
+        System.out.println(Arrays.toString(hm.entrySet().toArray()));
         if (pre != null) {
             txtPrefix.setText(pre.toString());
         } else {
@@ -1163,11 +1169,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
             }
             
             DefaultTableModel model;
+            DefaultTableModel rawModel;
             if (txtHeaderRows.getText().length() < 1) {
                 //model = getModelFromCsvFile(this.flSourceFile, strDelim, false);
                 model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             } else {
                 model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             }
             jTable1.setModel(model);
             //Reset Text area and show new lines
@@ -1185,7 +1194,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
         //arrDataColumn = new String[jTable1.getColumnCount()];
-       dlManager.findReplaceField(jTable1, txtPrefix.getText(), txtSuffix.getText());
+       dlManager.findReplaceField(jTable1, txtPrefix.getText(), txtSuffix.getText(), jTable1.getSelectedColumn());
+       dlManager.updateFindReplaceHeader(oldColumnName, txtColName.getText());
         if (!txtColName.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtColName.getText());
             dlManager.renameTableColumn(jTable1, txtColName.getText(), jTable1.getSelectedColumn());
@@ -1295,7 +1305,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 if (optCreateViaText == JOptionPane.OK_OPTION) {
                     dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
                     dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
-                    dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
+                    dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), textValue.getText());
                 }
             } else if (columnAction.getSelectedIndex() == 1){
                 Object[] createDupJoin = {
