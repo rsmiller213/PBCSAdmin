@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 /**
@@ -17,14 +19,14 @@ import javax.swing.table.TableColumn;
  * @author Randall.Miller
  */
 public class AcceptReject extends javax.swing.JDialog {
-
+    JTable tblMain;
     /**
      * Creates new form AcceptReject
      */
     public AcceptReject(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        populateJTable();
+        //populateJTable();
     }
 
     /**
@@ -47,8 +49,15 @@ public class AcceptReject extends javax.swing.JDialog {
         btnPrevField1 = new javax.swing.JButton();
         btnOK = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         bgAndOr.add(rblAnd);
         rblAnd.setText("And");
@@ -79,7 +88,7 @@ public class AcceptReject extends javax.swing.JDialog {
 
         tblAccRej.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "<HTML>Accept<BR>Reject</HTML>", "Type", "Criteria", "Condition", "<HTML>Case<BR>Sensitive<HTML>"
@@ -96,8 +105,18 @@ public class AcceptReject extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tblAccRej);
 
         btnNextField.setText("Next Field");
+        btnNextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextFieldActionPerformed(evt);
+            }
+        });
 
         btnPrevField1.setText("Prev Field");
+        btnPrevField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevField1ActionPerformed(evt);
+            }
+        });
 
         btnOK.setText("OK");
         btnOK.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +130,20 @@ public class AcceptReject extends javax.swing.JDialog {
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
+            }
+        });
+
+        btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
             }
         });
 
@@ -131,18 +164,21 @@ public class AcceptReject extends javax.swing.JDialog {
                         .addComponent(lblCol)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 135, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnPrevField1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnNextField)
-                                .addGap(118, 118, 118))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnOK)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancel)
-                                .addGap(134, 134, 134))))))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnOK)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCancel)
+                        .addGap(134, 134, 134))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSave)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnPrevField1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNextField)
+                        .addGap(106, 106, 106))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,12 +192,14 @@ public class AcceptReject extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNextField)
-                    .addComponent(btnPrevField1))
+                    .addComponent(btnPrevField1)
+                    .addComponent(btnAdd)
+                    .addComponent(btnSave))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOK)
                     .addComponent(btnCancel))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -178,10 +216,68 @@ public class AcceptReject extends javax.swing.JDialog {
         
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    
-    private void populateJTable()
-    {
+    private void moveSelectionMainTbl(){
+        //tblMain = ((PBCSAdmin) this.getParent()).getMainTable();
+        if (tblMain.getSelectedColumn() == 0){
+            btnPrevField1.setEnabled(false);
+        } else {
+            btnPrevField1.setEnabled(true);
+        }
         
+        if (tblMain.getSelectedColumn() == tblMain.getColumnCount() - 1){
+            btnNextField.setEnabled(false);
+        } else {
+            btnNextField.setEnabled(true);
+        }
+        ((PBCSAdmin) this.getParent()).updateColProps();
+    }
+    private void btnNextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextFieldActionPerformed
+        // TODO add your handling code here:
+        tblMain.setColumnSelectionInterval(tblMain.getSelectedColumn() + 1, tblMain.getSelectedColumn() + 1);
+        ((PBCSAdmin) this.getParent()).dlManager.getAcceptRejectItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn(), tblMain.getColumnCount());
+        populateJTable(false);
+        //((PBCSAdmin) this.getParent()).dlManager.saveFindReplaceItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn());
+        moveSelectionMainTbl();
+    }//GEN-LAST:event_btnNextFieldActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        tblMain = ((PBCSAdmin) this.getParent()).getMainTable();
+        if (((PBCSAdmin) this.getParent()).dlManager.hmAcceptRejectItems.isEmpty()) {
+            populateJTable(true);
+        } else {
+            ((PBCSAdmin) this.getParent()).dlManager.getAcceptRejectItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn(), tblMain.getColumnCount());
+        }
+        moveSelectionMainTbl();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnPrevField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevField1ActionPerformed
+        // TODO add your handling code here:
+        tblMain.setColumnSelectionInterval(tblMain.getSelectedColumn() - 1, tblMain.getSelectedColumn() - 1);
+        ((PBCSAdmin) this.getParent()).dlManager.getAcceptRejectItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn(), tblMain.getColumnCount());
+        //((PBCSAdmin) this.getParent()).dlManager.saveFindReplaceItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn());
+        populateJTable(false);
+        moveSelectionMainTbl();
+    }//GEN-LAST:event_btnPrevField1ActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        //((DefaultTableModel) tblAccRej.getModel()).addRow(new Object[]{ "", "", "","", false});
+        populateJTable(true);
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        ((PBCSAdmin) this.getParent()).dlManager.saveAcceptRejectItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn());
+        
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    
+    private void populateJTable(Boolean bAddRow)
+    {
+        if (bAddRow) {
+            ((DefaultTableModel) tblAccRej.getModel()).addRow(new Object[]{ "", "", "","", false});
+        }
         TableColumn colAccRej = tblAccRej.getColumnModel().getColumn(0);
         TableColumn colType = tblAccRej.getColumnModel().getColumn(1);
         TableColumn colCond = tblAccRej.getColumnModel().getColumn(3);
@@ -279,10 +375,12 @@ public class AcceptReject extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgAndOr;
+    private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnOK;
     private javax.swing.JButton btnPrevField1;
+    private javax.swing.JButton btnSave;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCol;
     private javax.swing.JPanel pnlAndOr;

@@ -59,7 +59,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
     pbcsFSManager fsManager = new pbcsFSManager();
-    AcceptReject accRej = new AcceptReject(null,true);
+    AcceptReject accRej = new AcceptReject(this,true);
     
     JLabel jobIDLabel = new JLabel();
     
@@ -1500,6 +1500,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
         updateColProps();
     }//GEN-LAST:event_btnPrevFieldActionPerformed
 
+    public JTable getMainTable(){
+        return jTable1;
+    }
+    
     private void btnNextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextFieldActionPerformed
         // TODO add your handling code here:
         
@@ -1709,6 +1713,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() - 1, jTable1.getSelectedColumn() - 1);
         //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
         dlManager.getFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
+        //dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         updateColProps();
         
     }//GEN-LAST:event_btnFnRPrevActionPerformed
@@ -1719,6 +1724,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() + 1, jTable1.getSelectedColumn() + 1);
         //tblFindReplace.setModel(dlManager.getFindReplaceItems(tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount()));
         dlManager.getFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
+        //dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         updateColProps();
     }//GEN-LAST:event_btnFnRNextActionPerformed
 
@@ -1748,6 +1754,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //AcceptReject.main(args);
        // jdFindReplace.setVisible(true);
        accRej.setVisible(true);
+       dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
     }//GEN-LAST:event_btnAccRejActionPerformed
 
     /**

@@ -55,6 +55,7 @@ public class pbcsDLManager {
     public File flSrcFile;
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
     HashMap hmFindReplaceItems = new HashMap();
+    HashMap hmAcceptRejectItems = new HashMap();
     HashMap hmMoves = new HashMap();
     /**
     * Creates table model from delimited file using Open CSV. 
@@ -599,6 +600,7 @@ public class pbcsDLManager {
                 ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
                 outputStream.writeObject(eventRows);
                 outputStream.writeObject(hmFindReplaceItems);
+                outputStream.writeObject(hmAcceptRejectItems);
                 outputStream.close();
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
@@ -622,6 +624,7 @@ public class pbcsDLManager {
                 ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
                 Object importProfile = (Object) inputStream.readObject();
                 Object findReplaceVectors = (Object) inputStream.readObject();
+                Object acceptReplace = (Object) inputStream.readObject();
                 if (importProfile instanceof ArrayList){
                     eventRowsProfile = (ArrayList<String[]>) importProfile;
                     for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
@@ -650,6 +653,9 @@ public class pbcsDLManager {
                 if (findReplaceVectors instanceof HashMap) {
                     hmFindReplaceItems = (HashMap) findReplaceVectors;
                     executeFindReplaceItems(jTable);
+                }
+                if (acceptReplace instanceof HashMap) {
+                hmAcceptRejectItems = (HashMap) acceptReplace;
                 }
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
@@ -816,6 +822,9 @@ public class pbcsDLManager {
             
         });
     }
+    public void saveAcceptRejectItems(String columnHeader, JTable jTable, int index){
+        hmAcceptRejectItems.put(columnHeader, ((DefaultTableModel) jTable.getModel()).getDataVector());
+    }
     
     public void saveFindReplaceItems(String columnHeader, JTable jTable, int index){
         hmFindReplaceItems.put(columnHeader, ((DefaultTableModel) jTable.getModel()).getDataVector());
@@ -828,8 +837,15 @@ public class pbcsDLManager {
                 Vector data = (Vector) hmFindReplaceItems.get(oldColumnHeader);
                 hmFindReplaceItems.remove(oldColumnHeader);
                 hmFindReplaceItems.put(newColumnHeader, data);
+            }    
+        }
+        if (!hmAcceptRejectItems.isEmpty()) {
+            if (hmAcceptRejectItems.containsKey(oldColumnHeader)){
+                System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
+                Vector data = (Vector) hmAcceptRejectItems.get(oldColumnHeader);
+                hmAcceptRejectItems.remove(oldColumnHeader);
+                hmAcceptRejectItems.put(newColumnHeader, data);
             }
-            
         }
         if (!hmMoves.isEmpty()) {
             Vector data = (Vector) hmMoves.get(oldColumnHeader);
@@ -837,6 +853,27 @@ public class pbcsDLManager {
             hmMoves.put(newColumnHeader, data);
         }
     }
+    
+    public void getAcceptRejectItems(String columnHeader, JTable jTable, int index, int colCount){
+        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+        Vector columns = new Vector();
+        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+            //columns.add(jTable.getModel().getColumnName(i));
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
+        }
+            //DefaultTableModel model = new DefaultTableModel();
+            try {
+                if (hmAcceptRejectItems.containsKey(columnHeader)) {
+                    model.setDataVector((Vector) hmAcceptRejectItems.get(columnHeader), columns);
+                    //System.out.println(Arrays.toString(((Vector) hmFindReplaceItems.get(columnHeader)).toArray()));
+                } else {
+                    model.setDataVector(new Vector(), columns);
+                }
+                ((DefaultTableModel) jTable.getModel()).fireTableDataChanged();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+            }
+        }
 
         public void getFindReplaceItems(String columnHeader, JTable jTable, int index, int colCount){
             DefaultTableModel model = (DefaultTableModel) jTable.getModel();
