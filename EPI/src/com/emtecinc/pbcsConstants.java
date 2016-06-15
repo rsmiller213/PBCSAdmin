@@ -32,4 +32,16 @@ public class pbcsConstants {
     public static final String EVT_CREATE_JOIN = "Create with Join";
     public static final String EVT_DELETE_COLUMN = "Delete Column";
     public static final String EVT_IGNORE_COLUMN = "Ignore Column";
+    public static final String AR_EQUALS = "Equals";
+    public static final String AR_NOT_EQUALS = "Not Equals";
+    public static final String AR_CONTAINS = "Contains";
+    public static final String AR_NOT_CONTAINS = "Does Not Contain";
+    public static final String AR_GREATER_THAN = "Greater Than";
+    public static final String AR_GREATER_THAN_EQUAL = "Greater Than or Equal";
+    public static final String AR_LESS_THAN = "Less Than";
+    public static final String AR_LESS_THAN_EQUAL = "Less Than or Equal";
+    public static final String AR_STRING = "String";
+    public static final String AR_NUMBER = "Number";
+    public static final String AR_ACCEPT = "Accept";
+    public static final String AR_REJECT = "Reject";
 }

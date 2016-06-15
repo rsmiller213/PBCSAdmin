@@ -60,6 +60,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     pbcsDLManager dlManager = new pbcsDLManager();
     pbcsFSManager fsManager = new pbcsFSManager();
     AcceptReject accRej = new AcceptReject(this,true);
+    ExportTblToFile export;
     
     JLabel jobIDLabel = new JLabel();
     
@@ -1458,9 +1459,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
         
         if (returnVal == JFileChooser.APPROVE_OPTION){
             // Save Locally
+//            try {
+//                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn);                
+//            } catch (IOException ex) {
+//                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+//            }
             try {
-                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn);                
-            } catch (IOException ex) {
+                this.export = new ExportTblToFile(jTable1, dlManager.hmAcceptRejectItems);
+                export.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn);
+            } catch (Exception ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
              //Upload File
@@ -1753,8 +1760,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         //AcceptReject.main(args);
        // jdFindReplace.setVisible(true);
+//       try {
+//            this.export = new ExportTblToFile(jTable1, dlManager.hmAcceptRejectItems);
+//        } catch (Exception ex) {
+//            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+       //AcceptReject accRej = new AcceptReject(this,true);
        accRej.setVisible(true);
-       dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
+       dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), accRej.getAcceptRejectTable() , jTable1.getSelectedColumn(), jTable1.getColumnCount());
+       //export.setAcceptReject();
     }//GEN-LAST:event_btnAccRejActionPerformed
 
     /**

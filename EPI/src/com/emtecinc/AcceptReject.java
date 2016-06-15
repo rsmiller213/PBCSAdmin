@@ -7,6 +7,7 @@ package com.emtecinc;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -102,6 +103,7 @@ public class AcceptReject extends javax.swing.JDialog {
                 return types [columnIndex];
             }
         });
+        tblAccRej.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblAccRej);
 
         btnNextField.setText("Next Field");
@@ -207,6 +209,8 @@ public class AcceptReject extends javax.swing.JDialog {
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
         // TODO add your handling code here:
+        System.out.println(Arrays.toString(((PBCSAdmin) this.getParent()).dlManager.hmAcceptRejectItems.entrySet().toArray()));
+        //this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_btnOKActionPerformed
 
@@ -247,6 +251,7 @@ public class AcceptReject extends javax.swing.JDialog {
             populateJTable(true);
         } else {
             ((PBCSAdmin) this.getParent()).dlManager.getAcceptRejectItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn(), tblMain.getColumnCount());
+            populateJTable(false);
         }
         moveSelectionMainTbl();
     }//GEN-LAST:event_formWindowOpened
@@ -269,9 +274,11 @@ public class AcceptReject extends javax.swing.JDialog {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
         ((PBCSAdmin) this.getParent()).dlManager.saveAcceptRejectItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn());
-        
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    public JTable getAcceptRejectTable(){
+        return tblAccRej;
+    }
     
     private void populateJTable(Boolean bAddRow)
     {
@@ -285,13 +292,13 @@ public class AcceptReject extends javax.swing.JDialog {
  
         
         JComboBox cbAccRej = new JComboBox();
-        cbAccRej.addItem("Accept");
-        cbAccRej.addItem("Reject");
+        cbAccRej.addItem(pbcsConstants.AR_ACCEPT);
+        cbAccRej.addItem(pbcsConstants.AR_REJECT);
         colAccRej.setCellEditor(new DefaultCellEditor(cbAccRej));
         
         JComboBox cbType = new JComboBox();
-        cbType.addItem("String");
-        cbType.addItem("Number");
+        cbType.addItem(pbcsConstants.AR_STRING);
+        cbType.addItem(pbcsConstants.AR_NUMBER);
         colType.setCellEditor(new DefaultCellEditor(cbType));
         
         JComboBox cbCond = new JComboBox();
@@ -303,21 +310,21 @@ public class AcceptReject extends javax.swing.JDialog {
             public void actionPerformed(ActionEvent e) {
                 
                 cbCond.removeAllItems();
-                cbCond.addItem("Equals");
-                cbCond.addItem("Not Equals");
+                cbCond.addItem(pbcsConstants.AR_EQUALS);
+                cbCond.addItem(pbcsConstants.AR_NOT_EQUALS);
                 
                 if (cbType.getSelectedIndex() != -1){
                     
-                    if (cbType.getSelectedItem().equals("String")){
-                        cbCond.addItem("Contains");
-                        cbCond.addItem("Does Not Contain");
+                    if (cbType.getSelectedItem().equals(pbcsConstants.AR_STRING)){
+                        cbCond.addItem(pbcsConstants.AR_CONTAINS);
+                        cbCond.addItem(pbcsConstants.AR_NOT_CONTAINS);
                         //cbxCase.setEnabled(true);
                         
                     } else {
-                        cbCond.addItem("Greater Than");
-                        cbCond.addItem("Greater Than or Equal");
-                        cbCond.addItem("Less Than");
-                        cbCond.addItem("Less Than or Equal");
+                        cbCond.addItem(pbcsConstants.AR_GREATER_THAN);
+                        cbCond.addItem(pbcsConstants.AR_GREATER_THAN_EQUAL);
+                        cbCond.addItem(pbcsConstants.AR_LESS_THAN);
+                        cbCond.addItem(pbcsConstants.AR_LESS_THAN_EQUAL);
                         //cbxCase.setEnabled(false);
                     }
                 }

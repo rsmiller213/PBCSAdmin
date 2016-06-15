@@ -488,7 +488,7 @@ public class pbcsDLManager {
                 bw.write("\t");
             }
         }
-
+        
         for (int i = 0 ; i < jTable.getRowCount(); i++) {
             bw.newLine();
             for(int j = 0 ; j < jTable.getColumnCount();j++) {
