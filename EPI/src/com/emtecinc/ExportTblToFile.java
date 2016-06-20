@@ -269,11 +269,14 @@ public class ExportTblToFile {
         System.out.println(Arrays.toString(skipRows.toArray()));
     }
 
-    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField) throws IOException{
+    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine) throws IOException{
         setAcceptReject();
         if (!file.exists()){
             file.createNewFile();
             //writeFileFromTable(jTable, file);
+        } else if (file.exists() && bCommandLine) {
+           file.delete();
+           file.createNewFile();
         } else {
            int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?", "Select File", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
            if (option == JOptionPane.OK_OPTION) {

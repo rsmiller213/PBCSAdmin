@@ -1466,7 +1466,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //            }
             try {
                 this.export = new ExportTblToFile(jTable1, dlManager.hmAcceptRejectItems);
-                export.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn);
+                export.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn, false);
             } catch (Exception ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1797,11 +1797,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(PBCSAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                if (args.length == 5){
+                    new PBCSAdmin().setVisible(false);
+                    PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4]);
+                    clInt.transformAndLoad();
+                    System.exit(0);
+                } else if (args.length == 0) {
                 new PBCSAdmin().setVisible(true);
+                } else {
+                    System.out.println("Invalid number of arguments specified. Please provide:");
+                    System.out.println(" Profile\n Data File Path\n Delimiter\n PBCS Job Name\n Out File Name");
+                    System.exit(0);
+                }
             }
         });
     }

@@ -665,6 +665,57 @@ public class pbcsDLManager {
         return hm;
     }
     
+    public HashMap openProfileFromCL(File file, JTable jTable) throws ClassNotFoundException{
+        ArrayList<String[]> eventRowsProfile = new ArrayList<String[]>();
+        HashMap hm =  new HashMap();
+        PBCSAdmin pbcsAdmin = new PBCSAdmin();
+        boolean bMoves = false;
+        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        
+            try {
+                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+                Object importProfile = (Object) inputStream.readObject();
+                Object findReplaceVectors = (Object) inputStream.readObject();
+                Object acceptReplace = (Object) inputStream.readObject();
+                if (importProfile instanceof ArrayList){
+                    eventRowsProfile = (ArrayList<String[]>) importProfile;
+                    for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
+                        String[] currLine = (String[]) it.next();
+                        if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
+                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3])); 
+                            //System.out.println(Arrays.toString(arr));
+                            //} else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
+                        }
+                        if (currLine[0].equals(pbcsConstants.EVT_MOVE)){
+                            bMoves = true;
+                            //System.out.println(arr[3] + arr[2]);
+                            hmMoves.clear();
+                            hmMoves.put(currLine[3], currLine[2]);
+                                //System.out.println("Before: " + hmMoves.get(currLine[3]));
+                            setMovesFromProfile(jTable);
+                        }
+                        if (!currLine[0].equals(pbcsConstants.EVT_MOVE) && !currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
+                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1]), Integer.parseInt(currLine[1]), currLine[3])); 
+                            //System.out.println(Arrays.toString(arr));
+                        }
+                    }
+                }
+                eventRows.clear();
+                eventRows.addAll(eventRowsProfile);
+                if (findReplaceVectors instanceof HashMap) {
+                    hmFindReplaceItems = (HashMap) findReplaceVectors;
+                    executeFindReplaceItems(jTable);
+                }
+                if (acceptReplace instanceof HashMap) {
+                hmAcceptRejectItems = (HashMap) acceptReplace;
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
+        return hm;
+    }
+    
     public void setMovesFromProfile(JTable jTable){
         //String header = hmMoves.entrySet().toArray()[0].toString();
         //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header));
