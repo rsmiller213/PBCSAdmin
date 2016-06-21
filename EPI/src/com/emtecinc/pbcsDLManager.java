@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -49,80 +50,133 @@ import javax.swing.table.TableModel;
  *
  * @author Luis.Castillo
  */
-
-
 public class pbcsDLManager {
+
     public File flSrcFile;
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
     HashMap hmFindReplaceItems = new HashMap();
     HashMap hmAcceptRejectItems = new HashMap();
     HashMap hmMoves = new HashMap();
+
     /**
-    * Creates table model from delimited file using Open CSV. 
-    *
-    * @param file file object where the data is loaded from
-    * @param delimiter delimiter in the file
-    * @param bHeaderRow   boolean that determines whether a header row is in the file or now
-    * @return            returns a DefaultTableModel
-    */
+     * Creates table model from delimited file using Open CSV.
+     *
+     * @param file file object where the data is loaded from
+     * @param delimiter delimiter in the file
+     * @param bHeaderRow boolean that determines whether a header row is in the
+     * file or now
+     * @return returns a DefaultTableModel
+     */
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow) {
-            DefaultTableModel model = null;
-            boolean isFirstRow = true;
-            try {
+        DefaultTableModel model = null;
+        boolean isFirstRow = true;
+        try {
             CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
             UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
             CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
-                        UTF8_CHARSET), delimiter.charAt(0));
-                List<String[]> dataList = reader.readAll();
-                for (String[] row: dataList) {
-                    for (int j = 0; j < row.length; j++)
-                        row[j] = row[j].trim();
-                    if (isFirstRow) {
-                        if (bHeaderRow) {
-                            model = new DefaultTableModel(row, 0);
-                            isFirstRow = false;
-                        } else {
-                            model = new DefaultTableModel(getTableColumnHeaders(row.length), 0);
-                            model.addRow(row);
-                            isFirstRow = false;
-                        }
-                    }
-                    else {
-                        if (model != null) {
-                            model.addRow(row);
-                        }
-                    }
+                    UTF8_CHARSET), delimiter.charAt(0));
+            List<String[]> dataList = reader.readAll();
+            for (String[] row : dataList) {
+                for (int j = 0; j < row.length; j++) {
+                    row[j] = row[j].trim();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                if (isFirstRow) {
+                    if (bHeaderRow) {
+                        model = new DefaultTableModel(row, 0);
+                        isFirstRow = false;
+                    } else {
+                        model = new DefaultTableModel(getTableColumnHeaders(row.length), 0);
+                        model.addRow(row);
+                        isFirstRow = false;
+                    }
+                } else if (model != null) {
+                    model.addRow(row);
+                }
             }
-            return model;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-    
+        return model;
+    }
+
     /**
-    * Creates table model from delimited file using Open CSV. 
-    *
-    * @param file file object where the data is loaded from
-    * @param delimiter delimiter in the file
-    * @param bHeaderRow   boolean that determines whether a header row is in the file or now
-    * @param linesToRead   integer that specifies the number of lines to read
-    * @return            returns a DefaultTableModel
-    */
+     * Creates table model from delimited file using Open CSV.
+     *
+     * @param file file object where the data is loaded from
+     * @param delimiter delimiter in the file
+     * @param bHeaderRow boolean that determines whether a header row is in the
+     * file or now
+     * @param linesToRead integer that specifies the number of lines to read
+     * @return returns a DefaultTableModel
+     */
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead) {
-            DefaultTableModel model = null;
-            boolean isFirstRow = true;
-            try {
+        DefaultTableModel model = null;
+        boolean isFirstRow = true;
+        try {
             CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
             UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
             CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
-                        UTF8_CHARSET), delimiter.charAt(0));
-                //List<String[]> dataList = reader.readAll();
-                String[] nextLine;
-                int N = linesToRead;
-                int counter = 0;
-                while ((nextLine = reader.readNext()) != null && counter < N)  {
-                    for (int j = 0; j < nextLine.length; j++)
-                        nextLine[j] = nextLine[j].trim();
+                    UTF8_CHARSET), delimiter.charAt(0));
+            //List<String[]> dataList = reader.readAll();
+            String[] nextLine;
+            int N = linesToRead;
+            int counter = 0;
+            while ((nextLine = reader.readNext()) != null && counter < N) {
+                for (int j = 0; j < nextLine.length; j++) {
+                    nextLine[j] = nextLine[j].trim();
+                }
+                if (isFirstRow) {
+                    if (bHeaderRow) {
+                        model = new DefaultTableModel(nextLine, 0);
+                        isFirstRow = false;
+                        counter++;
+                    } else {
+                        model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
+                        model.addRow(nextLine);
+                        isFirstRow = false;
+                        counter++;
+                    }
+                } else if (model != null) {
+                    model.addRow(nextLine);
+                    counter++;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return model;
+    }
+
+    /**
+     * Creates table model from delimited file using Open CSV.
+     *
+     * @param file file object where the data is loaded from
+     * @param delimiter delimiter in the file
+     * @param bHeaderRow boolean that determines whether a header row is in the
+     * file or now
+     * @param linesToRead integer that specifies the number of lines to read
+     * @param startLine integer that specifies the line number to read from
+     * @return returns a DefaultTableModel
+     */
+    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead, int startLine) {
+        DefaultTableModel model = null;
+        boolean isFirstRow = true;
+        try {
+            CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
+            UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
+            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
+                    UTF8_CHARSET), delimiter.charAt(0));
+            //List<String[]> dataList = reader.readAll();
+            String[] nextLine;
+            int N = linesToRead;
+            int counter = 0;
+            int lineNumber = 0;
+            while ((nextLine = reader.readNext()) != null && counter < N) {
+                for (int j = 0; j < nextLine.length; j++) {
+                    nextLine[j] = nextLine[j].trim();
+                }
+                lineNumber++;
+                if (lineNumber >= startLine) {
                     if (isFirstRow) {
                         if (bHeaderRow) {
                             model = new DefaultTableModel(nextLine, 0);
@@ -134,256 +188,273 @@ public class pbcsDLManager {
                             isFirstRow = false;
                             counter++;
                         }
-                    }
-                    else {
-                        if (model != null) {
-                            model.addRow(nextLine);
-                            counter++;
-                        }
+                    } else if (model != null) {
+                        model.addRow(nextLine);
+                        counter++;
                     }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
-            return model;
+            reader.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-    
+        return model;
+    }
+
     /**
-    * Creates table model from delimited file using Open CSV. 
-    *
-    * @param file file object where the data is loaded from
-    * @param delimiter delimiter in the file
-    * @param bHeaderRow   boolean that determines whether a header row is in the file or now
-    * @param linesToRead   integer that specifies the number of lines to read
-    * @param startLine   integer that specifies the line number to read from
-    * @return            returns a DefaultTableModel
-    */
-    public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead, int startLine) {
-            DefaultTableModel model = null;
-            boolean isFirstRow = true;
-            try {
-            CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
-            UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
-            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
-                        UTF8_CHARSET), delimiter.charAt(0));
-                //List<String[]> dataList = reader.readAll();
-                String[] nextLine;
-                int N = linesToRead;
-                int counter = 0;
-                int lineNumber = 0;
-                while ((nextLine = reader.readNext()) != null && counter < N)  {
-                    for (int j = 0; j < nextLine.length; j++)
-                        nextLine[j] = nextLine[j].trim();
-                    lineNumber++;
-                    if (lineNumber >= startLine) {
-                            if (isFirstRow) {
-                                if (bHeaderRow) {
-                                    model = new DefaultTableModel(nextLine, 0);
-                                    isFirstRow = false;
-                                    counter++;
-                                } else {
-                                    model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
-                                    model.addRow(nextLine);
-                                    isFirstRow = false;
-                                    counter++;
-                                }
-                            }
-                            else {
-                                if (model != null) {
-                                    model.addRow(nextLine);
-                                    counter++;
-                                }
-                            }
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return model;
-        }
-    
-    /**
-    * Creates header names for a table model. Names them 1-x
-    *
-    * @param size integer that specifies the number of columns in the table
-    * @return            returns the table headers in an Object[]
-    */
+     * Creates header names for a table model. Names them 1-x
+     *
+     * @param size integer that specifies the number of columns in the table
+     * @return returns the table headers in an Object[]
+     */
     public Object[] getTableColumnHeaders(int size) {
-            Object[] header = new Object[size];
-            for (int i = 0; i < header.length; i++) {
-                //header[i] = i + 1;
-                header[i] = String.format("Field %d", i + 1);
-            }
-            return header;
+        Object[] header = new Object[size];
+        for (int i = 0; i < header.length; i++) {
+            //header[i] = i + 1;
+            header[i] = String.format("Field %d", i + 1);
         }
-    
+        return header;
+    }
+
     /**
-    * Creates table model from delimited file using Open CSV. 
-    *
-    * @param jTable JTable used in the UI
-    * @param strPrefix   Prefix to be added
-    * @param strSuffix   Suffix to be added
-    * @return            returns a TableModel and also updates the JTable
-    */
-    public TableModel findReplaceField(JTable jTable, String strPrefix, String strSuffix, int index) {
+     * Creates table model from delimited file using Open CSV.
+     *
+     * @param jTable JTable used in the UI
+     * @param strPrefix Prefix to be added
+     * @param strSuffix Suffix to be added
+     * @return returns a TableModel and also updates the JTable
+     */
+//    public TableModel findReplaceField(JTable jTable, String strPrefix, String strSuffix, int index) {
+//        //int index = jTable.convertColumnIndexToModel(jTable.getSelectedColumn());
+//        updateColumnModelData(jTable);
+//        TableModel model = jTable.getModel();
+//        try {
+//            Object[] rows = new Object[jTable.getRowCount()];
+//            for (int i = 0; i < rows.length; i++) {
+//                rows[i] = model.getValueAt(i, index);
+//                if (!rows[i].toString().startsWith(strPrefix)) {
+//                    rows[i] = strPrefix + rows[i];
+//                }
+//                if (!rows[i].toString().endsWith(strSuffix)) {
+//                    rows[i] = rows[i] + strSuffix;
+//                }
+//
+//                model.setValueAt(rows[i], i, index);
+//            }
+//            jTable.setModel(model);
+//        } catch (Throwable x) {
+//            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+//        }
+//        return model;
+//    }
+    
+    public DefaultTableModel findReplaceField(JTable jTable, String strPrefix, String strSuffix, int index) {
         //int index = jTable.convertColumnIndexToModel(jTable.getSelectedColumn());
         updateColumnModelData(jTable);
-        TableModel model = jTable.getModel();
-        try{
-                Object[] rows = new Object[jTable.getRowCount()];
-                for (int i = 0; i < rows.length; i++) {
-                    rows[i] = model.getValueAt(i, index);
-                    if (!rows[i].toString().startsWith(strPrefix)) {
-                        rows[i] = strPrefix + rows[i];
-                    } 
-                    if (!rows[i].toString().endsWith(strSuffix)) {
-                        rows[i] = rows[i] + strSuffix;
-                    }
-                    
-                    model.setValueAt(rows[i], i, index);
+        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+        Vector columns = new Vector();
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
+        }
+        try {
+            Object[] rows = new Object[jTable.getRowCount()];
+            Vector vRows = ((DefaultTableModel) jTable.getModel()).getDataVector();
+            Vector newRows = new Vector();
+            for (int i = 0; i < vRows.size(); i++) {
+                rows[i] = ((Vector) vRows.elementAt(i)).elementAt(index);
+                if (!rows[i].toString().startsWith(strPrefix)) {
+                    rows[i] = strPrefix + rows[i];
                 }
-                jTable.setModel(model);
-            } catch (Throwable x) {
-                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+                if (!rows[i].toString().endsWith(strSuffix)) {
+                    rows[i] = rows[i] + strSuffix;
+                }
+
+                ((Vector) vRows.elementAt(i)).set(index, rows[i]);
             }
+            model.setDataVector(vRows, columns);
+        } catch (Throwable x) {
+            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+        }
         return model;
     }
     
-    public TableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
-        TableModel model = jTable.getModel();
+    public DefaultTableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
+        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+        Vector columns = new Vector();
+        Vector vRows = ((DefaultTableModel) jTable.getModel()).getDataVector();
+        Vector newRows = new Vector();
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
+        }
         try {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 int index = jTable.convertColumnIndexToModel(j);
-                    Object[] rows = new Object[jTable.getRowCount()];
-                    for (int i = 0; i < rows.length; i++) {
-                        if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
+                Object[] rows = new Object[jTable.getRowCount()];
+                for (int i = 0; i < vRows.size(); i++) {
+                    if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
+                        rows[i] = ((Vector) vRows.elementAt(i)).elementAt(index);
+                        if (rows[i].equals(strFind)) {
+                            rows[i] = strReplace;
+                            //model.setValueAt(rows[i], i, index);
+                            ((Vector) vRows.elementAt(i)).set(index, rows[i]);
+                        } else {
                             rows[i] = model.getValueAt(i, index);
-                            if (rows[i].equals(strFind)) {
-                                rows[i] = strReplace;
-                                model.setValueAt(rows[i], i, index);
-                            } else {
-                                rows[i] = model.getValueAt(i, index);
-                                model.setValueAt(rows[i], i, index);
-                            }
-                        } else if (strFind != null && !bMatchWord && bMatchCase || strReplace != null && !bMatchWord && bMatchCase) {
-                            rows[i] = model.getValueAt(i, index);
-                            rows[i] = rows[i].toString().replace(strFind, strReplace);
-                            model.setValueAt(rows[i], i, index);
-                        } else if (strFind != null && !bMatchWord && !bMatchCase || strReplace != null && !bMatchWord && !bMatchCase) {
-                            rows[i] = model.getValueAt(i, index);
-                            rows[i] = rows[i].toString().replaceAll("(?i)"+ Pattern.quote(strFind), strReplace);
-                            model.setValueAt(rows[i], i, index);
+                            //model.setValueAt(rows[i], i, index);
+                            ((Vector) vRows.elementAt(i)).set(index, rows[i]);
                         }
+                    } else if (strFind != null && !bMatchWord && bMatchCase || strReplace != null && !bMatchWord && bMatchCase) {
+                        rows[i] = model.getValueAt(i, index);
+                        rows[i] = rows[i].toString().replace(strFind, strReplace);
+                        //model.setValueAt(rows[i], i, index);
+                        ((Vector) vRows.elementAt(i)).set(index, rows[i]);
+                    } else if (strFind != null && !bMatchWord && !bMatchCase || strReplace != null && !bMatchWord && !bMatchCase) {
+                        rows[i] = model.getValueAt(i, index);
+                        rows[i] = rows[i].toString().replaceAll("(?i)" + Pattern.quote(strFind), strReplace);
+                        //model.setValueAt(rows[i], i, index);
+                        ((Vector) vRows.elementAt(i)).set(index, rows[i]);
                     }
-                    jTable.setModel(model);
+                }
+                model.setDataVector(vRows, columns);
             }
-            } catch (Throwable x) {
-                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
-            }
+        } catch (Throwable x) {
+            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+        }
         return model;
     }
+
+//    public TableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
+//        TableModel model = jTable.getModel();
+//        try {
+//            for (int j = 0; j < jTable.getColumnCount(); j++) {
+//                int index = jTable.convertColumnIndexToModel(j);
+//                Object[] rows = new Object[jTable.getRowCount()];
+//                for (int i = 0; i < rows.length; i++) {
+//                    if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
+//                        rows[i] = model.getValueAt(i, index);
+//                        if (rows[i].equals(strFind)) {
+//                            rows[i] = strReplace;
+//                            model.setValueAt(rows[i], i, index);
+//                        } else {
+//                            rows[i] = model.getValueAt(i, index);
+//                            model.setValueAt(rows[i], i, index);
+//                        }
+//                    } else if (strFind != null && !bMatchWord && bMatchCase || strReplace != null && !bMatchWord && bMatchCase) {
+//                        rows[i] = model.getValueAt(i, index);
+//                        rows[i] = rows[i].toString().replace(strFind, strReplace);
+//                        model.setValueAt(rows[i], i, index);
+//                    } else if (strFind != null && !bMatchWord && !bMatchCase || strReplace != null && !bMatchWord && !bMatchCase) {
+//                        rows[i] = model.getValueAt(i, index);
+//                        rows[i] = rows[i].toString().replaceAll("(?i)" + Pattern.quote(strFind), strReplace);
+//                        model.setValueAt(rows[i], i, index);
+//                    }
+//                }
+//                jTable.setModel(model);
+//            }
+//        } catch (Throwable x) {
+//            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+//        }
+//        return model;
+//    }
     
     /**
-    * Creates table model from delimited file using Open CSV. 
-    *
-    * @param file text file to be opened
-    * @param intStartRow integer with value to start reading from
-    * @param intDisplayRows   integer represents number of rows to be displayed
-    * @return            ArrayList<String> is returned with the lines from the text file
-    */
-    public ArrayList<String> openTextFile(File file, int intStartRow, int intDisplayRows){
+     * Creates table model from delimited file using Open CSV.
+     *
+     * @param file text file to be opened
+     * @param intStartRow integer with value to start reading from
+     * @param intDisplayRows integer represents number of rows to be displayed
+     * @return ArrayList<String> is returned with the lines from the text file
+     */
+    public ArrayList<String> openTextFile(File file, int intStartRow, int intDisplayRows) {
         ArrayList<String> arrLines = new ArrayList<String>();
         BufferedReader reader = null;
 
         try {
-                System.out.println("Opening: " + file.getName() + ".");
-                reader = new java.io.BufferedReader(new java.io.FileReader(file.getAbsoluteFile()));
-                String line;
-                int counter = 0;
-                int lineNumber = 0;
-                try {
-                    while ((line = reader.readLine()) != null && counter < intDisplayRows) { 
-                        lineNumber++;
-                        if (lineNumber >= intStartRow) {
-                            arrLines.add(line);
-                            counter++;
-                        }
+            System.out.println("Opening: " + file.getName() + ".");
+            reader = new java.io.BufferedReader(new java.io.FileReader(file.getAbsoluteFile()));
+            String line;
+            int counter = 0;
+            int lineNumber = 0;
+            try {
+                while ((line = reader.readLine()) != null && counter < intDisplayRows) {
+                    lineNumber++;
+                    if (lineNumber >= intStartRow) {
+                        arrLines.add(line);
+                        counter++;
                     }
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
                 }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
         return arrLines;
     }
-    
-    
+
     /**
-    * Adds a table column and can populate all rows with provided data 
-    *
-    * @param JTable JTable object used in UI
-    * @param strColumnName string with column name
-    * @param strRowData   string with row data
-    */
-    public void addTableColumn(JTable jTable, String strColumnName, String strRowData){
+     * Adds a table column and can populate all rows with provided data
+     *
+     * @param JTable JTable object used in UI
+     * @param strColumnName string with column name
+     * @param strRowData string with row data
+     */
+    public void addTableColumn(JTable jTable, String strColumnName, String strRowData) {
         try {
             //updateColumnModelHeaders(jTable);
             updateColumnModelData(jTable);
             DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
-                tblModel.addColumn(strColumnName);
-                //int columns = tblModel.getColumnCount() - 1 ;
-                //TableColumn t = new TableColumn();
-                //t.setHeaderValue((Object) strColumnName);
-                //jTable.getColumnModel().addColumn(t);
-                //System.out.println("Table Model " + jTable.getModel().getColumnCount() + " Column Model " + jTable.getColumnModel().getColumnCount());
-                //jTable.repaint();
-                //int columns = jTable.getColumnModel().getColumnIndex((Object) strColumnName);
-                int columns = tblModel.findColumn(strColumnName);
-                Object[] rows = new Object[jTable.getRowCount()];
-                //updateColumnValues(jTable, columns, strRowData);
-               for (int i = 0; i < rows.length; i++) {
-                    tblModel.setValueAt(strRowData, i, columns);
-                    //jTable.setValueAt(strRowData, i, columns);
-                }
-               tblModel.fireTableDataChanged();
+            tblModel.addColumn(strColumnName);
+            //int columns = tblModel.getColumnCount() - 1 ;
+            //TableColumn t = new TableColumn();
+            //t.setHeaderValue((Object) strColumnName);
+            //jTable.getColumnModel().addColumn(t);
+            //System.out.println("Table Model " + jTable.getModel().getColumnCount() + " Column Model " + jTable.getColumnModel().getColumnCount());
+            //jTable.repaint();
+            //int columns = jTable.getColumnModel().getColumnIndex((Object) strColumnName);
+            int columns = tblModel.findColumn(strColumnName);
+            Object[] rows = new Object[jTable.getRowCount()];
+            //updateColumnValues(jTable, columns, strRowData);
+            for (int i = 0; i < rows.length; i++) {
+                tblModel.setValueAt(strRowData, i, columns);
+                //jTable.setValueAt(strRowData, i, columns);
+            }
+            tblModel.fireTableDataChanged();
         } catch (Throwable x) {
-                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
     }
-    
-   /**
-    * Split a column by either a delim or # of chars
-    *
-    * @param tTable JTable object used in UI
-    * @param iColIdx int with Column Index
-    * @param bCharSplit boolean, True for Char Split, False for Delim Split
-    * @param strSplitBy   string with either the # of chars or delimiter
-    */
-    public void splitColumn(JTable tTable, boolean bCharSplit, String strSplitBy ){
-        try{
+
+    /**
+     * Split a column by either a delim or # of chars
+     *
+     * @param tTable JTable object used in UI
+     * @param iColIdx int with Column Index
+     * @param bCharSplit boolean, True for Char Split, False for Delim Split
+     * @param strSplitBy string with either the # of chars or delimiter
+     */
+    public void splitColumn(JTable tTable, boolean bCharSplit, String strSplitBy) {
+        try {
             // Locals
             updateColumnModelData(tTable);
             int iCurCol = tTable.convertColumnIndexToModel(tTable.getSelectedColumn());
             String strCur;
             String strNew;
             String strColHeader = tTable.getColumnModel().getColumn(tTable.getSelectedColumn()).getHeaderValue().toString();
-            
+
             // Create New Column
             DefaultTableModel tblModel = (DefaultTableModel) tTable.getModel();
-            addTableColumn(tTable,strColHeader + "_Split","abc");
+            addTableColumn(tTable, strColHeader + "_Split", "abc");
             int iNewCol = tblModel.getColumnCount() - 1;
-            
-            
+
             // Get Model to Loop Rows
             TableModel model = tTable.getModel();
             Object[] rows = new Object[tTable.getRowCount()];
-            
+
             //Loop Rows
             for (int i = 0; i < rows.length; i++) {
                 strCur = model.getValueAt(i, iCurCol).toString();
-                
-                if (bCharSplit){
+
+                if (bCharSplit) {
                     // Convert Str to Int
                     int iSplitBy = Integer.valueOf(strSplitBy);
                     // Split into Two Strings
@@ -393,21 +464,21 @@ public class pbcsDLManager {
                     strNew = strCur.substring(strCur.indexOf(strSplitBy) + 1);
                     strCur = strCur.substring(0, strCur.indexOf(strSplitBy));
                 }
-                
+
                 // Update Rows
                 model.setValueAt(strCur, i, iCurCol);
                 model.setValueAt(strNew, i, iNewCol);
             }
-            
+
             tTable.setModel(model);
-            
-            } catch (Throwable x) {
-                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
-            }
-    }  
-    
-    public void splitColumnByProfile(JTable tTable, boolean bCharSplit, String strSplitBy, int oldColumn ){
-        try{
+
+        } catch (Throwable x) {
+            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+        }
+    }
+
+    public void splitColumnByProfile(JTable tTable, boolean bCharSplit, String strSplitBy, int oldColumn) {
+        try {
             // Locals
             updateColumnModelData(tTable);
             int iCurCol = tTable.convertColumnIndexToModel(oldColumn);
@@ -415,21 +486,21 @@ public class pbcsDLManager {
             String strNew;
             String strColHeader = tTable.getColumnModel().getColumn(oldColumn).getHeaderValue().toString();
             int iNewCol;
-            
+
             // Create New Column
             DefaultTableModel tblModel = (DefaultTableModel) tTable.getModel();
-            addTableColumn(tTable,strColHeader + "_Split","abc");
+            addTableColumn(tTable, strColHeader + "_Split", "abc");
             iNewCol = tblModel.getColumnCount() - 1;
-            
+
             // Get Model to Loop Rows
             TableModel model = tTable.getModel();
             Object[] rows = new Object[tTable.getRowCount()];
-            
+
             //Loop Rows
             for (int i = 0; i < rows.length; i++) {
                 strCur = model.getValueAt(i, iCurCol).toString();
-                
-                if (bCharSplit){
+
+                if (bCharSplit) {
                     // Convert Str to Int
                     int iSplitBy = Integer.valueOf(strSplitBy);
                     // Split into Two Strings
@@ -439,88 +510,89 @@ public class pbcsDLManager {
                     strNew = strCur.substring(strCur.indexOf(strSplitBy) + 1);
                     strCur = strCur.substring(0, strCur.indexOf(strSplitBy));
                 }
-                
+
                 // Update Rows
                 model.setValueAt(strCur, i, iCurCol);
                 model.setValueAt(strNew, i, iNewCol);
-                }
-                tTable.setModel(model);
-            } catch (Throwable x) {
-                JOptionPane.showMessageDialog(null, "Error: Column Identifier not found. Error: " + x.getMessage());
             }
+            tTable.setModel(model);
+        } catch (Throwable x) {
+            JOptionPane.showMessageDialog(null, "Error: Column Identifier not found. Error: " + x.getMessage());
+        }
     }
-    
+
     /**
-    * Adds a table column and can populate all rows with provided data 
-    *
-    * @param JTable JTable object used in UI
-    * @param strColumnName string with column name
-    * @param columnNumber int for the column being updated
-    */
-    public void renameTableColumn(JTable jTable, String strColumnName, int columnNumber){
+     * Adds a table column and can populate all rows with provided data
+     *
+     * @param JTable JTable object used in UI
+     * @param strColumnName string with column name
+     * @param columnNumber int for the column being updated
+     */
+    public void renameTableColumn(JTable jTable, String strColumnName, int columnNumber) {
         //int columnNumber = jTable.getSelectedColumn();
         jTable.getColumnModel().getColumn(columnNumber).setHeaderValue(strColumnName);
         jTable.getTableHeader().repaint();
         //updateColumnModelHeaders(jTable);
         updateColumnModelData(jTable);
     }
-    
+
     //public void exportFileFromTable(JTable jTable, File file, int[] arrDataColumn) throws IOException{
-    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField) throws IOException{
-        if (!file.exists()){
+    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField) throws IOException {
+        if (!file.exists()) {
             file.createNewFile();
             //writeFileFromTable(jTable, file);
         } else {
-           int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?", "Select File", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-           if (option == JOptionPane.OK_OPTION) {
-               file.delete();
-               file.createNewFile();
-               //writeFileFromTable(jTable, file);
-           }
+            int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?", "Select File", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (option == JOptionPane.OK_OPTION) {
+                file.delete();
+                file.createNewFile();
+                //writeFileFromTable(jTable, file);
+            }
         }
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
-        for(int i = 0 ; i < jTable.getColumnCount() ; i++) {
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
             //bw.write(jTable.getColumnName(i));
             //if (arrDataColumn[i] == 1){
-            if (!arrDataColumn.get(i).equals("")){
-                bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString()+ "\"");
+            if (!arrDataColumn.get(i).equals("")) {
+                bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
                 bw.write("\t");
             }
         }
-        
-        for (int i = 0 ; i < jTable.getRowCount(); i++) {
+
+        for (int i = 0; i < jTable.getRowCount(); i++) {
             bw.newLine();
-            for(int j = 0 ; j < jTable.getColumnCount();j++) {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
                 //if (arrDataColumn[j] == 0) {
                 if (!arrDataColumn.get(j).equals("")) {
-                //if (j <= arrDataColumn.size()) {
-                    bw.write((String)(jTable.getValueAt(i,j)));
+                    //if (j <= arrDataColumn.size()) {
+                    bw.write((String) (jTable.getValueAt(i, j)));
                     bw.write("\t");
                 } else if (!arrIgnoreField.get(j).equals("")) {
                     continue;
                 } else {
-                    bw.write((String)("\"" + jTable.getValueAt(i,j) + "\""));
+                    bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
                     bw.write("\t");
                 }
             }
         }
         bw.close();
     }
-    public ArrayList<String> getTableColumnNames(JTable jTable){
+
+    public ArrayList<String> getTableColumnNames(JTable jTable) {
         ArrayList<String> columns = new ArrayList<String>();
-        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
             //columns.add(jTable.getModel().getColumnName(i));
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
         return columns;
     }
-    
+
     //public DefaultTableModel duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
-    public void duplicateColumn (JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns){
+    public void duplicateColumn(JTable jTable, String header, String leftColumn, String rightColumn, String delimiter, Boolean deleteColumns) {
         //updateColumnModelHeaders(jTable);
         updateColumnModelData(jTable);
-        DefaultTableModel model = (DefaultTableModel)jTable.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         //int leftColIndex = jTable.convertColumnIndexToModel(model.findColumn(leftColumn));
         //int rightColIndex = jTable.convertColumnIndexToModel(model.findColumn(rightColumn));
         model.addColumn(header);
@@ -528,7 +600,7 @@ public class pbcsDLManager {
         t.setHeaderValue(header);
         //jTable.getColumnModel().addColumn(t);
         //jTable.addColumn(t);
-        for (int i = 0 ; i < jTable.getRowCount(); i++){
+        for (int i = 0; i < jTable.getRowCount(); i++) {
             String leftValue = model.getValueAt(i, model.findColumn(leftColumn)).toString();
             String rightValue = model.getValueAt(i, model.findColumn(rightColumn)).toString();
             //String leftValue = (String) jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex((Object) leftColumn));
@@ -547,18 +619,18 @@ public class pbcsDLManager {
         }
         //model.fireTableDataChanged();
     }
-    
-    public void duplicateColumnFromProfile (JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns){
+
+    public void duplicateColumnFromProfile(JTable jTable, String header, int leftColumn, int rightColumn, String delimiter, Boolean deleteColumns) {
         //dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
         //updateColumnModelHeaders(jTable);
         //updateColumnModelData(jTable);
-        DefaultTableModel model = (DefaultTableModel)jTable.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         //model.addColumn(header);
         TableColumn t = new TableColumn();
         //t.setHeaderValue(header);
         model.addColumn(header);
         //jTable.getColumnModel().addColumn(t);
-        for (int i = 0 ; i < jTable.getRowCount(); i++){
+        for (int i = 0; i < jTable.getRowCount(); i++) {
             //System.out.println(jTable.getColumnModel().getColumn(jTable.convertColumnIndexToModel(leftColumn)).getHeaderValue());
             //System.out.println(jTable.getColumnModel().getColumn(leftColumn).getHeaderValue());
             String leftValue = jTable.getValueAt(i, jTable.convertColumnIndexToView(leftColumn)).toString();
@@ -575,19 +647,19 @@ public class pbcsDLManager {
         }
         //model.fireTableDataChanged();
     }
-    
+
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
         eventRows.add(new String[]{operation, movedFrom, movedTo, characters});
         System.out.println(operation + " " + movedFrom + " " + movedTo + " " + characters);
     }
-    
-    public void saveFile(){
+
+    public void saveFile() {
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
         int returnVal = fc.showOpenDialog(null);
-        
-        if (returnVal == JFileChooser.APPROVE_OPTION){
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file.exists()) {
                 int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?");
@@ -608,42 +680,43 @@ public class pbcsDLManager {
         }
     }
 
-    public HashMap openProfile(JTable jTable) throws ClassNotFoundException{
+    public HashMap openProfile(JTable jTable) throws ClassNotFoundException {
         ArrayList<String[]> eventRowsProfile = new ArrayList<String[]>();
-        HashMap hm =  new HashMap();
+        HashMap hm = new HashMap();
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         PBCSAdmin pbcsAdmin = new PBCSAdmin();
         boolean bMoves = false;
         //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
         int returnVal = fc.showOpenDialog(null);
-        
-        if (returnVal == JFileChooser.APPROVE_OPTION){
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             try {
                 ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
                 Object importProfile = (Object) inputStream.readObject();
                 Object findReplaceVectors = (Object) inputStream.readObject();
                 Object acceptReplace = (Object) inputStream.readObject();
-                if (importProfile instanceof ArrayList){
+                if (importProfile instanceof ArrayList) {
                     eventRowsProfile = (ArrayList<String[]>) importProfile;
                     for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
                         String[] currLine = (String[]) it.next();
-                        if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
-                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3])); 
+                        System.out.println(Arrays.toString(currLine));
+                        if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)) {
+                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3]));
                             //System.out.println(Arrays.toString(arr));
                             //} else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
                         }
-                        if (currLine[0].equals(pbcsConstants.EVT_MOVE)){
+                        if (currLine[0].equals(pbcsConstants.EVT_MOVE)) {
                             bMoves = true;
                             //System.out.println(arr[3] + arr[2]);
                             hmMoves.clear();
                             hmMoves.put(currLine[3], currLine[2]);
-                                //System.out.println("Before: " + hmMoves.get(currLine[3]));
+                            //System.out.println("Before: " + hmMoves.get(currLine[3]));
                             setMovesFromProfile(jTable);
                         }
-                        if (!currLine[0].equals(pbcsConstants.EVT_MOVE) && !currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
-                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1]), Integer.parseInt(currLine[1]), currLine[3])); 
+                        if (!currLine[0].equals(pbcsConstants.EVT_MOVE) && !currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)) {
+                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1]), Integer.parseInt(currLine[1]), currLine[3]));
                             //System.out.println(Arrays.toString(arr));
                         }
                     }
@@ -655,68 +728,68 @@ public class pbcsDLManager {
                     executeFindReplaceItems(jTable);
                 }
                 if (acceptReplace instanceof HashMap) {
-                hmAcceptRejectItems = (HashMap) acceptReplace;
+                    hmAcceptRejectItems = (HashMap) acceptReplace;
                 }
             } catch (IOException ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
-        return hm;
-    }
-    
-    public HashMap openProfileFromCL(File file, JTable jTable) throws ClassNotFoundException{
-        ArrayList<String[]> eventRowsProfile = new ArrayList<String[]>();
-        HashMap hm =  new HashMap();
-        PBCSAdmin pbcsAdmin = new PBCSAdmin();
-        boolean bMoves = false;
-        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
-        
-            try {
-                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
-                Object importProfile = (Object) inputStream.readObject();
-                Object findReplaceVectors = (Object) inputStream.readObject();
-                Object acceptReplace = (Object) inputStream.readObject();
-                if (importProfile instanceof ArrayList){
-                    eventRowsProfile = (ArrayList<String[]>) importProfile;
-                    for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
-                        String[] currLine = (String[]) it.next();
-                        if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
-                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3])); 
-                            //System.out.println(Arrays.toString(arr));
-                            //} else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
-                        }
-                        if (currLine[0].equals(pbcsConstants.EVT_MOVE)){
-                            bMoves = true;
-                            //System.out.println(arr[3] + arr[2]);
-                            hmMoves.clear();
-                            hmMoves.put(currLine[3], currLine[2]);
-                                //System.out.println("Before: " + hmMoves.get(currLine[3]));
-                            setMovesFromProfile(jTable);
-                        }
-                        if (!currLine[0].equals(pbcsConstants.EVT_MOVE) && !currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)){
-                            hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1]), Integer.parseInt(currLine[1]), currLine[3])); 
-                            //System.out.println(Arrays.toString(arr));
-                        }
-                    }
-                }
-                eventRows.clear();
-                eventRows.addAll(eventRowsProfile);
-                if (findReplaceVectors instanceof HashMap) {
-                    hmFindReplaceItems = (HashMap) findReplaceVectors;
-                    executeFindReplaceItems(jTable);
-                }
-                if (acceptReplace instanceof HashMap) {
-                hmAcceptRejectItems = (HashMap) acceptReplace;
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            }
         //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
         return hm;
     }
-    
-    public void setMovesFromProfile(JTable jTable){
+
+    public HashMap openProfileFromCL(File file, JTable jTable) throws ClassNotFoundException {
+        ArrayList<String[]> eventRowsProfile = new ArrayList<String[]>();
+        HashMap hm = new HashMap();
+        PBCSAdmin pbcsAdmin = new PBCSAdmin();
+        boolean bMoves = false;
+        //fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+            Object importProfile = (Object) inputStream.readObject();
+            Object findReplaceVectors = (Object) inputStream.readObject();
+            Object acceptReplace = (Object) inputStream.readObject();
+            if (importProfile instanceof ArrayList) {
+                eventRowsProfile = (ArrayList<String[]>) importProfile;
+                for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
+                    String[] currLine = (String[]) it.next();
+                    if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)) {
+                        hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3]));
+                        //System.out.println(Arrays.toString(arr));
+                        //} else if (arr[0].equals(pbcsConstants.EVT_MOVE)){
+                    }
+                    if (currLine[0].equals(pbcsConstants.EVT_MOVE)) {
+                        bMoves = true;
+                        //System.out.println(arr[3] + arr[2]);
+                        hmMoves.clear();
+                        hmMoves.put(currLine[3], currLine[2]);
+                        //System.out.println("Before: " + hmMoves.get(currLine[3]));
+                        setMovesFromProfile(jTable);
+                    }
+                    if (!currLine[0].equals(pbcsConstants.EVT_MOVE) && !currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)) {
+                        hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1]), Integer.parseInt(currLine[1]), currLine[3]));
+                        //System.out.println(Arrays.toString(arr));
+                    }
+                }
+            }
+            eventRows.clear();
+            eventRows.addAll(eventRowsProfile);
+            if (findReplaceVectors instanceof HashMap) {
+                hmFindReplaceItems = (HashMap) findReplaceVectors;
+                executeFindReplaceItems(jTable);
+            }
+            if (acceptReplace instanceof HashMap) {
+                hmAcceptRejectItems = (HashMap) acceptReplace;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.out.println("Array: " + Arrays.toString(hm.entrySet().toArray()));
+        return hm;
+    }
+
+    public void setMovesFromProfile(JTable jTable) {
         //String header = hmMoves.entrySet().toArray()[0].toString();
         //int from = ((DefaultTableModel)jTable.getModel()).findColumn(hmMoves.get(header));
         updateColumnModelData(jTable);
@@ -745,102 +818,105 @@ public class pbcsDLManager {
 //            //((DefaultTableModel)jTable.getModel()).fireTableStructureChanged();
 //        }
     }
-    
+
     //public void setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
-    public HashMap setImportProfile (JTable jTable, String action, int fromColumn, int toColumn, String value){
+    public HashMap setImportProfile(JTable jTable, String action, int fromColumn, int toColumn, String value) {
         //ArrayList<String> arrDataColumn = new ArrayList<>();
         //System.out.println(action);
         HashMap hm = new HashMap();
         //jTable.moveColumn(4,0);
         if (action.equals(pbcsConstants.EVT_RENAME)) {
             renameTableColumn(jTable, value, toColumn);
-        } else if (action.equals(pbcsConstants.EVT_DATA)){
+        } else if (action.equals(pbcsConstants.EVT_DATA)) {
             PBCSAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
-        } else if (action.equals(pbcsConstants.EVT_IGNORE_COLUMN)){
+        } else if (action.equals(pbcsConstants.EVT_IGNORE_COLUMN)) {
             PBCSAdmin.arrIgnoreColumn.set(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
-        } else if (action.equals(pbcsConstants.EVT_PREFIX)){
+        } else if (action.equals(pbcsConstants.EVT_PREFIX)) {
             hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
             findReplaceField(jTable, value, "", toColumn);
-        } else if (action.equals(pbcsConstants.EVT_SUFFIX)){
-            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString()+ "|Suffix", value);
+        } else if (action.equals(pbcsConstants.EVT_SUFFIX)) {
+            hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Suffix", value);
             findReplaceField(jTable, "", value, toColumn);
-        } else if (action.equals(pbcsConstants.EVT_MOVE)){
-           
-        } else if (action.equals(pbcsConstants.EVT_ADD)){
+        } else if (action.equals(pbcsConstants.EVT_MOVE)) {
+
+        } else if (action.equals(pbcsConstants.EVT_ADD)) {
             addTableColumn(jTable, value, "");
             //jTable.getTableHeader().repaint();
-        } else if (action.equals(pbcsConstants.EVT_COLUMN_VALUES)){
+        } else if (action.equals(pbcsConstants.EVT_COLUMN_VALUES)) {
             updateColumnValues(jTable, toColumn, value);
-        } else if (action.equals(pbcsConstants.EVT_SPLIT_CHARS)){
+        } else if (action.equals(pbcsConstants.EVT_SPLIT_CHARS)) {
             splitColumnByProfile(jTable, true, value, fromColumn);
-        } else if (action.equals(pbcsConstants.EVT_SPLIT_DELIM)){
+        } else if (action.equals(pbcsConstants.EVT_SPLIT_DELIM)) {
             splitColumnByProfile(jTable, false, value, fromColumn);
-        } else if (action.equals(pbcsConstants.EVT_CREATE_JOIN)){
+        } else if (action.equals(pbcsConstants.EVT_CREATE_JOIN)) {
             //System.out.println(Integer.toString(toColumn) + " " + fromColumn + " " + value);
             duplicateColumnFromProfile(jTable, Integer.toString(toColumn), fromColumn, toColumn, value, false);
-        } else if (action.equals(pbcsConstants.EVT_DELETE_COLUMN)){
+        } else if (action.equals(pbcsConstants.EVT_DELETE_COLUMN)) {
             jTable.removeColumn(jTable.getColumnModel().getColumn(fromColumn));
             jTable.removeColumn(jTable.getColumnModel().getColumn(toColumn));
         }
         //System.out.println(Arrays.toString(hm.entrySet().toArray()));
         return hm;
     }
-    
-    public void updateColumnModelHeaders(JTable jTable){
+
+    public void updateColumnModelHeaders(JTable jTable) {
         int selectedColumn = jTable.getSelectedColumn();
         Vector columns = new Vector();
-        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
             //columns.add(jTable.getModel().getColumnName(i));
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
         ((DefaultTableModel) jTable.getModel()).setColumnIdentifiers(columns);
-        if (selectedColumn >= 0){
+        if (selectedColumn >= 0) {
             jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
         }
     }
-    
-    public void updateColumnModelData(JTable jTable){
+
+    public void updateColumnModelData(JTable jTable) {
         int selectedColumn = jTable.getSelectedColumn();
-        Vector columns = new Vector();
-        //Vector rows = ((DefaultTableModel) jTable.getModel()).getDataVector();
-        Vector rows = new Vector();
+        Vector columns = new Vector<String>();
+        Vector rows = ((DefaultTableModel) jTable.getModel()).getDataVector();
+        //Vector rows = new Vector();
+        
         String[][] rowData = new String[jTable.getRowCount()][jTable.getColumnCount()];
         //System.out.println(Arrays.toString(rows.toArray()));
-        for (int i = 0 ; i < jTable.getColumnCount(); i++){
-            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
+            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
         }
-        for (int i = 0 ; i < jTable.getRowCount(); i++){
-            for (int j = 0 ; j < jTable.getColumnCount(); j++){
-                rowData[i][j] = jTable.getValueAt(i, j).toString();
-                rows.add(i, rowData[i][j]);
-            }
-        }
+//        for (int i = 0; i < jTable.getRowCount(); i++) {
+//            for (int j = 0; j < jTable.getColumnCount(); j++) {
+//                System.out.println(i);
+//                rowData[i][j] = jTable.getValueAt(i, j).toString();
+//                rows.add(i, rowData[i][j]);
+//            }
+//        }
         //System.out.println(Arrays.toString(rowData[0]));
 //        ((DefaultTableModel) jTable.getModel()).setDataVector(rows, columns);
-        ((DefaultTableModel) jTable.getModel()).setDataVector((Object[][])rowData, columns.toArray());
-        if (selectedColumn >= 0){
+        //((DefaultTableModel) jTable.getModel()).setDataVector((Object[][]) rowData, columns.toArray());
+        ((DefaultTableModel) jTable.getModel()).setDataVector(rows, columns);
+        if (selectedColumn >= 0) {
             jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
         }
     }
-    
-    public void updateColumnValues(JTable jTable, int columnIndex, String strRowData){
+
+    public void updateColumnValues(JTable jTable, int columnIndex, String strRowData) {
         try {
-                //DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
-                TableModel tblModel = jTable.getModel();
-                //tblModel.addColumn(strColumnName);
-                Object[] rows = new Object[jTable.getRowCount()];
-               for (int i = 0; i < rows.length; i++) {
-                    rows[i] = strRowData;
-                    tblModel.setValueAt(rows[i], i, columnIndex);
-                }
-               //tblModel.fireTableDataChanged(); 
+            //DefaultTableModel tblModel = (DefaultTableModel) jTable.getModel();
+            TableModel tblModel = jTable.getModel();
+            //tblModel.addColumn(strColumnName);
+            Object[] rows = new Object[jTable.getRowCount()];
+            for (int i = 0; i < rows.length; i++) {
+                rows[i] = strRowData;
+                tblModel.setValueAt(rows[i], i, columnIndex);
+            }
+            //tblModel.fireTableDataChanged(); 
         } catch (Throwable x) {
-                JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
     }
-    
-    public void getTableColumnMoves(JTable jTable){
-        jTable.getColumnModel().addColumnModelListener(new TableColumnModelListener(){
+
+    public void getTableColumnMoves(JTable jTable) {
+        jTable.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
             @Override
             public void columnAdded(TableColumnModelEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -854,7 +930,7 @@ public class pbcsDLManager {
             @Override
             public void columnMoved(TableColumnModelEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                if (e.getFromIndex() != e.getToIndex()){
+                if (e.getFromIndex() != e.getToIndex()) {
                     //System.out.println(pbcsConstants.EVT_MOVE + " " +e.getFromIndex()+", "+e.getToIndex());
                     updateEventLog(pbcsConstants.EVT_MOVE, Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), jTable.getColumnModel().getColumn(e.getToIndex()).getHeaderValue().toString());
                     //arrMoves.add(new String[]{Integer.toString(e.getFromIndex()), Integer.toString(e.getToIndex()), jTable.getColumnModel().getColumn(e.getToIndex()).getHeaderValue().toString()});
@@ -870,28 +946,29 @@ public class pbcsDLManager {
             public void columnSelectionChanged(ListSelectionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-            
+
         });
     }
-    public void saveAcceptRejectItems(String columnHeader, JTable jTable, int index){
+
+    public void saveAcceptRejectItems(String columnHeader, JTable jTable, int index) {
         hmAcceptRejectItems.put(columnHeader, ((DefaultTableModel) jTable.getModel()).getDataVector());
     }
-    
-    public void saveFindReplaceItems(String columnHeader, JTable jTable, int index){
+
+    public void saveFindReplaceItems(String columnHeader, JTable jTable, int index) {
         hmFindReplaceItems.put(columnHeader, ((DefaultTableModel) jTable.getModel()).getDataVector());
     }
-    
+
     public void updateFindReplaceHeader(String oldColumnHeader, String newColumnHeader) {
         if (!hmFindReplaceItems.isEmpty()) {
-            if (hmFindReplaceItems.containsKey(oldColumnHeader)){
+            if (hmFindReplaceItems.containsKey(oldColumnHeader)) {
                 System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
                 Vector data = (Vector) hmFindReplaceItems.get(oldColumnHeader);
                 hmFindReplaceItems.remove(oldColumnHeader);
                 hmFindReplaceItems.put(newColumnHeader, data);
-            }    
+            }
         }
         if (!hmAcceptRejectItems.isEmpty()) {
-            if (hmAcceptRejectItems.containsKey(oldColumnHeader)){
+            if (hmAcceptRejectItems.containsKey(oldColumnHeader)) {
                 System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
                 Vector data = (Vector) hmAcceptRejectItems.get(oldColumnHeader);
                 hmAcceptRejectItems.remove(oldColumnHeader);
@@ -904,52 +981,52 @@ public class pbcsDLManager {
             hmMoves.put(newColumnHeader, data);
         }
     }
-    
-    public void getAcceptRejectItems(String columnHeader, JTable jTable, int index, int colCount){
+
+    public void getAcceptRejectItems(String columnHeader, JTable jTable, int index, int colCount) {
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         Vector columns = new Vector();
-        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
             //columns.add(jTable.getModel().getColumnName(i));
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
-            //DefaultTableModel model = new DefaultTableModel();
-            try {
-                if (hmAcceptRejectItems.containsKey(columnHeader)) {
-                    model.setDataVector((Vector) hmAcceptRejectItems.get(columnHeader), columns);
-                    //System.out.println(Arrays.toString(((Vector) hmFindReplaceItems.get(columnHeader)).toArray()));
-                } else {
-                    model.setDataVector(new Vector(), columns);
-                }
-                ((DefaultTableModel) jTable.getModel()).fireTableDataChanged();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        //DefaultTableModel model = new DefaultTableModel();
+        try {
+            if (hmAcceptRejectItems.containsKey(columnHeader)) {
+                model.setDataVector((Vector) hmAcceptRejectItems.get(columnHeader), columns);
+                //System.out.println(Arrays.toString(((Vector) hmFindReplaceItems.get(columnHeader)).toArray()));
+            } else {
+                model.setDataVector(new Vector(), columns);
             }
+            ((DefaultTableModel) jTable.getModel()).fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
+    }
 
-        public void getFindReplaceItems(String columnHeader, JTable jTable, int index, int colCount){
-            DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-            Vector columns = new Vector();
-        for (int i = 0 ; i < jTable.getColumnCount(); i++){
+    public void getFindReplaceItems(String columnHeader, JTable jTable, int index, int colCount) {
+        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+        Vector columns = new Vector();
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
             //columns.add(jTable.getModel().getColumnName(i));
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue().toString());
         }
-            //DefaultTableModel model = new DefaultTableModel();
-            try {
-                if (hmFindReplaceItems.containsKey(columnHeader)) {
-                    model.setDataVector((Vector) hmFindReplaceItems.get(columnHeader), columns);
-                    //System.out.println(Arrays.toString(((Vector) hmFindReplaceItems.get(columnHeader)).toArray()));
-                } else {
-                    model.setDataVector(new Vector(), columns);
-                }
-                ((DefaultTableModel) jTable.getModel()).fireTableDataChanged();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        //DefaultTableModel model = new DefaultTableModel();
+        try {
+            if (hmFindReplaceItems.containsKey(columnHeader)) {
+                model.setDataVector((Vector) hmFindReplaceItems.get(columnHeader), columns);
+                //System.out.println(Arrays.toString(((Vector) hmFindReplaceItems.get(columnHeader)).toArray()));
+            } else {
+                model.setDataVector(new Vector(), columns);
             }
+            ((DefaultTableModel) jTable.getModel()).fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
-    
+    }
+
     public void executeFindReplaceItems(JTable jTable) {
         if (!hmFindReplaceItems.isEmpty()) {
-            System.out.println(Arrays.toString(hmFindReplaceItems.entrySet().toArray()));
+            //System.out.println(Arrays.toString(hmFindReplaceItems.entrySet().toArray()));
             ArrayList<String> columns = new ArrayList<String>();
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 System.out.println("Index: " + j + " Column: " + jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
@@ -957,14 +1034,14 @@ public class pbcsDLManager {
             }
             for (int i = 0; i < columns.size(); i++) {
                 Vector allData = new Vector();
-                if (hmFindReplaceItems.containsKey(columns.get(i))){
+                if (hmFindReplaceItems.containsKey(columns.get(i))) {
                     System.out.println(i + " : " + columns.get(i));
                     allData = (Vector) hmFindReplaceItems.get(columns.get(i));
                     if (!allData.isEmpty()) {
                         for (Iterator it = allData.iterator(); it.hasNext();) {
                             Vector row = (Vector) it.next();
                             findReplaceField(jTable, row.get(0).toString(), row.get(1).toString(),
-                                Boolean.parseBoolean(row.get(2).toString()), Boolean.parseBoolean(row.get(3).toString()));
+                                    Boolean.parseBoolean(row.get(2).toString()), Boolean.parseBoolean(row.get(3).toString()));
                         }
                     }
                 }

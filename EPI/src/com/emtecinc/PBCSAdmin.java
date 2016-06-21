@@ -1191,19 +1191,25 @@ public class PBCSAdmin extends javax.swing.JFrame {
             DefaultTableModel rawModel;
             if (txtHeaderRows.getText().length() < 1) {
                 //model = getModelFromCsvFile(this.flSourceFile, strDelim, false);
-                model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
-                rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                //model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                jTable1.setModel(dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText())));
+                //rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             } else {
-                model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
-                rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                jTable1.setModel(dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText())));
+                //model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
+                //rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             }
-            jTable1.setModel(model);
+            //jTable1.setModel(model);
+            System.gc();
             //Reset Text area and show new lines
             jTextArea1.setText("");
             ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
-            for (String t: arrLines) {
-                jTextArea1.append(t + "\n");
-            } 
+//            for (String t: arrLines) {
+//                jTextArea1.append(t + "\n");
+//            } 
+//            for (int i = 0; i < 500; i++) {
+//                jTextArea1.append(arrLines.get(i) + "\n");
+//            }
         } catch (Throwable x) {
             
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
@@ -1275,9 +1281,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION){
             flSourceFile = fc.getSelectedFile();
             ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
-            for (String t: arrLines) {
-                jTextArea1.append(t + "\n");
-            } 
+//            for (String t: arrLines) {
+//                jTextArea1.append(t + "\n");
+//            } 
+//            for (int i = 0; i < 500; i++) {
+//                jTextArea1.append(arrLines.get(i) + "\n");
+//            }
         } else {
             JOptionPane.showMessageDialog(null, "Open command cancelled by user.");
         }
