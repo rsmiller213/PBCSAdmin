@@ -1204,12 +1204,17 @@ public class PBCSAdmin extends javax.swing.JFrame {
             //Reset Text area and show new lines
             jTextArea1.setText("");
             ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
-//            for (String t: arrLines) {
-//                jTextArea1.append(t + "\n");
-//            } 
-//            for (int i = 0; i < 500; i++) {
-//                jTextArea1.append(arrLines.get(i) + "\n");
-//            }
+            if (arrLines.size() >=500) {
+                for (int i = 0; i < 500; i++) {
+                    jTextArea1.append(arrLines.get(i) + "\n");
+                }
+            } else {
+                for (String t: arrLines) {
+                    jTextArea1.append(t + "\n");
+                }
+            }
+            arrLines.clear();
+
         } catch (Throwable x) {
             
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
@@ -1239,11 +1244,19 @@ public class PBCSAdmin extends javax.swing.JFrame {
             dlManager.updateEventLog(pbcsConstants.EVT_DATA, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
             //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
             arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+        } else {
+            if (!arrDataColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
+                arrDataColumn.set(jTable1.getSelectedColumn(), "");
+            }
         }
         if (cbIgnoreCol.isSelected()) {
             dlManager.updateEventLog(pbcsConstants.EVT_IGNORE_COLUMN, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
             //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
             arrIgnoreColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+        } else {
+            if (!arrIgnoreColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
+                arrIgnoreColumn.set(jTable1.getSelectedColumn(), "");
+            }
         }
 //        for (Object t: dlManager.eventRows){
 //            if (t instanceof String[]){
@@ -1281,12 +1294,16 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION){
             flSourceFile = fc.getSelectedFile();
             ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
-//            for (String t: arrLines) {
-//                jTextArea1.append(t + "\n");
-//            } 
-//            for (int i = 0; i < 500; i++) {
-//                jTextArea1.append(arrLines.get(i) + "\n");
-//            }
+            if (arrLines.size() >= 500) {
+                for (int i = 0; i < 500; i++) {
+                    jTextArea1.append(arrLines.get(i) + "\n");
+                }
+            } else {
+                for (String t : arrLines) {
+                    jTextArea1.append(t + "\n");
+                }
+            }
+            arrLines.clear();
         } else {
             JOptionPane.showMessageDialog(null, "Open command cancelled by user.");
         }
@@ -1335,6 +1352,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
                     dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
                     dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), textValue.getText());
+                    arrDataColumn.add("");
+                    arrIgnoreColumn.add("");
                 }
             } else if (columnAction.getSelectedIndex() == 1){
                 Object[] createDupJoin = {
@@ -1365,6 +1384,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 Integer.toString(jTable1.getColumnCount() - 1), splitChar.getText());
                         dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount() - 1),
                                 Integer.toString(jTable1.getColumnCount() - 1), colHeader.getText());
+                        arrDataColumn.add("");
+                        arrIgnoreColumn.add("");
                     }
                 }
             } else if (columnAction.getSelectedIndex() == 2){
@@ -1380,6 +1401,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         bSplitBy = true;
                     }
                     dlManager.splitColumn(jTable1, bSplitBy, splitNum.getText());
+                    arrDataColumn.add("");
+                    arrIgnoreColumn.add("");
                     if (bSplitBy) {
                         dlManager.updateEventLog(pbcsConstants.EVT_SPLIT_CHARS, Integer.toString(selectedColumn), Integer.toString(jTable1.getColumnCount() - 1), splitNum.getText());
                     } else {

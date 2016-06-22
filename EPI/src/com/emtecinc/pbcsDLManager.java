@@ -66,7 +66,7 @@ public class pbcsDLManager {
      * @param bHeaderRow boolean that determines whether a header row is in the
      * file or now
      * @return returns a DefaultTableModel
-     */
+     */ 
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow) {
         DefaultTableModel model = null;
         boolean isFirstRow = true;
@@ -272,6 +272,7 @@ public class pbcsDLManager {
                 ((Vector) vRows.elementAt(i)).set(index, rows[i]);
             }
             model.setDataVector(vRows, columns);
+            jTable.setColumnSelectionInterval(index, index);
         } catch (Throwable x) {
             JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
@@ -754,6 +755,7 @@ public class pbcsDLManager {
                 eventRowsProfile = (ArrayList<String[]>) importProfile;
                 for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
                     String[] currLine = (String[]) it.next();
+                    System.out.println(Arrays.toString(currLine));
                     if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)) {
                         hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3]));
                         //System.out.println(Arrays.toString(arr));
@@ -841,6 +843,8 @@ public class pbcsDLManager {
 
         } else if (action.equals(pbcsConstants.EVT_ADD)) {
             addTableColumn(jTable, value, "");
+            PBCSAdmin.arrDataColumn.add("");
+            PBCSAdmin.arrIgnoreColumn.add("");
             //jTable.getTableHeader().repaint();
         } else if (action.equals(pbcsConstants.EVT_COLUMN_VALUES)) {
             updateColumnValues(jTable, toColumn, value);
@@ -875,7 +879,8 @@ public class pbcsDLManager {
     public void updateColumnModelData(JTable jTable) {
         int selectedColumn = jTable.getSelectedColumn();
         Vector columns = new Vector<String>();
-        Vector rows = ((DefaultTableModel) jTable.getModel()).getDataVector();
+        //Vector rows = ((DefaultTableModel) jTable.getModel()).getDataVector();
+        Vector rows = (Vector) ((DefaultTableModel) jTable.getModel()).getDataVector().clone();
         //Vector rows = new Vector();
         
         String[][] rowData = new String[jTable.getRowCount()][jTable.getColumnCount()];
@@ -883,17 +888,18 @@ public class pbcsDLManager {
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
         }
-//        for (int i = 0; i < jTable.getRowCount(); i++) {
-//            for (int j = 0; j < jTable.getColumnCount(); j++) {
-//                System.out.println(i);
-//                rowData[i][j] = jTable.getValueAt(i, j).toString();
-//                rows.add(i, rowData[i][j]);
-//            }
-//        }
+        
+        for (int i = 0; i < jTable.getRowCount(); i++) {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                //System.out.println(i);
+                rowData[i][j] = jTable.getValueAt(i, j).toString();
+                //rows.add(i, rowData[i][j]);
+            }
+        }
         //System.out.println(Arrays.toString(rowData[0]));
 //        ((DefaultTableModel) jTable.getModel()).setDataVector(rows, columns);
-        //((DefaultTableModel) jTable.getModel()).setDataVector((Object[][]) rowData, columns.toArray());
-        ((DefaultTableModel) jTable.getModel()).setDataVector(rows, columns);
+        ((DefaultTableModel) jTable.getModel()).setDataVector((Object[][]) rowData, columns.toArray());
+        //((DefaultTableModel) jTable.getModel()).setDataVector(rows, columns);
         if (selectedColumn >= 0) {
             jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
         }
@@ -1027,6 +1033,7 @@ public class pbcsDLManager {
     public void executeFindReplaceItems(JTable jTable) {
         if (!hmFindReplaceItems.isEmpty()) {
             //System.out.println(Arrays.toString(hmFindReplaceItems.entrySet().toArray()));
+            updateColumnModelData(jTable);
             ArrayList<String> columns = new ArrayList<String>();
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 System.out.println("Index: " + j + " Column: " + jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
