@@ -279,18 +279,18 @@ public class pbcsDLManager {
         return model;
     }
     
-    public DefaultTableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
+    public DefaultTableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase, int index) {
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         Vector columns = new Vector();
         Vector vRows = ((DefaultTableModel) jTable.getModel()).getDataVector();
         Vector newRows = new Vector();
+        int newIndex = jTable.convertColumnIndexToModel(index);
+        
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
         }
         try {
-            for (int j = 0; j < jTable.getColumnCount(); j++) {
-                int index = jTable.convertColumnIndexToModel(j);
-                Object[] rows = new Object[jTable.getRowCount()];
+            Object[] rows = new Object[jTable.getRowCount()];
                 for (int i = 0; i < vRows.size(); i++) {
                     if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
                         rows[i] = ((Vector) vRows.elementAt(i)).elementAt(index);
@@ -316,12 +316,55 @@ public class pbcsDLManager {
                     }
                 }
                 model.setDataVector(vRows, columns);
-            }
         } catch (Throwable x) {
             JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
         return model;
     }
+    
+//    public DefaultTableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
+//        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+//        Vector columns = new Vector();
+//        Vector vRows = ((DefaultTableModel) jTable.getModel()).getDataVector();
+//        Vector newRows = new Vector();
+//        for (int i = 0; i < jTable.getColumnCount(); i++) {
+//            columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
+//        }
+//        try {
+//            for (int j = 0; j < jTable.getColumnCount(); j++) {
+//                int index = jTable.convertColumnIndexToModel(j);
+//                Object[] rows = new Object[jTable.getRowCount()];
+//                for (int i = 0; i < vRows.size(); i++) {
+//                    if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
+//                        rows[i] = ((Vector) vRows.elementAt(i)).elementAt(index);
+//                        if (rows[i].equals(strFind)) {
+//                            rows[i] = strReplace;
+//                            //model.setValueAt(rows[i], i, index);
+//                            ((Vector) vRows.elementAt(i)).set(index, rows[i]);
+//                        } else {
+//                            rows[i] = model.getValueAt(i, index);
+//                            //model.setValueAt(rows[i], i, index);
+//                            ((Vector) vRows.elementAt(i)).set(index, rows[i]);
+//                        }
+//                    } else if (strFind != null && !bMatchWord && bMatchCase || strReplace != null && !bMatchWord && bMatchCase) {
+//                        rows[i] = model.getValueAt(i, index);
+//                        rows[i] = rows[i].toString().replace(strFind, strReplace);
+//                        //model.setValueAt(rows[i], i, index);
+//                        ((Vector) vRows.elementAt(i)).set(index, rows[i]);
+//                    } else if (strFind != null && !bMatchWord && !bMatchCase || strReplace != null && !bMatchWord && !bMatchCase) {
+//                        rows[i] = model.getValueAt(i, index);
+//                        rows[i] = rows[i].toString().replaceAll("(?i)" + Pattern.quote(strFind), strReplace);
+//                        //model.setValueAt(rows[i], i, index);
+//                        ((Vector) vRows.elementAt(i)).set(index, rows[i]);
+//                    }
+//                }
+//                model.setDataVector(vRows, columns);
+//            }
+//        } catch (Throwable x) {
+//            JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
+//        }
+//        return model;
+//    }
 
 //    public TableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
 //        TableModel model = jTable.getModel();
@@ -388,6 +431,11 @@ public class pbcsDLManager {
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        try {
+            reader.close();
+        } catch (IOException ex) {
+            Logger.getLogger(pbcsDLManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return arrLines;
     }
@@ -1036,7 +1084,7 @@ public class pbcsDLManager {
             updateColumnModelData(jTable);
             ArrayList<String> columns = new ArrayList<String>();
             for (int j = 0; j < jTable.getColumnCount(); j++) {
-                System.out.println("Index: " + j + " Column: " + jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
+                //System.out.println("Index: " + j + " Column: " + jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
                 columns.add(jTable.getColumnModel().getColumn(j).getHeaderValue().toString());
             }
             for (int i = 0; i < columns.size(); i++) {
@@ -1048,7 +1096,7 @@ public class pbcsDLManager {
                         for (Iterator it = allData.iterator(); it.hasNext();) {
                             Vector row = (Vector) it.next();
                             findReplaceField(jTable, row.get(0).toString(), row.get(1).toString(),
-                                    Boolean.parseBoolean(row.get(2).toString()), Boolean.parseBoolean(row.get(3).toString()));
+                                    Boolean.parseBoolean(row.get(2).toString()), Boolean.parseBoolean(row.get(3).toString()), i);
                         }
                     }
                 }

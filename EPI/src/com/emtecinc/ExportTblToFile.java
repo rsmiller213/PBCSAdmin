@@ -255,7 +255,7 @@ public class ExportTblToFile {
         System.out.println(Arrays.toString(skipRows.toArray()));
     }
     
-    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine) throws IOException {
+    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine, boolean bAppend) throws IOException {
         setAcceptReject();
         //Start update of index in ArrayList. When new columns are added the index for data and ignore gets out of wack so this takes care of that
         if (!arrDataColumn.isEmpty()) {
@@ -287,9 +287,11 @@ public class ExportTblToFile {
         if (!file.exists()) {
             file.createNewFile();
             //writeFileFromTable(jTable, file);
-        } else if (file.exists() && bCommandLine) {
+        } else if (file.exists() && bCommandLine && !bAppend) {
             file.delete();
             file.createNewFile();
+        } else if (file.exists() && bCommandLine && bAppend) {
+            
         } else {
             int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?", "Select File", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if (option == JOptionPane.OK_OPTION) {
@@ -298,7 +300,7 @@ public class ExportTblToFile {
                 //writeFileFromTable(jTable, file);
             }
         }
-        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
         BufferedWriter bw = new BufferedWriter(fw);
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             //bw.write(jTable.getColumnName(i));

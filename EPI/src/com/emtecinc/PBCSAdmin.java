@@ -1498,7 +1498,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //            }
             try {
                 this.export = new ExportTblToFile(jTable1, dlManager.hmAcceptRejectItems);
-                export.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn, false);
+                export.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn, false, false);
             } catch (Exception ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1835,6 +1835,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             public void run() {
                 if (args.length == 5){
                     new PBCSAdmin().setVisible(false);
+                    //PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
                     PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4]);
                     clInt.transformAndLoad();
                     System.exit(0);
