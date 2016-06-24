@@ -880,6 +880,7 @@ public class pbcsDLManager {
         } else if (action.equals(pbcsConstants.EVT_DATA)) {
             PBCSAdmin.arrDataColumn.add(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
         } else if (action.equals(pbcsConstants.EVT_IGNORE_COLUMN)) {
+            PBCSAdmin.arrIgnoreColumn.add("");
             PBCSAdmin.arrIgnoreColumn.set(toColumn, jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString());
         } else if (action.equals(pbcsConstants.EVT_PREFIX)) {
             hm.put(jTable.getColumnModel().getColumn(toColumn).getHeaderValue().toString() + "|Prefix", value);
