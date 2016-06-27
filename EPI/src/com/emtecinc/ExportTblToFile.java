@@ -254,15 +254,20 @@ public class ExportTblToFile {
         }
         System.out.println(Arrays.toString(skipRows.toArray()));
     }
-    
+
     public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine, boolean bAppend) throws IOException {
         setAcceptReject();
         //Start update of index in ArrayList. When new columns are added the index for data and ignore gets out of wack so this takes care of that
         if (!arrDataColumn.isEmpty()) {
             for (int i = 0; i < arrDataColumn.size(); i++) {
-                if (!arrDataColumn.get(i).isEmpty()) {
+                if (!arrDataColumn.get(i).equals("")) {
                     int indexInArray = i;
-                    int indexInTable = jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i));
+                    int indexInTable;
+                    try {
+                        indexInTable = jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i));
+                    } catch (IllegalArgumentException e) {
+                        continue;
+                    }
                     if (indexInArray != indexInTable) {
                         String colHeader = arrDataColumn.get(i);
                         arrDataColumn.set(i, "");
@@ -293,7 +298,7 @@ public class ExportTblToFile {
             file.delete();
             file.createNewFile();
         } else if (file.exists() && bCommandLine && bAppend) {
-            
+
         } else {
             int option = JOptionPane.showConfirmDialog(null, "File already exists. Overwrite?", "Select File", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if (option == JOptionPane.OK_OPTION) {
@@ -309,8 +314,9 @@ public class ExportTblToFile {
             //if (arrDataColumn[i] == 1){
             //System.out.println(Arrays.toString(arrDataColumn.toArray()));
             if (arrDataColumn.size() > i) {
-                if (!arrDataColumn.get(i).equals("")) {
-                    //System.out.println("Data Col Error: " + arrDataColumn.get(i));
+                //if (!arrDataColumn.get(i).equals("")) {
+                if (arrDataColumn.get(i).equals(jTable.getColumnModel().getColumn(i).getHeaderValue().toString())) {
+                    System.out.println("Data Col Error: " + arrDataColumn.get(i));
                     //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
                     bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
                     bw.write("\t");
@@ -325,17 +331,18 @@ public class ExportTblToFile {
                 for (int j = 0; j < jTable.getColumnCount(); j++) {
                     //if (arrDataColumn[j] == 0) {
                     if (arrDataColumn.size() > j) {
-                        if (!arrDataColumn.get(j).equals("")) {
-                        //if (j <= arrDataColumn.size()) {
-                        //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
-                        bw.write((String) (jTable.getValueAt(i, j)));
-                        bw.write("\t");
-                    } else if (!arrIgnoreField.get(j).equals("")) {
-                        continue;
-                    } else {
-                        bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
-                        bw.write("\t");
-                    }
+                        //if (!arrDataColumn.get(j).equals("")) {
+                        if (arrDataColumn.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                            //if (j <= arrDataColumn.size()) {
+                            //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
+                            bw.write((String) (jTable.getValueAt(i, j)));
+                            bw.write("\t");
+                        } else if (!arrIgnoreField.get(j).equals("")) {
+                            continue;
+                        } else {
+                            bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
+                            bw.write("\t");
+                        }
                     }
                 }
             } else {
