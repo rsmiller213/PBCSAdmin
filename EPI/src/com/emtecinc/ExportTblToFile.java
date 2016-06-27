@@ -273,8 +273,10 @@ public class ExportTblToFile {
         }
         if (!arrIgnoreField.isEmpty()) {
             for (int i = 0; i < arrIgnoreField.size(); i++) {
-                if (!arrIgnoreField.get(i).isEmpty()) {
+                //if (!arrIgnoreField.get(i).isEmpty()) {
+                if (!arrIgnoreField.get(i).equals("")) {
                     int indexInArray = i;
+                    //System.out.println("Col Error: " + arrIgnoreField.get(i));
                     int indexInTable = jTable.getColumnModel().getColumnIndex(arrIgnoreField.get(i));
                     if (indexInArray != indexInTable) {
                         String colHeader = arrIgnoreField.get(i);
@@ -307,6 +309,7 @@ public class ExportTblToFile {
             //if (arrDataColumn[i] == 1){
             //System.out.println(Arrays.toString(arrDataColumn.toArray()));
             if (!arrDataColumn.get(i).equals("")) {
+                //System.out.println("Data Col Error: " + arrDataColumn.get(i));
                 //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
                 bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
                 bw.write("\t");

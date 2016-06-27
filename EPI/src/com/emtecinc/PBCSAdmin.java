@@ -22,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -1243,7 +1244,11 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (cbData.isSelected()) {
             dlManager.updateEventLog(pbcsConstants.EVT_DATA, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
             //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
-            arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            if (arrDataColumn.indexOf(oldColumnName) != -1) {
+                Collections.replaceAll(arrDataColumn, oldColumnName, txtColName.getText());
+            } else {
+                arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            }
         } else {
             if (!arrDataColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
                 arrDataColumn.set(jTable1.getSelectedColumn(), "");
@@ -1252,7 +1257,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
         if (cbIgnoreCol.isSelected()) {
             dlManager.updateEventLog(pbcsConstants.EVT_IGNORE_COLUMN, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
             //arrDataColumn.add(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
-            arrIgnoreColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            //arrIgnoreColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            if (arrIgnoreColumn.indexOf(oldColumnName) != -1) {
+                Collections.replaceAll(arrIgnoreColumn, oldColumnName, txtColName.getText());
+            } else {
+                arrIgnoreColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
+            }
         } else {
             if (!arrIgnoreColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
                 arrIgnoreColumn.set(jTable1.getSelectedColumn(), "");
