@@ -316,7 +316,7 @@ public class ExportTblToFile {
             if (arrDataColumn.size() > i) {
                 //if (!arrDataColumn.get(i).equals("")) {
                 if (arrDataColumn.get(i).equals(jTable.getColumnModel().getColumn(i).getHeaderValue().toString())) {
-                    System.out.println("Data Col Error: " + arrDataColumn.get(i));
+                    //System.out.println("Data Col Error: " + arrDataColumn.get(i));
                     //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
                     bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
                     bw.write("\t");
@@ -337,7 +337,8 @@ public class ExportTblToFile {
                             //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
                             bw.write((String) (jTable.getValueAt(i, j)));
                             bw.write("\t");
-                        } else if (!arrIgnoreField.get(j).equals("")) {
+                        //} else if (!arrIgnoreField.get(j).equals("")) {
+                        } else if (arrIgnoreField.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
                             continue;
                         } else {
                             bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
