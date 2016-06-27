@@ -8,8 +8,12 @@ package com.emtecinc;
 import static com.emtecinc.PBCSAdmin.pbcsUserName;
 import com.emtecinc.pbcsDLManager;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -40,15 +44,45 @@ public class PBCSCommandLine extends PBCSAdmin {
         this.outFile = outFile;
         //this.bAppend = bAppend;
         ArrayList<String> tas = new ArrayList<String>();
-        
+
+    }
+
+    private boolean getHeaderRow(File file) throws IOException, ClassNotFoundException {
+        boolean bHeaderRow = false;
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+        Object importProfile = (Object) inputStream.readObject();
+        if (importProfile instanceof ArrayList) {
+            ArrayList<String[]> eventRowsProfile = (ArrayList<String[]>) importProfile;
+            for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
+                String[] currLine = (String[]) it.next();
+                //System.out.println(Arrays.toString(currLine));
+                if (currLine[0].equals(pbcsConstants.EVT_HEADER)) {
+                    bHeaderRow = true;
+                    System.out.println("Found Header!");
+                } else {
+                    bHeaderRow = false;
+                }
+            }
+            inputStream.close();
+        }
+        return bHeaderRow;
     }
 
     public void transformAndLoad() {
-    //public void transformAndLoad(int lineCount, int numberToLoad, int startLine) {
+        //public void transformAndLoad(int lineCount, int numberToLoad, int startLine) {
         File flDataFile = new File(dataFile);
         File flProfile = new File(profileLocation);
         File flOutFile = new File(outFile);
-        DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, false);
+        boolean bHeaderRow = false;
+        try {
+            bHeaderRow = getHeaderRow(flProfile);
+        } catch (IOException ex) {
+            Logger.getLogger(PBCSCommandLine.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PBCSCommandLine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, bHeaderRow);
+        //DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, false);
         //DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, false, numberToLoad, startLine);
         exportTable.setModel(mainModel);
         ArrayList<String> pbcsInfo = null;
@@ -69,9 +103,9 @@ public class PBCSCommandLine extends PBCSAdmin {
                 flOutFile.createNewFile();
             }
             this.export = new ExportTblToFile(exportTable, dlManager.hmAcceptRejectItems);
-            if (bAppend){
+            if (bAppend) {
                 export.exportFileFromTable(exportTable, flOutFile, arrDataColumn, arrIgnoreColumn, true, true);
-                
+
             } else {
                 export.exportFileFromTable(exportTable, flOutFile, arrDataColumn, arrIgnoreColumn, true, false);
             }

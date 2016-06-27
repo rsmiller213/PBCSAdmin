@@ -1197,6 +1197,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 //rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, false, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             } else {
                 jTable1.setModel(dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText())));
+                //Add header rows to event log
+                dlManager.updateEventLog(pbcsConstants.EVT_HEADER, "0", "0", "Header");
                 //model = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
                 //rawModel = dlManager.getModelFromCsvFile(this.flSourceFile, strDelim, true, Integer.parseInt(txtDisplayRows.getText()), Integer.parseInt(txtStartRow.getText()));
             }
@@ -1717,6 +1719,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
         // TODO add your handling code here:
+        if (txtHeaderRows.getText().length() >= 1) {
+            //Add header rows to event log
+            dlManager.updateEventLog(pbcsConstants.EVT_HEADER, "0", "0", "Header");
+        }
         dlManager.saveFile();
     }//GEN-LAST:event_btnSaveProfileActionPerformed
 

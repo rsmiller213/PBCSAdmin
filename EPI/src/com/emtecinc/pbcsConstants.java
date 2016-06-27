@@ -19,6 +19,7 @@ public class pbcsConstants {
     public static final String DBG_PBCS_LCMVER = "11.1.2.3.600";
     public static final String DBG_PBCS_APP = "POC_CITA";
     public static final String EVT_MOVE = "Move";
+    public static final String EVT_HEADER = "Header Rows";
     public static final String EVT_PREFIX = "Prefix";
     public static final String EVT_SUFFIX = "Suffix";
     public static final String EVT_DATA = "Data";

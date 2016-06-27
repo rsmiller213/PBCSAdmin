@@ -308,11 +308,13 @@ public class ExportTblToFile {
             //bw.write(jTable.getColumnName(i));
             //if (arrDataColumn[i] == 1){
             //System.out.println(Arrays.toString(arrDataColumn.toArray()));
-            if (!arrDataColumn.get(i).equals("")) {
-                //System.out.println("Data Col Error: " + arrDataColumn.get(i));
-                //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
-                bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
-                bw.write("\t");
+            if (arrDataColumn.size() > i) {
+                if (!arrDataColumn.get(i).equals("")) {
+                    //System.out.println("Data Col Error: " + arrDataColumn.get(i));
+                    //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
+                    bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
+                    bw.write("\t");
+                }
             }
         }
 
@@ -322,7 +324,8 @@ public class ExportTblToFile {
                 bw.newLine();
                 for (int j = 0; j < jTable.getColumnCount(); j++) {
                     //if (arrDataColumn[j] == 0) {
-                    if (!arrDataColumn.get(j).equals("")) {
+                    if (arrDataColumn.size() > j) {
+                        if (!arrDataColumn.get(j).equals("")) {
                         //if (j <= arrDataColumn.size()) {
                         //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
                         bw.write((String) (jTable.getValueAt(i, j)));
@@ -332,6 +335,7 @@ public class ExportTblToFile {
                     } else {
                         bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
                         bw.write("\t");
+                    }
                     }
                 }
             } else {
