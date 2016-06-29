@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 public class ExportTblToFile {
 
     ArrayList<Integer> skipRows = new ArrayList<Integer>();
+    ArrayList<Integer> acceptRows = new ArrayList<Integer>();
     HashMap hmAcceptRejectItems = new HashMap();
     JTable dataTable = new JTable();
 
@@ -89,23 +90,26 @@ public class ExportTblToFile {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
                         if (row.get(4).equals("true")) {
-                            if (!dataTable.getValueAt(i, colIndex).equals(row.get(2))) {
-                                skipRows.add(i);
+                            if (dataTable.getValueAt(i, colIndex).equals(row.get(2))) {
+                                //skipRows.add(i);
+                                acceptRows.add(i);
                             }
-                        } else if (!dataTable.getValueAt(i, colIndex).toString().equalsIgnoreCase(row.get(2).toString())) {
-                            skipRows.add(i);
-                        }
+                        } else if (dataTable.getValueAt(i, colIndex).toString().equalsIgnoreCase(row.get(2).toString())) {
+                            //skipRows.add(i);
+                            acceptRows.add(i);
+                        } //} else if (dataTable.getValueAt(i, colIndex).equals(row.get(2))) {
+                        //skipRows.add(i);
                     }
                 }
                 if (row.get(3).equals(pbcsConstants.AR_NOT_EQUALS)) {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
                         if (row.get(4).equals("true")) {
-                            if (dataTable.getValueAt(i, colIndex).equals(row.get(2))) {
-                                skipRows.add(i);
+                            if (!dataTable.getValueAt(i, colIndex).equals(row.get(2))) {
+                                acceptRows.add(i);
                             }
-                        } else if (dataTable.getValueAt(i, colIndex).toString().equalsIgnoreCase(row.get(2).toString())) {
-                            skipRows.add(i);
+                        } else if (!dataTable.getValueAt(i, colIndex).toString().equalsIgnoreCase(row.get(2).toString())) {
+                            acceptRows.add(i);
                         }
                     }
                 }
@@ -113,11 +117,13 @@ public class ExportTblToFile {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
                         if (row.get(4).equals("true")) {
-                            if (!dataTable.getValueAt(i, colIndex).toString().regionMatches(0, row.get(2).toString(), 0, row.get(2).toString().length())) {
-                                skipRows.add(i);
+                            if (dataTable.getValueAt(i, colIndex).toString().regionMatches(0, row.get(2).toString(), 0, row.get(2).toString().length())) {
+                                //skipRows.add(i);
+                                acceptRows.add(i);
                             }
-                        } else if (!dataTable.getValueAt(i, colIndex).toString().contains(row.get(2).toString())) {
-                            skipRows.add(i);
+                        } else if (dataTable.getValueAt(i, colIndex).toString().contains(row.get(2).toString())) {
+                            //skipRows.add(i);
+                            acceptRows.add(i);
                         }
                     }
                 }
@@ -125,11 +131,13 @@ public class ExportTblToFile {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
                         if (row.get(4).equals("true")) {
-                            if (dataTable.getValueAt(i, colIndex).toString().regionMatches(0, row.get(2).toString(), 0, row.get(2).toString().length())) {
-                                skipRows.add(i);
+                            if (!dataTable.getValueAt(i, colIndex).toString().regionMatches(0, row.get(2).toString(), 0, row.get(2).toString().length())) {
+                                //skipRows.add(i);
+                                acceptRows.add(i);
                             }
-                        } else if (!dataTable.getValueAt(i, colIndex).toString().contentEquals(row.get(2).toString())) {
-                            skipRows.add(i);
+                        } else if (dataTable.getValueAt(i, colIndex).toString().contentEquals(row.get(2).toString())) {
+                            //skipRows.add(i);
+                            acceptRows.add(i);
                         }
 
                     }
@@ -137,32 +145,32 @@ public class ExportTblToFile {
                 if (row.get(3).equals(pbcsConstants.AR_GREATER_THAN)) {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
-                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) < Integer.parseInt(row.get(2).toString())) {
-                            skipRows.add(i);
+                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) > Integer.parseInt(row.get(2).toString())) {
+                            acceptRows.add(i);
                         }
                     }
                 }
                 if (row.get(3).equals(pbcsConstants.AR_GREATER_THAN_EQUAL)) {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
-                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) <= Integer.parseInt(row.get(2).toString())) {
-                            skipRows.add(i);
+                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) >= Integer.parseInt(row.get(2).toString())) {
+                            acceptRows.add(i);
                         }
                     }
                 }
                 if (row.get(3).equals(pbcsConstants.AR_LESS_THAN)) {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
-                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) > Integer.parseInt(row.get(2).toString())) {
-                            skipRows.add(i);
+                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) < Integer.parseInt(row.get(2).toString())) {
+                            acceptRows.add(i);
                         }
                     }
                 }
                 if (row.get(3).equals(pbcsConstants.AR_LESS_THAN_EQUAL)) {
                     for (int i = 0; i < dataTable.getRowCount(); i++) {
                         //Vector dataRow = (Vector) mainTblData.get(i);
-                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) >= Integer.parseInt(row.get(2).toString())) {
-                            skipRows.add(i);
+                        if (Integer.parseInt(dataTable.getValueAt(i, colIndex).toString()) <= Integer.parseInt(row.get(2).toString())) {
+                            acceptRows.add(i);
                         }
                     }
                 }
@@ -252,7 +260,7 @@ public class ExportTblToFile {
                 }
                 break;
         }
-        System.out.println(Arrays.toString(skipRows.toArray()));
+        //System.out.println(Arrays.toString(skipRows.toArray()));
     }
 
     public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine, boolean bAppend) throws IOException {
@@ -326,23 +334,52 @@ public class ExportTblToFile {
 
         for (int i = 0; i < jTable.getRowCount(); i++) {
             //System.out.println(skipRows.indexOf((Object) i));
-            if (skipRows.indexOf((Object) i) == -1) {
-                bw.newLine();
-                for (int j = 0; j < jTable.getColumnCount(); j++) {
-                    //if (arrDataColumn[j] == 0) {
-                    if (arrDataColumn.size() > j) {
-                        //if (!arrDataColumn.get(j).equals("")) {
-                        if (arrDataColumn.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
-                            //if (j <= arrDataColumn.size()) {
-                            //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
-                            bw.write((String) (jTable.getValueAt(i, j)));
-                            bw.write("\t");
-                        //} else if (!arrIgnoreField.get(j).equals("")) {
-                        } else if (arrIgnoreField.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
-                            continue;
-                        } else {
-                            bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
-                            bw.write("\t");
+            //if (acceptRows.indexOf((Object) i) != -1 || skipRows.indexOf((Object) i) == -1 ) {
+            if (!acceptRows.isEmpty()) {
+                for (int z = 0; z < acceptRows.size(); z++) {
+                    if (acceptRows.get(z) == i) {
+                        bw.newLine();
+                        for (int j = 0; j < jTable.getColumnCount(); j++) {
+                            //if (arrDataColumn[j] == 0) {
+                            if (arrDataColumn.size() > j) {
+                                //if (!arrDataColumn.get(j).equals("")) {
+                                if (arrDataColumn.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                    //if (j <= arrDataColumn.size()) {
+                                    //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
+                                    bw.write((String) (jTable.getValueAt(i, j)));
+                                    bw.write("\t");
+                                    //} else if (!arrIgnoreField.get(j).equals("")) {
+                                } else if (arrIgnoreField.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                    continue;
+                                } else {
+                                    bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
+                                    bw.write("\t");
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (!skipRows.isEmpty()) {
+                for (int z = 0; z < skipRows.size(); z++) {
+                    if (skipRows.get(z) != i) {
+                        bw.newLine();
+                        for (int j = 0; j < jTable.getColumnCount(); j++) {
+                            //if (arrDataColumn[j] == 0) {
+                            if (arrDataColumn.size() > j) {
+                                //if (!arrDataColumn.get(j).equals("")) {
+                                if (arrDataColumn.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                    //if (j <= arrDataColumn.size()) {
+                                    //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
+                                    bw.write((String) (jTable.getValueAt(i, j)));
+                                    bw.write("\t");
+                                    //} else if (!arrIgnoreField.get(j).equals("")) {
+                                } else if (arrIgnoreField.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                    continue;
+                                } else {
+                                    bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
+                                    bw.write("\t");
+                                }
+                            }
                         }
                     }
                 }
