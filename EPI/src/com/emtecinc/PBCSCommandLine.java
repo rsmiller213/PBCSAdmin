@@ -9,7 +9,9 @@ import static com.emtecinc.PBCSAdmin.pbcsUserName;
 import com.emtecinc.pbcsDLManager;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +60,7 @@ public class PBCSCommandLine extends PBCSAdmin {
                 //System.out.println(Arrays.toString(currLine));
                 if (currLine[0].equals(pbcsConstants.EVT_HEADER)) {
                     bHeaderRow = true;
-                    System.out.println("Found Header!");
+                    //System.out.println("Found Header!");
                 } else {
                     bHeaderRow = false;
                 }
@@ -67,14 +69,31 @@ public class PBCSCommandLine extends PBCSAdmin {
         }
         return bHeaderRow;
     }
-
+    
+    private static int countLines(File aFile) throws IOException {
+        LineNumberReader reader = null;
+        try {
+            reader = new LineNumberReader(new FileReader(aFile));
+            while ((reader.readLine()) != null);
+            return reader.getLineNumber();
+        } catch (Exception ex) {
+            return -1;
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
+    
     public void transformAndLoad() {
         //public void transformAndLoad(int lineCount, int numberToLoad, int startLine) {
         File flDataFile = new File(dataFile);
         File flProfile = new File(profileLocation);
         File flOutFile = new File(outFile);
+        int linesInFile = 0;
         boolean bHeaderRow = false;
         try {
+            linesInFile = countLines(flDataFile);
             bHeaderRow = getHeaderRow(flProfile);
         } catch (IOException ex) {
             Logger.getLogger(PBCSCommandLine.class.getName()).log(Level.SEVERE, null, ex);

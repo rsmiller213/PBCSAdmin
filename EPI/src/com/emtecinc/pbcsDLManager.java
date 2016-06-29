@@ -566,7 +566,7 @@ public class pbcsDLManager {
             }
             tTable.setModel(model);
         } catch (Throwable x) {
-            JOptionPane.showMessageDialog(null, "Error: Column Identifier not found. Error: " + x.getMessage());
+            //JOptionPane.showMessageDialog(null, "Error: Column Identifier not found. Error: " + x.getMessage());
         }
     }
 
@@ -941,6 +941,7 @@ public class pbcsDLManager {
         for (int i = 0; i < jTable.getRowCount(); i++) {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 //System.out.println(i);
+                //System.out.println(i + " " + j);
                 rowData[i][j] = jTable.getValueAt(i, j).toString();
                 //rows.add(i, rowData[i][j]);
             }

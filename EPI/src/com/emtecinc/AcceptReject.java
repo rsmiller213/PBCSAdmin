@@ -11,6 +11,7 @@ import java.util.Arrays;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -52,6 +53,7 @@ public class AcceptReject extends javax.swing.JDialog {
         btnCancel = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
+        btnRemove = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -149,6 +151,13 @@ public class AcceptReject extends javax.swing.JDialog {
             }
         });
 
+        btnRemove.setText("Remove");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -172,15 +181,16 @@ public class AcceptReject extends javax.swing.JDialog {
                         .addComponent(btnCancel)
                         .addGap(134, 134, 134))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
                         .addComponent(btnAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSave)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRemove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnPrevField1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnNextField)
-                        .addGap(106, 106, 106))))
+                        .addGap(64, 64, 64))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,7 +206,8 @@ public class AcceptReject extends javax.swing.JDialog {
                     .addComponent(btnNextField)
                     .addComponent(btnPrevField1)
                     .addComponent(btnAdd)
-                    .addComponent(btnSave))
+                    .addComponent(btnSave)
+                    .addComponent(btnRemove))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOK)
@@ -275,6 +286,15 @@ public class AcceptReject extends javax.swing.JDialog {
         // TODO add your handling code here:
         ((PBCSAdmin) this.getParent()).dlManager.saveAcceptRejectItems(tblMain.getColumnModel().getColumn(tblMain.getSelectedColumn()).getHeaderValue().toString(), tblAccRej, tblMain.getSelectedColumn());
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        // TODO add your handling code here:
+        try {
+            ((DefaultTableModel) tblAccRej.getModel()).removeRow(tblAccRej.getSelectedRow());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this.getParent(), "Please select a row to delete");
+        }
+    }//GEN-LAST:event_btnRemoveActionPerformed
 
     public JTable getAcceptRejectTable(){
         return tblAccRej;
@@ -387,6 +407,7 @@ public class AcceptReject extends javax.swing.JDialog {
     private javax.swing.JButton btnNextField;
     private javax.swing.JButton btnOK;
     private javax.swing.JButton btnPrevField1;
+    private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnSave;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCol;
