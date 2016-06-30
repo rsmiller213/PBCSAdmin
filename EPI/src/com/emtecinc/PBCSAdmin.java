@@ -51,20 +51,20 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-
 /**
  *
  * @author Randall.Miller
  */
 public class PBCSAdmin extends javax.swing.JFrame {
+
     public File flSourceFile;
     pbcsDLManager dlManager = new pbcsDLManager();
     pbcsFSManager fsManager = new pbcsFSManager();
-    AcceptReject accRej = new AcceptReject(this,true);
+    AcceptReject accRej = new AcceptReject(this, true);
     ExportTblToFile export;
-    
+
     JLabel jobIDLabel = new JLabel();
-    
+
     //static int[] arrDataColumn;
     static ArrayList<String> arrDataColumn = new ArrayList<>();
     static ArrayList<String> arrIgnoreColumn = new ArrayList<>();
@@ -82,14 +82,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
     ArrayList<String[]> eventRows = new ArrayList<String[]>();
     ArrayList<String[]> propList = new ArrayList<String[]>();
     String oldColumnName;
-    
+
     /**
      * Creates new form PBCSAdmin
      */
     public PBCSAdmin() {
         initComponents();
         dlManager.getTableColumnMoves(jTable1);
-        
+
     }
 
     /**
@@ -1100,21 +1100,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
+
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        updateColProps();        
+        updateColProps();
     }//GEN-LAST:event_jTable1MouseClicked
 
-    public void updateColProps(){
+    public void updateColProps() {
         jTable1.setCellSelectionEnabled(false);
         jTable1.setRowSelectionAllowed(false);
         jTable1.setColumnSelectionAllowed(true);
         jTable1.getSelectedColumn();
-        jTable1.setRowSelectionInterval(0, jTable1.getRowCount()-1);
+        jTable1.setRowSelectionInterval(0, jTable1.getRowCount() - 1);
         lblColumn.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + " Properties");
         txtColName.setText(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
         oldColumnName = txtColName.getText();
-       // txtColName.setText(jTable1.getColumnName(jTable1.getSelectedColumn()));
+        // txtColName.setText(jTable1.getColumnName(jTable1.getSelectedColumn()));
         btnColumnActions.setEnabled(true);
         // Set Column Property Objects to Enabled
         btnUpdateField.setEnabled(true);
@@ -1126,22 +1126,22 @@ public class PBCSAdmin extends javax.swing.JFrame {
         cbIgnoreCol.setEnabled(true);
         btnAccRej.setEnabled(true);
         lblFnRSelectedCol.setText("Selected Column: " + lblColumn.getText());
-        if (jTable1.getSelectedColumn() == 0){
+        if (jTable1.getSelectedColumn() == 0) {
             btnPrevField.setEnabled(false);
             btnFnRPrev.setEnabled(false);
         } else {
             btnPrevField.setEnabled(true);
             btnFnRPrev.setEnabled(true);
         }
-        
-        if (jTable1.getSelectedColumn() == jTable1.getColumnCount() - 1){
+
+        if (jTable1.getSelectedColumn() == jTable1.getColumnCount() - 1) {
             btnNextField.setEnabled(false);
             btnFnRNext.setEnabled(false);
         } else {
             btnNextField.setEnabled(true);
             btnFnRNext.setEnabled(true);
         }
-        
+
         // Set Data Checkbox based on array
         String columnHeader = jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString();
         if (arrDataColumn.contains(columnHeader)) {
@@ -1154,7 +1154,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         } else {
             cbIgnoreCol.setSelected(false);
         }
-        
+
         //Set Text Boxes based on HashMap
         Object pre = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix");
         Object suf = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix");
@@ -1172,22 +1172,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //dlManager.getTableColumnMoves(jTable1);
     }
 
-    
-    
+
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
-        try{            
+        try {
             String strDelim = "";
-            if (rbComma.isSelected()){
+            if (rbComma.isSelected()) {
                 strDelim = ",";
-            } else if (rbTab.isSelected()){
+            } else if (rbTab.isSelected()) {
                 strDelim = "\t";
-            } else if (rbSpace.isSelected()){
+            } else if (rbSpace.isSelected()) {
                 strDelim = " ";
-            } else if (rbCustom.isSelected()){
+            } else if (rbCustom.isSelected()) {
                 strDelim = txtCustDelim.getText();
             }
-            
+
             DefaultTableModel model;
             DefaultTableModel rawModel;
             if (txtHeaderRows.getText().length() < 1) {
@@ -1207,19 +1206,19 @@ public class PBCSAdmin extends javax.swing.JFrame {
             //Reset Text area and show new lines
             jTextArea1.setText("");
             ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
-            if (arrLines.size() >=500) {
+            if (arrLines.size() >= 500) {
                 for (int i = 0; i < 500; i++) {
                     jTextArea1.append(arrLines.get(i) + "\n");
                 }
             } else {
-                for (String t: arrLines) {
+                for (String t : arrLines) {
                     jTextArea1.append(t + "\n");
                 }
             }
             arrLines.clear();
 
         } catch (Throwable x) {
-            
+
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + x.getMessage());
         }
     }//GEN-LAST:event_btnRefreshActionPerformed
@@ -1227,9 +1226,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnUpdateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFieldActionPerformed
         // TODO add your handling code here:
         //arrDataColumn = new String[jTable1.getColumnCount()];
-       dlManager.findReplaceField(jTable1, txtPrefix.getText(), txtSuffix.getText(), jTable1.getSelectedColumn());
-       System.out.println(oldColumnName + " | New " + txtColName.getText());
-       dlManager.updateFindReplaceHeader(oldColumnName, txtColName.getText());
+        dlManager.findReplaceField(jTable1, txtPrefix.getText(), txtSuffix.getText(), jTable1.getSelectedColumn());
+        System.out.println(oldColumnName + " | New " + txtColName.getText());
+        dlManager.updateFindReplaceHeader(oldColumnName, txtColName.getText());
         if (!txtColName.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtColName.getText());
             dlManager.renameTableColumn(jTable1, txtColName.getText(), jTable1.getSelectedColumn());
@@ -1241,7 +1240,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         }
         if (!txtSuffix.getText().equals("")) {
             dlManager.updateEventLog(pbcsConstants.EVT_SUFFIX, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), txtSuffix.getText());
-            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString()+ "|Suffix", txtSuffix.getText());
+            hm.put(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix", txtSuffix.getText());
         }
         if (cbData.isSelected()) {
             dlManager.updateEventLog(pbcsConstants.EVT_DATA, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
@@ -1251,10 +1250,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
             } else {
                 arrDataColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
             }
-        } else {
-            if (!arrDataColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
-                arrDataColumn.set(jTable1.getSelectedColumn(), "");
-            }
+        } else if (!arrDataColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
+            arrDataColumn.set(jTable1.getSelectedColumn(), "");
         }
         if (cbIgnoreCol.isSelected()) {
             dlManager.updateEventLog(pbcsConstants.EVT_IGNORE_COLUMN, Integer.toString(jTable1.getSelectedColumn()), Integer.toString(jTable1.getSelectedColumn()), "Selected");
@@ -1265,10 +1262,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
             } else {
                 arrIgnoreColumn.add(jTable1.getSelectedColumn(), jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString());
             }
-        } else {
-            if (!arrIgnoreColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
-                arrIgnoreColumn.set(jTable1.getSelectedColumn(), "");
-            }
+        } else if (!arrIgnoreColumn.get(jTable1.getSelectedColumn()).isEmpty()) {
+            arrIgnoreColumn.set(jTable1.getSelectedColumn(), "");
         }
 //        for (Object t: dlManager.eventRows){
 //            if (t instanceof String[]){
@@ -1276,7 +1271,6 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //                System.out.println(Arrays.toString(arr));
 //            }
 //        }
-
 
 //        Can't check if cbIgnore is selected as if you switch columns it will become unselected. Need to test against some stored value. 
 //        jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
@@ -1303,7 +1297,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
         int returnVal = fc.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION){
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             flSourceFile = fc.getSelectedFile();
             ArrayList<String> arrLines = dlManager.openTextFile(flSourceFile, Integer.parseInt(txtStartRow.getText()), Integer.parseInt(txtDisplayRows.getText()));
             if (arrLines.size() >= 500) {
@@ -1326,26 +1320,26 @@ public class PBCSAdmin extends javax.swing.JFrame {
         int selectedColumn = jTable1.getSelectedColumn();
         JTextField colHeader = new JTextField();
         JTextField textValue = new JTextField();
-        
+
         JComboBox leftCol = new JComboBox();
         JComboBox rightCol = new JComboBox();
         JTextField splitChar = new JTextField();
-        
+
         JComboBox splitBy = new JComboBox();
         splitBy.addItem("Delimiter");
         splitBy.addItem("Number of Characters");
         JTextField splitNum = new JTextField();
-        
+
         JComboBox columnAction = new JComboBox();
         columnAction.addItem("Create from Text");
         columnAction.addItem("Create/Duplicate from Join");
         columnAction.addItem("Split");
-        
+
         JCheckBox cbDeleteColumns = new JCheckBox();
-        
+
         //fill drop-downs with column names
         ArrayList<String> columns = dlManager.getTableColumnNames(jTable1);
-        for (String column: columns){
+        for (String column : columns) {
             leftCol.addItem(column);
             rightCol.addItem(column);
         }
@@ -1354,20 +1348,20 @@ public class PBCSAdmin extends javax.swing.JFrame {
         };
         int option = JOptionPane.showConfirmDialog(this.getParent(), newField, "Column Information", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            if (columnAction.getSelectedIndex() == 0){
+            if (columnAction.getSelectedIndex() == 0) {
                 Object[] splitField = {
-                        "Header", colHeader,
-                        "Text Value", textValue
-                    };
+                    "Header", colHeader,
+                    "Text Value", textValue
+                };
                 int optCreateViaText = JOptionPane.showConfirmDialog(this.getParent(), splitField, "Create Via Text", JOptionPane.OK_CANCEL_OPTION);
                 if (optCreateViaText == JOptionPane.OK_OPTION) {
                     dlManager.addTableColumn(jTable1, colHeader.getText(), textValue.getText());
-                    dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), colHeader.getText());
-                    dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object)colHeader.getText())), textValue.getText());
+                    dlManager.updateEventLog(pbcsConstants.EVT_ADD, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object) colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object) colHeader.getText())), colHeader.getText());
+                    dlManager.updateEventLog(pbcsConstants.EVT_COLUMN_VALUES, Integer.toString(jTable1.getColumnModel().getColumnIndex((Object) colHeader.getText())), Integer.toString(jTable1.getColumnModel().getColumnIndex((Object) colHeader.getText())), textValue.getText());
                     arrDataColumn.add("");
                     arrIgnoreColumn.add("");
                 }
-            } else if (columnAction.getSelectedIndex() == 1){
+            } else if (columnAction.getSelectedIndex() == 1) {
                 Object[] createDupJoin = {
                     "Left Column", leftCol,
                     "Right Column", rightCol,
@@ -1377,7 +1371,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 };
                 int optCreateDupJoin = JOptionPane.showConfirmDialog(this.getParent(), createDupJoin, "Create/Duplicate Via Join", JOptionPane.OK_CANCEL_OPTION);
                 if (optCreateDupJoin == JOptionPane.OK_OPTION) {
-                    if (cbDeleteColumns.isSelected()){
+                    if (cbDeleteColumns.isSelected()) {
                         dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, Integer.toString(leftCol.getSelectedIndex())
                                 + " " + Integer.toString(rightCol.getSelectedIndex()), Integer.toString(jTable1.getColumnCount()), splitChar.getText());
                         dlManager.updateEventLog(pbcsConstants.EVT_RENAME, Integer.toString(jTable1.getColumnCount()),
@@ -1386,10 +1380,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
 //                      dlManager.updateEventLog(pbcsConstants.EVT_DELETE_COLUMN, Integer.toString(rightCol.getSelectedIndex()),
 //                              Integer.toString(rightCol.getSelectedIndex()), colHeader.getText());
-                        dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+                        dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(),
                                 rightCol.getSelectedItem().toString(), splitChar.getText(), true);
                     } else {
-                        dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(), 
+                        dlManager.duplicateColumn(jTable1, colHeader.getText(), leftCol.getSelectedItem().toString(),
                                 rightCol.getSelectedItem().toString(), splitChar.getText(), false);
                         dlManager.updateEventLog(pbcsConstants.EVT_CREATE_JOIN, jTable1.getColumnModel().getColumnIndex(leftCol.getSelectedItem().toString())
                                 + " " + jTable1.getColumnModel().getColumnIndex(rightCol.getSelectedItem().toString()),
@@ -1400,16 +1394,16 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         arrIgnoreColumn.add("");
                     }
                 }
-            } else if (columnAction.getSelectedIndex() == 2){
+            } else if (columnAction.getSelectedIndex() == 2) {
                 Object[] splitCols = {
-                        //"Column", leftCol,
-                        "Split By", splitBy,
-                        "Delimiter/# of Characters", splitNum
+                    //"Column", leftCol,
+                    "Split By", splitBy,
+                    "Delimiter/# of Characters", splitNum
                 };
                 int optSplit = JOptionPane.showConfirmDialog(this.getParent(), splitCols, "Split Columns", JOptionPane.OK_CANCEL_OPTION);
                 if (optSplit == JOptionPane.OK_OPTION) {
                     boolean bSplitBy = false;
-                    if (splitBy.getSelectedIndex() == 1){
+                    if (splitBy.getSelectedIndex() == 1) {
                         bSplitBy = true;
                     }
                     dlManager.splitColumn(jTable1, bSplitBy, splitNum.getText());
@@ -1422,11 +1416,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     }
                 }
             }
-            
-            
-            
-            
-            
+
 //            switch (columnAction.getSelectedIndex()) {
 //                case 0:
 //
@@ -1500,8 +1490,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
         int returnVal = fc.showOpenDialog(null);
-        
-        if (returnVal == JFileChooser.APPROVE_OPTION){
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             // Save Locally
 //            try {
 //                dlManager.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn);                
@@ -1514,8 +1504,8 @@ public class PBCSAdmin extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
-             //Upload File
-            try{
+            //Upload File
+            try {
                 PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
                 pbcsclient.uploadFile(fc.getSelectedFile());
                 refreshFMLists();
@@ -1528,16 +1518,16 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
         // TODO add your handling code here:
         //System.out.println(evt.getPropertyName());
-        if (evt.getPropertyName() == "model") {            
+        if (evt.getPropertyName() == "model") {
             btnLoadProfile.setEnabled(true);
             btnSaveProfile.setEnabled(true);
             btnExport.setEnabled(true);
 
-           for (int i = 0 ; i < jTable1.getColumnCount(); i++){
-               arrColNames.add(i,"");
-               arrDataColumn.add(i,"");
-               arrIgnoreColumn.add(i, "");
-           }
+            for (int i = 0; i < jTable1.getColumnCount(); i++) {
+                arrColNames.add(i, "");
+                arrDataColumn.add(i, "");
+                arrIgnoreColumn.add(i, "");
+            }
         }
     }//GEN-LAST:event_jTable1PropertyChange
 
@@ -1551,13 +1541,13 @@ public class PBCSAdmin extends javax.swing.JFrame {
         updateColProps();
     }//GEN-LAST:event_btnPrevFieldActionPerformed
 
-    public JTable getMainTable(){
+    public JTable getMainTable() {
         return jTable1;
     }
-    
+
     private void btnNextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextFieldActionPerformed
         // TODO add your handling code here:
-        
+
         jTable1.setColumnSelectionInterval(jTable1.getSelectedColumn() + 1, jTable1.getSelectedColumn() + 1);
         updateColProps();
     }//GEN-LAST:event_btnNextFieldActionPerformed
@@ -1576,7 +1566,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
             pbcsclient.getServices();
             // Refresh File Manager Lists
             refreshFMLists();
-            lblApp.setText(pbcsclient.getCurrentDetails("HP","AppName"));
+            lblApp.setText(pbcsclient.getCurrentDetails("HP", "AppName"));
             // Logged in & refreshed
             blnIsLoggedIn = true;
             JOptionPane.showMessageDialog(this.getParent(), "Login Successful");
@@ -1585,54 +1575,53 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 MainTabbedPane.setEnabledAt(i, true);
             }
 
-            if (pbcsConstants.DBG){
-                System.out.println("LCM Version: " + pbcsclient.getCurrentDetails("LCM","Version"));
-                System.out.println("LCM URL: " + pbcsclient.getCurrentDetails("LCM","URL"));
-                System.out.println("HP Version: " + pbcsclient.getCurrentDetails("HP","Version"));
-                System.out.println("HP URL: " + pbcsclient.getCurrentDetails("HP","URL"));
-                System.out.println("App Name: " + pbcsclient.getCurrentDetails("HP","AppName"));
-                System.out.println("App Type: " + pbcsclient.getCurrentDetails("HP","AppType"));
+            if (pbcsConstants.DBG) {
+                System.out.println("LCM Version: " + pbcsclient.getCurrentDetails("LCM", "Version"));
+                System.out.println("LCM URL: " + pbcsclient.getCurrentDetails("LCM", "URL"));
+                System.out.println("HP Version: " + pbcsclient.getCurrentDetails("HP", "Version"));
+                System.out.println("HP URL: " + pbcsclient.getCurrentDetails("HP", "URL"));
+                System.out.println("App Name: " + pbcsclient.getCurrentDetails("HP", "AppName"));
+                System.out.println("App Type: " + pbcsclient.getCurrentDetails("HP", "AppType"));
             }
-            
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex.getMessage());
             blnIsLoggedIn = false;
         }
     }//GEN-LAST:event_btnLoginActionPerformed
-    
-    private void refreshFMLists(){
+
+    private void refreshFMLists() {
         try {
             // TODO add your handling code here:
-           //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
-           //         pbcsUrl, pbcsConstants.DBG_PBCS_HPVER, "POC_CITA");
+            //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
+            //         pbcsUrl, pbcsConstants.DBG_PBCS_HPVER, "POC_CITA");
             ArrayList<String> arrHeaders = new ArrayList<>(4);
             arrHeaders.add("Name");
             arrHeaders.add("Last Modified");
             arrHeaders.add("Size");
             PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
             // New Table
-            
+
             ArrayList<Object[]> arrRows = new ArrayList<Object[]>();
             arrRows = pbcsclient.getPlanningFileDetails();
-            DefaultTableModel fileModel = fsManager.setTableModelFromStrArray(arrRows,arrHeaders);
+            DefaultTableModel fileModel = fsManager.setTableModelFromStrArray(arrRows, arrHeaders);
             tblFiles.setModel(fileModel);
             // Old Lists
             ArrayList<String> arrJobs = pbcsclient.listJobs();
             DefaultListModel listModel = new DefaultListModel();
-            for (String job: arrJobs){
+            for (String job : arrJobs) {
                 listModel.addElement(job);
             }
             lstJobs.setModel(listModel);
 
-
         } catch (Exception ex) {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-	}
-    
+        }
+    }
+
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
         // TODO add your handling code here:
-        if (lstJobs.getSelectedIndex() != -1 && tblFiles.getSelectedRow() != -1){
+        if (lstJobs.getSelectedIndex() != -1 && tblFiles.getSelectedRow() != -1) {
             try {
                 PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
                 int JID = pbcsclient.ImportData(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString(), lstJobs.getSelectedValue());
@@ -1646,14 +1635,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 //Logger.getLogger(PBCSAdmin1.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this.getParent(), "Error: " + ex.getMessage());
             }
-        }else {
+        } else {
             JOptionPane.showMessageDialog(this.getParent(), "Please Select a Load File & Job");
         }
     }//GEN-LAST:event_btnLoadActionPerformed
 
     private void btnCldRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldRefreshActionPerformed
         // TODO add your handling code here:
-         if(blnIsLoggedIn){
+        if (blnIsLoggedIn) {
             refreshFMLists();
         } else {
             JOptionPane.showMessageDialog(this.getParent(), "You are not logged in!");
@@ -1662,15 +1651,15 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnCldUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldUploadActionPerformed
         // TODO add your handling code here:
-        if(blnIsLoggedIn){
+        if (blnIsLoggedIn) {
             final JFileChooser fc = new JFileChooser();
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
             int returnVal = fc.showOpenDialog(null);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION){
-                 //Upload File
-                try{
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                //Upload File
+                try {
                     //PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword,
                     //    pbcsUrl, pbcsConstants.DBG_PBCS_HPVER, "POC_CITA");
                     PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
@@ -1687,16 +1676,16 @@ public class PBCSAdmin extends javax.swing.JFrame {
 
     private void btnCldDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCldDownloadActionPerformed
         try {
-            if (tblFiles.getSelectedRow() == -1){
+            if (tblFiles.getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(this.getParent(), "Please Select a File");
             } else {
                 final JFileChooser fc = new JFileChooser();
                 fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 fc.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
                 int returnVal = fc.showOpenDialog(null);
-                if (returnVal == JFileChooser.APPROVE_OPTION){
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
-                    pbcsclient.downloadFile(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString(),fc.getSelectedFile().toString());
+                    pbcsclient.downloadFile(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString(), fc.getSelectedFile().toString());
                     JOptionPane.showMessageDialog(this.getParent(), tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString() + " downloaded to " + fc.getSelectedFile().toString() + " successfully!");
                 }
             }
@@ -1712,9 +1701,9 @@ public class PBCSAdmin extends javax.swing.JFrame {
             pbcsclient.deleteFile(tblFiles.getValueAt(tblFiles.getSelectedRow(), 0).toString());
             refreshFMLists();
         } catch (Exception ex) {
-                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btnCldDeleteActionPerformed
 
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
@@ -1742,7 +1731,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         jdFindReplace.setVisible(true);
         dlManager.getFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
-        
+
     }//GEN-LAST:event_btnFindReplaceActionPerformed
 
     private void btnFnRCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRCloseActionPerformed
@@ -1770,7 +1759,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         dlManager.getFindReplaceItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         //dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), tblFindReplace, jTable1.getSelectedColumn(), jTable1.getColumnCount());
         updateColProps();
-        
+
     }//GEN-LAST:event_btnFnRPrevActionPerformed
 
     private void btnFnRNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRNextActionPerformed
@@ -1786,7 +1775,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnFnRAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRAddActionPerformed
         // TODO add your handling code here:
         //((DefaultTableModel) tblFindReplace.getModel()).addRow(new Object[tblFindReplace.getColumnCount()]);
-        ((DefaultTableModel) tblFindReplace.getModel()).addRow(new Object[]{ "", "", false, false});
+        ((DefaultTableModel) tblFindReplace.getModel()).addRow(new Object[]{"", "", false, false});
     }//GEN-LAST:event_btnFnRAddActionPerformed
 
     private void btnFnRRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnRRemoveActionPerformed
@@ -1796,7 +1785,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this.getParent(), "Please select a row to delete");
         }
-        
+
     }//GEN-LAST:event_btnFnRRemoveActionPerformed
 
     private void btnSaveFnRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveFnRActionPerformed
@@ -1807,16 +1796,16 @@ public class PBCSAdmin extends javax.swing.JFrame {
     private void btnAccRejActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccRejActionPerformed
         // TODO add your handling code here:
         //AcceptReject.main(args);
-       // jdFindReplace.setVisible(true);
+        // jdFindReplace.setVisible(true);
 //       try {
 //            this.export = new ExportTblToFile(jTable1, dlManager.hmAcceptRejectItems);
 //        } catch (Exception ex) {
 //            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-       //AcceptReject accRej = new AcceptReject(this,true);
-       accRej.setVisible(true);
-       dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), accRej.getAcceptRejectTable() , jTable1.getSelectedColumn(), jTable1.getColumnCount());
-       //export.setAcceptReject();
+        //AcceptReject accRej = new AcceptReject(this,true);
+        accRej.setVisible(true);
+        dlManager.getAcceptRejectItems(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString(), accRej.getAcceptRejectTable(), jTable1.getSelectedColumn(), jTable1.getColumnCount());
+        //export.setAcceptReject();
     }//GEN-LAST:event_btnAccRejActionPerformed
 
     /**
@@ -1845,21 +1834,29 @@ public class PBCSAdmin extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(PBCSAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                if (args.length == 5){
+                if (args.length == 5) {
                     new PBCSAdmin().setVisible(false);
                     //PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
                     PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4]);
                     clInt.transformAndLoad();
                     System.exit(0);
                 } else if (args.length == 0) {
-                new PBCSAdmin().setVisible(true);
+                    new PBCSAdmin().setVisible(true);
+                } else if (args.length == 1 && args[0].equals(pbcsConstants.ENCRYPT)) {
+                    try {
+                        new PBCSGetPropsFile().getPropValues(pbcsConstants.ENCRYPT);
+                    } catch (IOException ex) {
+                        System.out.println("Error opening config file: " + ex.getMessage());
+                    }
                 } else {
                     System.out.println("Invalid number of arguments specified. Please provide:");
                     System.out.println(" Profile\n Data File Path\n Delimiter\n PBCS Job Name\n Out File Name");
+                    System.out.println("To encrypt the password, enter the password in plain text in the config file");
+                    System.out.println("and call the jar file and pass the 'encrypt' parameter");
                     System.exit(0);
                 }
             }

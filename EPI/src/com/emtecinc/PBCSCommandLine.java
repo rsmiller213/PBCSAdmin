@@ -133,23 +133,24 @@ public class PBCSCommandLine extends PBCSAdmin {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
-//        try {
-//            pbcsInfo = new PBCSGetPropsFile().getPropValues();
-//        } catch (IOException ex) {
-//            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
-//            System.exit(1);
-//        }
-//        pbcsUrl = pbcsInfo.get(0);
-//        pbcsDomain = pbcsInfo.get(1);
-//        pbcsUserName = pbcsInfo.get(2);
-//        pbcsPassword = pbcsInfo.get(3);
-//        
-//        try {
-//            PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
-//            pbcsclient.uploadFile(flOutFile);
-//        } catch (Exception ex2) {
-//            System.out.println("Error: " + ex2.getMessage());
-//            System.exit(1);
-//        }
+        try {
+            pbcsInfo = new PBCSGetPropsFile().getPropValues(pbcsConstants.DECRYPT);
+        } catch (IOException ex) {
+            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
+        }
+        pbcsUrl = pbcsInfo.get(0);
+        pbcsDomain = pbcsInfo.get(1);
+        pbcsUserName = pbcsInfo.get(2);
+        pbcsPassword = pbcsInfo.get(3);
+        
+        try {
+            PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+            pbcsclient.uploadFile(flOutFile);
+            pbcsclient.ImportData(outFile, pbcsJobName);
+        } catch (Exception ex2) {
+            System.out.println("Error: " + ex2.getMessage());
+            System.exit(1);
+        }
     }
 }

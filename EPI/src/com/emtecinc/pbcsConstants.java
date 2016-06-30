@@ -45,4 +45,6 @@ public class pbcsConstants {
     public static final String AR_NUMBER = "Number";
     public static final String AR_ACCEPT = "Accept";
     public static final String AR_REJECT = "Reject";
+    public static final String ENCRYPT = "encrypt";
+    public static final String DECRYPT = "decrypt";
 }

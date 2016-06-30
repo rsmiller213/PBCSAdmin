@@ -8,6 +8,7 @@ package com.emtecinc;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -42,12 +43,12 @@ public class PBCSGetPropsFile {
         MessageDigest sha = null;
         try {
             key = myKey.getBytes("UTF-8");
-            System.out.println(key.length);
+            //System.out.println(key.length);
             sha = MessageDigest.getInstance("SHA-1");
             key = sha.digest(key);
             key = Arrays.copyOf(key, 16); // use only first 128 bit
-            System.out.println(key.length);
-            System.out.println(new String(key, "UTF-8"));
+            //System.out.println(key.length);
+            //System.out.println(new String(key, "UTF-8"));
             secretKey = new SecretKeySpec(key, "AES");
 
         } catch (NoSuchAlgorithmException e) {
@@ -59,7 +60,7 @@ public class PBCSGetPropsFile {
         }
     }
 
-    public ArrayList<String> getPropValues() throws IOException {
+    public ArrayList<String> getPropValues(String action) throws IOException {
 
         try {
             File jarPath = new File(PBCSAdmin.class.getProtectionDomain().getCodeSource().getLocation().getPath());
@@ -72,6 +73,7 @@ public class PBCSGetPropsFile {
 
             if (inputStream != null) {
                 prop.load(inputStream);
+                inputStream.close();
             } else {
                 throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
             }
@@ -86,18 +88,52 @@ public class PBCSGetPropsFile {
             result.add(prop.getProperty("PBCS_URL"));
             result.add(prop.getProperty("PBCS_DOMAIN"));
             result.add(prop.getProperty("PBCS_USER"));
-            result.add(prop.getProperty("PBCS_PASS"));
+//            result.add(prop.getProperty("PBCS_PASS"));
             setKey(prop.getProperty("PBCS_DOMAIN") + "." + prop.getProperty("PBCS_USER"));
-            encrypt(prop.getProperty("PBCS_PASS"));
+            if (action.equals(pbcsConstants.ENCRYPT)) {
+                encrypt(prop.getProperty("PBCS_PASS"));
+                setEncryptedPassConfigFile(result);
+            } else {
+                setEncryptedString(prop.getProperty("PBCS_PASS"));
+                decrypt(PBCSGetPropsFile.encryptedString);
+                result.add(PBCSGetPropsFile.decryptedString);
+            }
             //decrypt(PBCSGetPropsFile.encryptedString);
-            decrypt("Hello");
-            System.out.println("decrypt " + PBCSGetPropsFile.decryptedString);
+            //decrypt("Hello");
+            //System.out.println("decrypt " + PBCSGetPropsFile.decryptedString);
         } catch (Exception e) {
             System.out.println("Exception: " + e);
-        } finally {
-            inputStream.close();
         }
         return result;
+    }
+
+    private void setEncryptedPassConfigFile(ArrayList<String> propValues) {
+        try {
+            File jarPath = new File(PBCSAdmin.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            String propertiesPath = jarPath.getParentFile().getAbsolutePath();
+            Properties prop = new Properties();
+            String propFileName = "./PBCSEnv.properties";
+            inputStream = new FileInputStream((propertiesPath + "/PBCSEnv.properties"));
+            FileOutputStream outStream = new FileOutputStream(propertiesPath + "/PBCSEnv.properties");
+
+            //inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+            
+
+            if (inputStream != null) {
+                prop.load(inputStream);
+                inputStream.close();
+            } else {
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            }
+            prop.setProperty("PBCS_URL", result.get(0));
+            prop.setProperty("PBCS_DOMAIN", result.get(1));
+            prop.setProperty("PBCS_USER", result.get(2));
+            prop.setProperty("PBCS_PASS", getEncryptedString());
+            prop.store(outStream, null);
+            outStream.close();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+        }
     }
 
     public static String getDecryptedString() {
