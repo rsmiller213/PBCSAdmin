@@ -147,7 +147,7 @@ public class PBCSCommandLine extends PBCSAdmin {
         try {
             PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
             pbcsclient.uploadFile(flOutFile);
-            pbcsclient.ImportData(outFile, pbcsJobName);
+            pbcsclient.ImportData(flOutFile.getName(), pbcsJobName);
         } catch (Exception ex2) {
             System.out.println("Error: " + ex2.getMessage());
             System.exit(1);

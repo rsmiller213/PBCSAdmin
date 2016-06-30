@@ -10,7 +10,7 @@ package com.emtecinc;
  * @author Randall.Miller
  */
 public class pbcsConstants {
-    public static final Boolean DBG = true;
+    public static final Boolean DBG = false;
     public static final String DBG_PBCS_URL = "https://emtec-emtec.pbcs.us2.oraclecloud.com";
     public static final String DBG_PBCS_DOMAIN = "emtec";
     public static final String DBG_PBCS_USER = "epmcloud1";

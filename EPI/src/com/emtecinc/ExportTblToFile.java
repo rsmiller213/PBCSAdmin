@@ -335,7 +335,53 @@ public class ExportTblToFile {
         for (int i = 0; i < jTable.getRowCount(); i++) {
             //System.out.println(skipRows.indexOf((Object) i));
             //if (acceptRows.indexOf((Object) i) != -1 || skipRows.indexOf((Object) i) == -1 ) {
-            if (!skipRows.contains(i)) {
+            if (!skipRows.isEmpty() && !acceptRows.isEmpty()) {
+                if (!skipRows.contains(i)) {
+                    if (acceptRows.contains(i)) {
+                        bw.newLine();
+                        for (int j = 0; j < jTable.getColumnCount(); j++) {
+                            //if (arrDataColumn[j] == 0) {
+                            if (arrDataColumn.size() > j) {
+                                //if (!arrDataColumn.get(j).equals("")) {
+                                if (arrDataColumn.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                    //if (j <= arrDataColumn.size()) {
+                                    //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
+                                    bw.write((String) (jTable.getValueAt(i, j)));
+                                    bw.write("\t");
+                                    //} else if (!arrIgnoreField.get(j).equals("")) {
+                                } else if (arrIgnoreField.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                    continue;
+                                } else {
+                                    bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
+                                    bw.write("\t");
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (!skipRows.isEmpty() && acceptRows.isEmpty()) {
+                if (!skipRows.contains(i)) {
+                    bw.newLine();
+                    for (int j = 0; j < jTable.getColumnCount(); j++) {
+                        //if (arrDataColumn[j] == 0) {
+                        if (arrDataColumn.size() > j) {
+                            //if (!arrDataColumn.get(j).equals("")) {
+                            if (arrDataColumn.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                //if (j <= arrDataColumn.size()) {
+                                //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
+                                bw.write((String) (jTable.getValueAt(i, j)));
+                                bw.write("\t");
+                                //} else if (!arrIgnoreField.get(j).equals("")) {
+                            } else if (arrIgnoreField.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                                continue;
+                            } else {
+                                bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
+                                bw.write("\t");
+                            }
+                        }
+                    }
+                }
+            } else if (skipRows.isEmpty() && !acceptRows.isEmpty()) {
                 if (acceptRows.contains(i)) {
                     bw.newLine();
                     for (int j = 0; j < jTable.getColumnCount(); j++) {
@@ -357,9 +403,27 @@ public class ExportTblToFile {
                         }
                     }
                 }
-
             } else {
-                continue;
+                //continue;
+                bw.newLine();
+                for (int j = 0; j < jTable.getColumnCount(); j++) {
+                    //if (arrDataColumn[j] == 0) {
+                    if (arrDataColumn.size() > j) {
+                        //if (!arrDataColumn.get(j).equals("")) {
+                        if (arrDataColumn.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                            //if (j <= arrDataColumn.size()) {
+                            //bw.write((String) (jTable.getValueAt(i, jTable.getColumnModel().getColumnIndex(arrDataColumn.get(j)))));
+                            bw.write((String) (jTable.getValueAt(i, j)));
+                            bw.write("\t");
+                            //} else if (!arrIgnoreField.get(j).equals("")) {
+                        } else if (arrIgnoreField.get(j).equals(jTable.getColumnModel().getColumn(j).getHeaderValue().toString())) {
+                            continue;
+                        } else {
+                            bw.write((String) ("\"" + jTable.getValueAt(i, j) + "\""));
+                            bw.write("\t");
+                        }
+                    }
+                }
             }
         }
         bw.close();
