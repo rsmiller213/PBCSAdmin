@@ -426,15 +426,15 @@ public class PBCSActions {
         int resStatus = json.getInt("status");
         if (resStatus == 0) {
             if (json.get("items").equals(JSONObject.NULL)) {
-                System.out.println("No files found");
+   //             System.out.println("No files found");
             } else {
-                System.out.println("List of files :");
+ //               System.out.println("List of files :");
                 JSONArray itemsArray = json.getJSONArray("items");
                 JSONObject jObj = null;
                 for (int i = 0; i < itemsArray.length(); i++) {
                     jObj = (JSONObject) itemsArray.get(i);
                     strArray.add(jObj.getString("name"));
-                    System.out.println(jObj.getString("name"));
+//                    System.out.println(jObj.getString("name"));
                 }
             }
         }

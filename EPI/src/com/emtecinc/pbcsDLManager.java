@@ -699,7 +699,7 @@ public class pbcsDLManager {
 
     public void updateEventLog(String operation, String movedFrom, String movedTo, String characters) {
         eventRows.add(new String[]{operation, movedFrom, movedTo, characters});
-        System.out.println(operation + " " + movedFrom + " " + movedTo + " " + characters);
+        //System.out.println(operation + " " + movedFrom + " " + movedTo + " " + characters);
     }
 
     public void saveFile() {
@@ -803,7 +803,7 @@ public class pbcsDLManager {
                 eventRowsProfile = (ArrayList<String[]>) importProfile;
                 for (Iterator it = eventRowsProfile.iterator(); it.hasNext();) {
                     String[] currLine = (String[]) it.next();
-                    System.out.println(Arrays.toString(currLine));
+                    //System.out.println(Arrays.toString(currLine));
                     if (currLine[0].equals(pbcsConstants.EVT_CREATE_JOIN)) {
                         hm.putAll(setImportProfile(jTable, currLine[0], Integer.parseInt(currLine[1].split(" ")[0]), Integer.parseInt(currLine[1].split(" ")[1]), currLine[3]));
                         //System.out.println(Arrays.toString(arr));
@@ -1017,7 +1017,7 @@ public class pbcsDLManager {
     public void updateFindReplaceHeader(String oldColumnHeader, String newColumnHeader) {
         if (!hmFindReplaceItems.isEmpty()) {
             if (hmFindReplaceItems.containsKey(oldColumnHeader)) {
-                System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
+                //System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
                 Vector data = (Vector) hmFindReplaceItems.get(oldColumnHeader);
                 hmFindReplaceItems.remove(oldColumnHeader);
                 hmFindReplaceItems.put(newColumnHeader, data);
@@ -1025,7 +1025,7 @@ public class pbcsDLManager {
         }
         if (!hmAcceptRejectItems.isEmpty()) {
             if (hmAcceptRejectItems.containsKey(oldColumnHeader)) {
-                System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
+                //System.out.println("old: " + oldColumnHeader + " new: " + newColumnHeader);
                 Vector data = (Vector) hmAcceptRejectItems.get(oldColumnHeader);
                 hmAcceptRejectItems.remove(oldColumnHeader);
                 hmAcceptRejectItems.put(newColumnHeader, data);
@@ -1092,7 +1092,7 @@ public class pbcsDLManager {
             for (int i = 0; i < columns.size(); i++) {
                 Vector allData = new Vector();
                 if (hmFindReplaceItems.containsKey(columns.get(i))) {
-                    System.out.println(i + " : " + columns.get(i));
+                    //System.out.println(i + " : " + columns.get(i));
                     allData = (Vector) hmFindReplaceItems.get(columns.get(i));
                     if (!allData.isEmpty()) {
                         for (Iterator it = allData.iterator(); it.hasNext();) {

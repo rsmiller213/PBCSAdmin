@@ -1158,7 +1158,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
         //Set Text Boxes based on HashMap
         Object pre = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Prefix");
         Object suf = hm.get(jTable1.getColumnModel().getColumn(jTable1.getSelectedColumn()).getHeaderValue().toString() + "|Suffix");
-        System.out.println(Arrays.toString(hm.entrySet().toArray()));
+        //System.out.println(Arrays.toString(hm.entrySet().toArray()));
         if (pre != null) {
             txtPrefix.setText(pre.toString());
         } else {

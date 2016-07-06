@@ -146,6 +146,13 @@ public class PBCSCommandLine extends PBCSAdmin {
         
         try {
             PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+            ArrayList<String> pbcsFiles = pbcsclient.listFilesReturn();
+            for (String fileName: pbcsFiles) {
+                if (fileName.equals(flOutFile.getName())) {
+                    System.out.println("File " + fileName + " already exists. Deleting file first...");
+                    pbcsclient.deleteFile(fileName);
+                }
+            }
             pbcsclient.uploadFile(flOutFile);
             pbcsclient.ImportData(flOutFile.getName(), pbcsJobName);
         } catch (Exception ex2) {
