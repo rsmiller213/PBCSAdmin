@@ -16,8 +16,10 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -1840,9 +1842,46 @@ public class PBCSAdmin extends javax.swing.JFrame {
             public void run() {
                 if (args.length == 5) {
                     new PBCSAdmin().setVisible(false);
-                    //PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
-                    PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4]);
-                    clInt.transformAndLoad();
+                    int lineCount = 0;
+                    int linesToLoad = 200000;
+                    int lineCounter = 0;
+                    File flOutFile = new File(args[4]);
+                    try {
+                        //PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
+                        lineCount = countLines(new File(args[1]));
+                        if (flOutFile.exists()) {
+                            flOutFile.delete();
+                        }
+                    } catch (IOException ex) {
+                        //Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println(ex);
+                    }
+                    if (lineCount > lineCounter) {
+                        while (lineCount > lineCounter) {
+                            PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
+                            clInt.transformAndLoad(lineCount, linesToLoad, lineCounter);
+                            lineCounter = lineCounter + linesToLoad;
+                            System.gc();
+                        }
+                        try {
+                            PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+                            ArrayList<String> pbcsFiles = pbcsclient.listFilesReturn();
+                            for (String fileName : pbcsFiles) {
+                                if (fileName.equals(flOutFile.getName())) {
+                                    System.out.println("File " + fileName + " already exists. Deleting file first...");
+                                    pbcsclient.deleteFile(fileName);
+                                }
+                            }
+                            pbcsclient.uploadFile(flOutFile);
+                            pbcsclient.ImportData(flOutFile.getName(), args[2]);
+                        } catch (Exception ex2) {
+                            System.out.println("Error: " + ex2.getMessage());
+                            System.exit(1);
+                        }
+                    } else {
+                        PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], false);
+                        clInt.transformAndLoad(lineCount, lineCount, lineCounter);
+                    }
                     System.exit(0);
                 } else if (args.length == 0) {
                     new PBCSAdmin().setVisible(true);
@@ -1858,6 +1897,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     System.out.println("To encrypt the password, enter the password in plain text in the config file");
                     System.out.println("and call the jar file and pass the 'encrypt' parameter");
                     System.exit(0);
+                }
+            }
+
+            private int countLines(File aFile) throws IOException {
+                LineNumberReader reader = null;
+                try {
+                    reader = new LineNumberReader(new FileReader(aFile));
+                    while ((reader.readLine()) != null);
+                    return reader.getLineNumber();
+                } catch (Exception ex) {
+                    return -1;
+                } finally {
+                    if (reader != null) {
+                        reader.close();
+                    }
                 }
             }
         });

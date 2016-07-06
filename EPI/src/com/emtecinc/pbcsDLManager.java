@@ -66,7 +66,7 @@ public class pbcsDLManager {
      * @param bHeaderRow boolean that determines whether a header row is in the
      * file or now
      * @return returns a DefaultTableModel
-     */ 
+     */
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow) {
         DefaultTableModel model = null;
         boolean isFirstRow = true;
@@ -175,24 +175,27 @@ public class pbcsDLManager {
                 for (int j = 0; j < nextLine.length; j++) {
                     nextLine[j] = nextLine[j].trim();
                 }
-                lineNumber++;
-                if (lineNumber >= startLine) {
+                if (lineNumber == 0) {
+                    if (bHeaderRow) {
+                        model = new DefaultTableModel(nextLine, 0);
+                        isFirstRow = false;
+                        counter++;
+                    } else {
+                        model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
+                        model.addRow(nextLine);
+                        isFirstRow = false;
+                        counter++;
+                    }
+                }
+                if (lineNumber > startLine) {
                     if (isFirstRow) {
-                        if (bHeaderRow) {
-                            model = new DefaultTableModel(nextLine, 0);
-                            isFirstRow = false;
-                            counter++;
-                        } else {
-                            model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
-                            model.addRow(nextLine);
-                            isFirstRow = false;
-                            counter++;
-                        }
+
                     } else if (model != null) {
                         model.addRow(nextLine);
                         counter++;
                     }
                 }
+                lineNumber++;
             }
             reader.close();
         } catch (Exception ex) {
@@ -247,7 +250,6 @@ public class pbcsDLManager {
 //        }
 //        return model;
 //    }
-    
     public DefaultTableModel findReplaceField(JTable jTable, String strPrefix, String strSuffix, int index) {
         //int index = jTable.convertColumnIndexToModel(jTable.getSelectedColumn());
         updateColumnModelData(jTable);
@@ -278,50 +280,50 @@ public class pbcsDLManager {
         }
         return model;
     }
-    
+
     public DefaultTableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase, int index) {
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         Vector columns = new Vector();
         Vector vRows = ((DefaultTableModel) jTable.getModel()).getDataVector();
         Vector newRows = new Vector();
         int newIndex = jTable.convertColumnIndexToModel(index);
-        
+
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
         }
         try {
             Object[] rows = new Object[jTable.getRowCount()];
-                for (int i = 0; i < vRows.size(); i++) {
-                    if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
-                        rows[i] = ((Vector) vRows.elementAt(i)).elementAt(index);
-                        if (rows[i].equals(strFind)) {
-                            rows[i] = strReplace;
-                            //model.setValueAt(rows[i], i, index);
-                            ((Vector) vRows.elementAt(i)).set(index, rows[i]);
-                        } else {
-                            rows[i] = model.getValueAt(i, index);
-                            //model.setValueAt(rows[i], i, index);
-                            ((Vector) vRows.elementAt(i)).set(index, rows[i]);
-                        }
-                    } else if (strFind != null && !bMatchWord && bMatchCase || strReplace != null && !bMatchWord && bMatchCase) {
-                        rows[i] = model.getValueAt(i, index);
-                        rows[i] = rows[i].toString().replace(strFind, strReplace);
+            for (int i = 0; i < vRows.size(); i++) {
+                if (strFind != null && bMatchWord || strReplace != null && bMatchWord) {
+                    rows[i] = ((Vector) vRows.elementAt(i)).elementAt(index);
+                    if (rows[i].equals(strFind)) {
+                        rows[i] = strReplace;
                         //model.setValueAt(rows[i], i, index);
                         ((Vector) vRows.elementAt(i)).set(index, rows[i]);
-                    } else if (strFind != null && !bMatchWord && !bMatchCase || strReplace != null && !bMatchWord && !bMatchCase) {
+                    } else {
                         rows[i] = model.getValueAt(i, index);
-                        rows[i] = rows[i].toString().replaceAll("(?i)" + Pattern.quote(strFind), strReplace);
                         //model.setValueAt(rows[i], i, index);
                         ((Vector) vRows.elementAt(i)).set(index, rows[i]);
                     }
+                } else if (strFind != null && !bMatchWord && bMatchCase || strReplace != null && !bMatchWord && bMatchCase) {
+                    rows[i] = model.getValueAt(i, index);
+                    rows[i] = rows[i].toString().replace(strFind, strReplace);
+                    //model.setValueAt(rows[i], i, index);
+                    ((Vector) vRows.elementAt(i)).set(index, rows[i]);
+                } else if (strFind != null && !bMatchWord && !bMatchCase || strReplace != null && !bMatchWord && !bMatchCase) {
+                    rows[i] = model.getValueAt(i, index);
+                    rows[i] = rows[i].toString().replaceAll("(?i)" + Pattern.quote(strFind), strReplace);
+                    //model.setValueAt(rows[i], i, index);
+                    ((Vector) vRows.elementAt(i)).set(index, rows[i]);
                 }
-                model.setDataVector(vRows, columns);
+            }
+            model.setDataVector(vRows, columns);
         } catch (Throwable x) {
             JOptionPane.showMessageDialog(null, "Error: Please ensure you select a field. Error: " + x.getMessage());
         }
         return model;
     }
-    
+
 //    public DefaultTableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
 //        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
 //        Vector columns = new Vector();
@@ -365,7 +367,6 @@ public class pbcsDLManager {
 //        }
 //        return model;
 //    }
-
 //    public TableModel findReplaceField(JTable jTable, String strFind, String strReplace, Boolean bMatchWord, Boolean bMatchCase) {
 //        TableModel model = jTable.getModel();
 //        try {
@@ -399,7 +400,6 @@ public class pbcsDLManager {
 //        }
 //        return model;
 //    }
-    
     /**
      * Creates table model from delimited file using Open CSV.
      *
@@ -608,7 +608,6 @@ public class pbcsDLManager {
                 bw.write("\t");
             }
         }
-
         for (int i = 0; i < jTable.getRowCount(); i++) {
             bw.newLine();
             for (int j = 0; j < jTable.getColumnCount(); j++) {
@@ -626,6 +625,7 @@ public class pbcsDLManager {
             }
         }
         bw.close();
+        fw.close();
     }
 
     public ArrayList<String> getTableColumnNames(JTable jTable) {
@@ -931,13 +931,13 @@ public class pbcsDLManager {
         //Vector rows = ((DefaultTableModel) jTable.getModel()).getDataVector();
         Vector rows = (Vector) ((DefaultTableModel) jTable.getModel()).getDataVector().clone();
         //Vector rows = new Vector();
-        
+
         String[][] rowData = new String[jTable.getRowCount()][jTable.getColumnCount()];
         //System.out.println(Arrays.toString(rows.toArray()));
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             columns.add(jTable.getColumnModel().getColumn(i).getHeaderValue());
         }
-        
+
         for (int i = 0; i < jTable.getRowCount(); i++) {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 //System.out.println(i);

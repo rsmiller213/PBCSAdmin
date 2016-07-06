@@ -7,8 +7,10 @@ package com.emtecinc;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -317,17 +319,20 @@ public class ExportTblToFile {
         }
         FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
         BufferedWriter bw = new BufferedWriter(fw);
-        for (int i = 0; i < jTable.getColumnCount(); i++) {
-            //bw.write(jTable.getColumnName(i));
-            //if (arrDataColumn[i] == 1){
-            //System.out.println(Arrays.toString(arrDataColumn.toArray()));
-            if (arrDataColumn.size() > i) {
-                //if (!arrDataColumn.get(i).equals("")) {
-                if (arrDataColumn.get(i).equals(jTable.getColumnModel().getColumn(i).getHeaderValue().toString())) {
-                    //System.out.println("Data Col Error: " + arrDataColumn.get(i));
-                    //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
-                    bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
-                    bw.write("\t");
+        int lineCount = countLines(file);
+        if (lineCount == 0) {
+            for (int i = 0; i < jTable.getColumnCount(); i++) {
+                //bw.write(jTable.getColumnName(i));
+                //if (arrDataColumn[i] == 1){
+                //System.out.println(Arrays.toString(arrDataColumn.toArray()));
+                if (arrDataColumn.size() > i) {
+                    //if (!arrDataColumn.get(i).equals("")) {
+                    if (arrDataColumn.get(i).equals(jTable.getColumnModel().getColumn(i).getHeaderValue().toString())) {
+                        //System.out.println("Data Col Error: " + arrDataColumn.get(i));
+                        //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
+                        bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
+                        bw.write("\t");
+                    }
                 }
             }
         }
@@ -427,6 +432,7 @@ public class ExportTblToFile {
             }
         }
         bw.close();
+        fw.close();
     }
 //    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine) throws IOException {
 //        setAcceptReject();
@@ -491,4 +497,19 @@ public class ExportTblToFile {
 ////        }
 //        bw.close();
 //    }
+
+    private int countLines(File aFile) throws IOException {
+        LineNumberReader reader = null;
+        try {
+            reader = new LineNumberReader(new FileReader(aFile));
+            while ((reader.readLine()) != null);
+            return reader.getLineNumber();
+        } catch (Exception ex) {
+            return -1;
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 }

@@ -37,14 +37,14 @@ public class PBCSCommandLine extends PBCSAdmin {
     JTable exportTable = new JTable();
     Boolean bAppend = false;
 
-//    public PBCSCommandLine(String profileLocation, String dataFile, String delim, String pbcsJobName, String outFile, Boolean bAppend) {
-    public PBCSCommandLine(String profileLocation, String dataFile, String delim, String pbcsJobName, String outFile) {
+    public PBCSCommandLine(String profileLocation, String dataFile, String delim, String pbcsJobName, String outFile, Boolean bAppend) {
+//    public PBCSCommandLine(String profileLocation, String dataFile, String delim, String pbcsJobName, String outFile) {
         this.profileLocation = profileLocation;
         this.pbcsJobName = pbcsJobName;
         this.dataFile = dataFile;
         this.delim = delim;
         this.outFile = outFile;
-        //this.bAppend = bAppend;
+        this.bAppend = bAppend;
         ArrayList<String> tas = new ArrayList<String>();
 
     }
@@ -85,8 +85,8 @@ public class PBCSCommandLine extends PBCSAdmin {
         }
     }
     
-    public void transformAndLoad() {
-        //public void transformAndLoad(int lineCount, int numberToLoad, int startLine) {
+    //public void transformAndLoad() {
+    public void transformAndLoad(int lineCount, int numberToLoad, int startLine) {
         File flDataFile = new File(dataFile);
         File flProfile = new File(profileLocation);
         File flOutFile = new File(outFile);
@@ -100,9 +100,9 @@ public class PBCSCommandLine extends PBCSAdmin {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PBCSCommandLine.class.getName()).log(Level.SEVERE, null, ex);
         }
-        DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, bHeaderRow);
+    //    DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, bHeaderRow);
         //DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, false);
-        //DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, false, numberToLoad, startLine);
+        DefaultTableModel mainModel = dlManager.getModelFromCsvFile(flDataFile, delim, bHeaderRow, numberToLoad, startLine);
         exportTable.setModel(mainModel);
         ArrayList<String> pbcsInfo = null;
         for (int i = 0; i < exportTable.getColumnCount(); i++) {
@@ -117,10 +117,10 @@ public class PBCSCommandLine extends PBCSAdmin {
             System.exit(1);
         }
         try {
-            if (flOutFile.exists()) {
-                flOutFile.delete();
-                flOutFile.createNewFile();
-            }
+//            if (flOutFile.exists()) {
+//                flOutFile.delete();
+//                flOutFile.createNewFile();
+//            }
             this.export = new ExportTblToFile(exportTable, dlManager.hmAcceptRejectItems);
             if (bAppend) {
                 export.exportFileFromTable(exportTable, flOutFile, arrDataColumn, arrIgnoreColumn, true, true);
@@ -144,20 +144,20 @@ public class PBCSCommandLine extends PBCSAdmin {
         pbcsUserName = pbcsInfo.get(2);
         pbcsPassword = pbcsInfo.get(3);
         
-        try {
-            PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
-            ArrayList<String> pbcsFiles = pbcsclient.listFilesReturn();
-            for (String fileName: pbcsFiles) {
-                if (fileName.equals(flOutFile.getName())) {
-                    System.out.println("File " + fileName + " already exists. Deleting file first...");
-                    pbcsclient.deleteFile(fileName);
-                }
-            }
-            pbcsclient.uploadFile(flOutFile);
-            pbcsclient.ImportData(flOutFile.getName(), pbcsJobName);
-        } catch (Exception ex2) {
-            System.out.println("Error: " + ex2.getMessage());
-            System.exit(1);
-        }
+//        try {
+//            PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
+//            ArrayList<String> pbcsFiles = pbcsclient.listFilesReturn();
+//            for (String fileName: pbcsFiles) {
+//                if (fileName.equals(flOutFile.getName())) {
+//                    System.out.println("File " + fileName + " already exists. Deleting file first...");
+//                    pbcsclient.deleteFile(fileName);
+//                }
+//            }
+//            pbcsclient.uploadFile(flOutFile);
+//            pbcsclient.ImportData(flOutFile.getName(), pbcsJobName);
+//        } catch (Exception ex2) {
+//            System.out.println("Error: " + ex2.getMessage());
+//            System.exit(1);
+//        }
     }
 }
