@@ -1502,7 +1502,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
 //            }
             try {
                 this.export = new ExportTblToFile(jTable1, dlManager.hmAcceptRejectItems);
-                export.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn, false, false);
+                export.exportFileFromTable(jTable1, fc.getSelectedFile(), arrDataColumn, arrIgnoreColumn, false, false, true);
             } catch (Exception ex) {
                 Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1848,7 +1848,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     File flOutFile = new File(args[4]);
                     try {
                         //PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
-                        lineCount = countLines(new File(args[1]));
+                        lineCount = countLines(new File(args[1])) + 1;
                         if (flOutFile.exists()) {
                             flOutFile.delete();
                         }
@@ -1859,7 +1859,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     if (lineCount > lineCounter) {
                         while (lineCount > lineCounter) {
                             PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
-                            clInt.transformAndLoad(lineCount, linesToLoad, lineCounter);
+                            clInt.transformAndLoad(lineCount, linesToLoad, lineCounter, false, true);
                             lineCounter = lineCounter + linesToLoad;
                             System.gc();
                         }
@@ -1873,14 +1873,14 @@ public class PBCSAdmin extends javax.swing.JFrame {
                                 }
                             }
                             pbcsclient.uploadFile(flOutFile);
-                            pbcsclient.ImportData(flOutFile.getName(), args[2]);
+                            pbcsclient.ImportData(flOutFile.getName(), args[3]);
                         } catch (Exception ex2) {
                             System.out.println("Error: " + ex2.getMessage());
                             System.exit(1);
                         }
                     } else {
                         PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], false);
-                        clInt.transformAndLoad(lineCount, lineCount, lineCounter);
+                        clInt.transformAndLoad(lineCount, lineCount, lineCounter, true, true);
                     }
                     System.exit(0);
                 } else if (args.length == 0) {
@@ -1890,6 +1890,21 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         new PBCSGetPropsFile().getPropValues(pbcsConstants.ENCRYPT);
                     } catch (IOException ex) {
                         System.out.println("Error opening config file: " + ex.getMessage());
+                    }
+                } else if (args.length == 6 && args[0].equals(pbcsConstants.TRANSFORM)) {
+                    int lineCount = 0;
+                    PBCSCommandLine clInt = new PBCSCommandLine(args[2], args[3], args[4], "", args[5], false);
+                    try {
+                        lineCount = lineCount = countLines(new File(args[3])) + 1;
+                    } catch (IOException ex) {
+                        Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    if (args[1].equals(pbcsConstants.HEADER)) {
+                        clInt.transformAndLoad(lineCount, lineCount, 1, false, true);
+                        System.exit(0);
+                    } else {
+                        clInt.transformAndLoad(lineCount, lineCount, 1, false, false);
+                        System.exit(0);
                     }
                 } else {
                     System.out.println("Invalid number of arguments specified. Please provide:");

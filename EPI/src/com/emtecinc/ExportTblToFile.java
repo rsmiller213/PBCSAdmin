@@ -265,7 +265,7 @@ public class ExportTblToFile {
         //System.out.println(Arrays.toString(skipRows.toArray()));
     }
 
-    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine, boolean bAppend) throws IOException {
+    public void exportFileFromTable(JTable jTable, File file, ArrayList<String> arrDataColumn, ArrayList<String> arrIgnoreField, boolean bCommandLine, boolean bAppend, boolean bOutHeader) throws IOException {
         setAcceptReject();
         //Start update of index in ArrayList. When new columns are added the index for data and ignore gets out of wack so this takes care of that
         if (!arrDataColumn.isEmpty()) {
@@ -319,31 +319,34 @@ public class ExportTblToFile {
         }
         FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
         BufferedWriter bw = new BufferedWriter(fw);
-        int lineCount = countLines(file);
-        if (lineCount == 0) {
-            for (int i = 0; i < jTable.getColumnCount(); i++) {
-                //bw.write(jTable.getColumnName(i));
-                //if (arrDataColumn[i] == 1){
-                //System.out.println(Arrays.toString(arrDataColumn.toArray()));
-                if (arrDataColumn.size() > i) {
-                    //if (!arrDataColumn.get(i).equals("")) {
-                    if (arrDataColumn.get(i).equals(jTable.getColumnModel().getColumn(i).getHeaderValue().toString())) {
-                        //System.out.println("Data Col Error: " + arrDataColumn.get(i));
-                        //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
-                        bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
-                        bw.write("\t");
+        if (bOutHeader) {
+            int lineCount = countLines(file);
+            if (lineCount == 0) {
+                for (int i = 0; i < jTable.getColumnCount(); i++) {
+                    //bw.write(jTable.getColumnName(i));
+                    //if (arrDataColumn[i] == 1){
+                    //System.out.println(Arrays.toString(arrDataColumn.toArray()));
+                    if (arrDataColumn.size() > i) {
+                        //if (!arrDataColumn.get(i).equals("")) {
+                        if (arrDataColumn.get(i).equals(jTable.getColumnModel().getColumn(i).getHeaderValue().toString())) {
+                            //System.out.println("Data Col Error: " + arrDataColumn.get(i));
+                            //bw.write("\"" + jTable.getColumnModel().getColumn(jTable.getColumnModel().getColumnIndex(arrDataColumn.get(i))).getHeaderValue().toString() + "\"");
+                            bw.write("\"" + jTable.getColumnModel().getColumn(i).getHeaderValue().toString() + "\"");
+                            bw.write("\t");
+                        }
                     }
                 }
             }
+            bw.newLine();
         }
-
+        
         for (int i = 0; i < jTable.getRowCount(); i++) {
             //System.out.println(skipRows.indexOf((Object) i));
             //if (acceptRows.indexOf((Object) i) != -1 || skipRows.indexOf((Object) i) == -1 ) {
             if (!skipRows.isEmpty() && !acceptRows.isEmpty()) {
                 if (!skipRows.contains(i)) {
                     if (acceptRows.contains(i)) {
-                        bw.newLine();
+                        if (i > 0) {bw.newLine();}
                         for (int j = 0; j < jTable.getColumnCount(); j++) {
                             //if (arrDataColumn[j] == 0) {
                             if (arrDataColumn.size() > j) {
@@ -366,7 +369,7 @@ public class ExportTblToFile {
                 }
             } else if (!skipRows.isEmpty() && acceptRows.isEmpty()) {
                 if (!skipRows.contains(i)) {
-                    bw.newLine();
+                    if (i > 0) {bw.newLine();}
                     for (int j = 0; j < jTable.getColumnCount(); j++) {
                         //if (arrDataColumn[j] == 0) {
                         if (arrDataColumn.size() > j) {
@@ -388,7 +391,7 @@ public class ExportTblToFile {
                 }
             } else if (skipRows.isEmpty() && !acceptRows.isEmpty()) {
                 if (acceptRows.contains(i)) {
-                    bw.newLine();
+                    if (i > 0) {bw.newLine();}
                     for (int j = 0; j < jTable.getColumnCount(); j++) {
                         //if (arrDataColumn[j] == 0) {
                         if (arrDataColumn.size() > j) {
@@ -410,7 +413,7 @@ public class ExportTblToFile {
                 }
             } else {
                 //continue;
-                bw.newLine();
+                if (i > 0) {bw.newLine();}
                 for (int j = 0; j < jTable.getColumnCount(); j++) {
                     //if (arrDataColumn[j] == 0) {
                     if (arrDataColumn.size() > j) {

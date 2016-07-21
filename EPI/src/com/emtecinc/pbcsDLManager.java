@@ -182,18 +182,14 @@ public class pbcsDLManager {
                         counter++;
                     } else {
                         model = new DefaultTableModel(getTableColumnHeaders(nextLine.length), 0);
-                        model.addRow(nextLine);
+                        //model.addRow(nextLine);
                         isFirstRow = false;
                         counter++;
                     }
                 }
-                if (lineNumber > startLine) {
-                    if (isFirstRow) {
-
-                    } else if (model != null) {
-                        model.addRow(nextLine);
-                        counter++;
-                    }
+                if (model != null) {
+                    model.addRow(nextLine);
+                    counter++;
                 }
                 lineNumber++;
             }
@@ -414,7 +410,10 @@ public class pbcsDLManager {
 
         try {
             System.out.println("Opening: " + file.getName() + ".");
+            //java.io.FileReader fr = new java.io.FileReader(file.getAbsoluteFile());
             reader = new java.io.BufferedReader(new java.io.FileReader(file.getAbsoluteFile()));
+            //reader = new java.io.BufferedReader(fr);
+            //System.out.println(fr.getEncoding());
             String line;
             int counter = 0;
             int lineNumber = 0;
