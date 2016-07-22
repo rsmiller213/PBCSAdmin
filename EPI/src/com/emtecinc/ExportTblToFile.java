@@ -346,7 +346,7 @@ public class ExportTblToFile {
             if (!skipRows.isEmpty() && !acceptRows.isEmpty()) {
                 if (!skipRows.contains(i)) {
                     if (acceptRows.contains(i)) {
-                        if (i > 0) {bw.newLine();}
+                        //if (i > 0) {bw.newLine();}
                         for (int j = 0; j < jTable.getColumnCount(); j++) {
                             //if (arrDataColumn[j] == 0) {
                             if (arrDataColumn.size() > j) {
@@ -365,11 +365,12 @@ public class ExportTblToFile {
                                 }
                             }
                         }
+                        if (i != jTable.getRowCount() - 1) {bw.newLine();}
                     }
                 }
             } else if (!skipRows.isEmpty() && acceptRows.isEmpty()) {
                 if (!skipRows.contains(i)) {
-                    if (i > 0) {bw.newLine();}
+                    //if (i > 0) {bw.newLine();}
                     for (int j = 0; j < jTable.getColumnCount(); j++) {
                         //if (arrDataColumn[j] == 0) {
                         if (arrDataColumn.size() > j) {
@@ -388,10 +389,11 @@ public class ExportTblToFile {
                             }
                         }
                     }
+                    if (i != jTable.getRowCount() - 1) {bw.newLine();}
                 }
             } else if (skipRows.isEmpty() && !acceptRows.isEmpty()) {
                 if (acceptRows.contains(i)) {
-                    if (i > 0) {bw.newLine();}
+                    //if (i > 0) {bw.newLine();}
                     for (int j = 0; j < jTable.getColumnCount(); j++) {
                         //if (arrDataColumn[j] == 0) {
                         if (arrDataColumn.size() > j) {
@@ -410,10 +412,11 @@ public class ExportTblToFile {
                             }
                         }
                     }
+                    if (i != jTable.getRowCount() - 1) {bw.newLine();}
                 }
             } else {
                 //continue;
-                if (i > 0) {bw.newLine();}
+                //if (i > 0) {bw.newLine();}
                 for (int j = 0; j < jTable.getColumnCount(); j++) {
                     //if (arrDataColumn[j] == 0) {
                     if (arrDataColumn.size() > j) {
@@ -432,6 +435,8 @@ public class ExportTblToFile {
                         }
                     }
                 }
+                //if (i > 0) {bw.newLine();}
+                if (i != jTable.getRowCount() - 1) {bw.newLine();}
             }
         }
         bw.close();

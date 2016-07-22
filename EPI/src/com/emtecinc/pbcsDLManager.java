@@ -161,23 +161,44 @@ public class pbcsDLManager {
     public DefaultTableModel getModelFromCsvFile(File file, String delimiter, Boolean bHeaderRow, int linesToRead, int startLine) {
         DefaultTableModel model = null;
         boolean isFirstRow = true;
+        CSVReader reader = null;
+//        if (startLine != 0 && bHeaderRow) {
+//            startLine = startLine + 1;
+//        }
         try {
             CharsetDecoder UTF8_CHARSET = StandardCharsets.UTF_8.newDecoder();
             UTF8_CHARSET.onMalformedInput(CodingErrorAction.REPLACE);
-            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
-                    UTF8_CHARSET), delimiter.charAt(0));
+            String[] strHeader = null;
+            if (bHeaderRow) {
+                CSVReader header = new CSVReader(new InputStreamReader(new FileInputStream(file),
+                        UTF8_CHARSET), delimiter.charAt(0));
+                strHeader = header.readNext();
+                for (int i = 0; i < strHeader.length; i++) {
+                    strHeader[i] = strHeader[i].trim();
+                }
+                header.close();
+            }
+            if (startLine == 0) {
+                reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
+                        UTF8_CHARSET), delimiter.charAt(0));
+            } else {
+                reader = new CSVReader(new InputStreamReader(new FileInputStream(file),
+                        UTF8_CHARSET), delimiter.charAt(0), '\"', startLine);
+            }
             //List<String[]> dataList = reader.readAll();
             String[] nextLine;
             int N = linesToRead;
             int counter = 0;
             int lineNumber = 0;
-            while ((nextLine = reader.readNext()) != null && counter < N) {
+
+            while ((nextLine = reader.readNext()) != null && counter <= N) {
                 for (int j = 0; j < nextLine.length; j++) {
                     nextLine[j] = nextLine[j].trim();
                 }
                 if (lineNumber == 0) {
                     if (bHeaderRow) {
-                        model = new DefaultTableModel(nextLine, 0);
+                        //model = new DefaultTableModel(nextLine, 0);
+                        model = new DefaultTableModel(strHeader, 0);
                         isFirstRow = false;
                         counter++;
                     } else {
@@ -185,6 +206,10 @@ public class pbcsDLManager {
                         //model.addRow(nextLine);
                         isFirstRow = false;
                         counter++;
+                    }
+                    if (startLine == 0 && bHeaderRow) {
+                        lineNumber++;
+                        continue;
                     }
                 }
                 if (model != null) {

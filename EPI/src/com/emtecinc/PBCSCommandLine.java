@@ -93,7 +93,7 @@ public class PBCSCommandLine extends PBCSAdmin {
         int linesInFile = 0;
         boolean bHeaderRow = false;
         try {
-            linesInFile = countLines(flDataFile);
+            linesInFile = countLines(flDataFile) + 1;
             bHeaderRow = getHeaderRow(flProfile);
         } catch (IOException ex) {
             Logger.getLogger(PBCSCommandLine.class.getName()).log(Level.SEVERE, null, ex);

@@ -1861,6 +1861,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                             PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
                             clInt.transformAndLoad(lineCount, linesToLoad, lineCounter, false, true);
                             lineCounter = lineCounter + linesToLoad;
+                            //System.out.println("Line Counter " + lineCounter + " LinesToLoad " + linesToLoad);
                             System.gc();
                         }
                         try {
@@ -1900,10 +1901,10 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     if (args[1].equals(pbcsConstants.HEADER)) {
-                        clInt.transformAndLoad(lineCount, lineCount, 1, false, true);
+                        clInt.transformAndLoad(lineCount, lineCount, 0, false, true);
                         System.exit(0);
                     } else {
-                        clInt.transformAndLoad(lineCount, lineCount, 1, false, false);
+                        clInt.transformAndLoad(lineCount, lineCount, 0, false, false);
                         System.exit(0);
                     }
                 } else {
