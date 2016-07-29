@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1848,7 +1849,12 @@ public class PBCSAdmin extends javax.swing.JFrame {
                     File flOutFile = new File(args[4]);
                     try {
                         //PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
+                        File flInFile = new File(args[1]);
                         lineCount = countLines(new File(args[1])) + 1;
+                        if (flInFile.length() < 10 && countLines(new File(args[1])) < 3) {
+                            System.out.println("Error: Source file empty! Please ensure the file has data!");
+                            System.exit(2);
+                        }
                         if (flOutFile.exists()) {
                             flOutFile.delete();
                         }
@@ -1856,7 +1862,7 @@ public class PBCSAdmin extends javax.swing.JFrame {
                         //Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println(ex);
                     }
-                    if (lineCount > lineCounter) {
+                    if (lineCount > linesToLoad) {
                         while (lineCount > lineCounter) {
                             PBCSCommandLine clInt = new PBCSCommandLine(args[0], args[1], args[2], args[3], args[4], true);
                             clInt.transformAndLoad(lineCount, linesToLoad, lineCounter, false, true);
@@ -1895,7 +1901,17 @@ public class PBCSAdmin extends javax.swing.JFrame {
                 } else if (args.length == 6 && args[0].equals(pbcsConstants.TRANSFORM)) {
                     int lineCount = 0;
                     PBCSCommandLine clInt = new PBCSCommandLine(args[2], args[3], args[4], "", args[5], false);
+                    File flInFile = new File(args[3]);
+                    boolean bFileEmpty = flInFile.length() == 0;
+                    if (bFileEmpty) {
+                        System.out.println("Error: Source file empty! Please ensure the file has data!");
+                        System.exit(2);
+                    }
                     try {
+                        if (flInFile.length() < 10 && countLines(flInFile) < 3) {
+                            System.out.println("Error: Source file empty! Please ensure the file has data!");
+                            System.exit(2);
+                        }
                         lineCount = lineCount = countLines(new File(args[3])) + 1;
                     } catch (IOException ex) {
                         Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);

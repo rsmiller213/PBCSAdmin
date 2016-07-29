@@ -133,18 +133,18 @@ public class PBCSCommandLine extends PBCSAdmin {
             Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
-        if (bPBCSLoad) {
-            try {
-                pbcsInfo = new PBCSGetPropsFile().getPropValues(pbcsConstants.DECRYPT);
-            } catch (IOException ex) {
-                Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(1);
-            }
-            pbcsUrl = pbcsInfo.get(0);
-            pbcsDomain = pbcsInfo.get(1);
-            pbcsUserName = pbcsInfo.get(2);
-            pbcsPassword = pbcsInfo.get(3);
+        try {
+            pbcsInfo = new PBCSGetPropsFile().getPropValues(pbcsConstants.DECRYPT);
+        } catch (IOException ex) {
+            Logger.getLogger(PBCSAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
+        }
+        pbcsUrl = pbcsInfo.get(0);
+        pbcsDomain = pbcsInfo.get(1);
+        pbcsUserName = pbcsInfo.get(2);
+        pbcsPassword = pbcsInfo.get(3);
 
+        if (bPBCSLoad) {
             try {
                 PBCSActions pbcsclient = new PBCSActions(pbcsUserName, pbcsDomain, pbcsPassword, pbcsUrl);
                 ArrayList<String> pbcsFiles = pbcsclient.listFilesReturn();
